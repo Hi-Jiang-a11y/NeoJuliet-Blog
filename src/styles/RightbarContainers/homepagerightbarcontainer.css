@@ -1,0 +1,19 @@
+.homepagerightbarcontainer {
+    padding: 0px;
+    margin-right: 27px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 400px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 60px;
+    height: 100vh;
+    /*background-color: rgb(255, 182, 92);*/
+}
+
+@media (max-width: 1200px) {
+    .homepagerightbarcontainer {
+        display: none;
+    }
+}

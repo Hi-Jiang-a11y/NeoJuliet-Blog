@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro'; 
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import '../styles/text-effect-typing.css';
+import SideAnnouncement from '../components/Side-Announcement.astro';
+import Calendar from '../components/Calendar.astro';
+import '../styles/RightbarContainers/homepagerightbarcontainer.css';
+---
+<Layout>
+    <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
+
+    <h2 id="typing"></h2>
+    <script type="module">
+        import { initTyping } from '/src/scripts/text-effect-typing.js';
+        initTyping('typing', "About Me ...", 90, 4000);
+    </script>
+
+    <h3>Nothing Here Yet.</h3>
+    <h3>Nothing Here Yet.</h3>
+    <h3>Nothing Here Yet.</h3>
+    <h3>Nothing Here Yet.</h3>
+    <h3>Nothing Here Yet.</h3>
+    <h3>Nothing Here Yet.</h3>
+    <h3>Nothing Here Yet.</h3>
+    <h3>Nothing Here Yet.</h3>
+    <h3>Nothing Here Yet.</h3>
+    <h3>Nothing Here Yet.</h3>
+    
+    <!--右边栏--!>
+            <div slot="rightbar" class="homepagerightbarcontainer">
+                <SideAnnouncement />
+                <Calendar />
+            </div>
+</Layout>
+

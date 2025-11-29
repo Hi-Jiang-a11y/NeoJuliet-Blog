@@ -1,0 +1,127 @@
+/* Side-Announcement.css - 完整版本 */
+
+.side-announcement {
+  border-radius: 12px;
+  padding: 12px;
+  box-sizing: border-box;
+  width: 100%;
+  /*background: rgba(255,182,193,0.06);*/
+}
+
+/* 标题左侧竖线 */
+.side-announcement h1 {
+  position: relative;
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+  font-weight: 700;
+  padding-left: 1rem;
+}
+.side-announcement h1::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 72%;
+  background-color: #ffb6c1;
+  border-radius: 2px;
+}
+
+/* 列表容器（可滚动） */
+.announcement-list {
+  max-height: 320px; /* 整体右栏内公告区域高度 */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 单条公告（外层，不裁切 header） */
+.announcement-item {
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255,182,193,0.05);
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s ease, transform 0.18s ease, background 0.18s ease;
+  cursor: pointer;
+  /* 不在这里裁切或限制高度 */
+}
+
+/* 悬停外观（外层放大/阴影） */
+.announcement-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  background: rgba(255,182,193,0.12);
+}
+
+/* header: 标题和日期在同一行 */
+.announcement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: rgb(34,41,57);
+}
+
+/* 日期小字 */
+.announcement-header .date {
+  font-size: 0.85rem;
+  color: rgb(96,115,159);
+  white-space: nowrap;
+}
+
+/* BODY（折叠区域）——初始收起 */
+.announcement-item .body {
+  max-height: 0;               /* 初始折叠 */
+  overflow: hidden;            /* 隐藏内容 */
+  opacity: 0;
+  transition: max-height 0.36s ease, opacity 0.28s ease, padding 0.28s ease;
+  padding-top: 0;
+  color: rgb(34,41,57);
+}
+
+/* 为了避免内部 <p> margin 导致撑开，重置 body 内元素 margin */
+.announcement-item .body p,
+.announcement-item .body ul,
+.announcement-item .body ol {
+  margin: 0;
+  padding: 0;
+}
+
+/* hover 时展开 body（把 max-height 设为足够大的值） */
+.announcement-item:hover .body {
+  max-height: 600px; /* 足够大以显示正文，或根据需求调整 */
+  opacity: 1;
+  padding-top: 8px;
+}
+
+.announcement-item.pinned {
+    background: rgba(255, 182, 193, 0.12);
+    max-height: 500px;     /* 自动展开 */
+    position: relative;
+}
+
+.announcement-item.pinned::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-top: 15px solid #ffb6c1;
+}
+
+/* 可选：在小屏隐藏详情（如果需要） */
+@media (max-width: 900px) {
+  .announcement-list {
+    max-height: 220px;
+  }
+  .announcement-item:hover .body {
+    /* 禁止在小屏完全展开以免遮挡 */
+    max-height: 200px;
+  }
+}
+

@@ -1,0 +1,101 @@
+.toc {
+    top: 60px;
+    padding: 0.75rem 1rem;
+    background: rgba(255,255,255,0.98);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    font-size: 1rem;
+    line-height: 1.5;
+    max-height: 850px;
+    overflow: auto;
+    border-radius: 12px 
+}
+
+/* 滚动条样式 */
+.toc::-webkit-scrollbar {
+    width: 6px;
+}
+
+.toc::-webkit-scrollbar-track {
+    background: rgba(255, 182, 193, 0.15);
+    border-radius: 10px;
+}
+
+.toc::-webkit-scrollbar-thumb {
+    background: rgba(255, 182, 193, 0.5);
+    border-radius: 10px;
+}
+
+.toc::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 182, 193, 0.9);
+}
+
+.toc h1 {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.toc h1::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 72%;
+    background: #ffb6c1;
+    font-size: 1.5rem;
+    border-radius: 2px;
+}
+
+.toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc ol ol {
+    padding-left: 0.9rem;
+    margin-top: 0.3rem;
+}
+
+.toc a {
+    display: inline-block;
+    padding: 0.12rem 0;
+    color: #4a4a4a;
+    text-decoration: none;
+    transition: color 0.15s ease, background-color 0.25s ease;
+}
+
+.toc a:hover {
+    color: rgb(255, 182, 193);
+}
+
+.toc a.active {
+    color: #ffb6c1;
+    font-weight: 600;
+}
+
+.toc a.active::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 1.1rem;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+    background: #ffb6c1;
+    border-radius: 2px;
+}
+
+/* 平滑滚动（备用） */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 小屏幕隐藏（按需调整） */
+@media (max-width: 900px) {
+    .toc { display: none; }
+}
+

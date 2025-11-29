@@ -1,0 +1,60 @@
+---
+import '../styles/Calendar.css';
+
+const now = new Date();
+
+const isToday = (date) =>
+  date.getFullYear() === now.getFullYear() &&
+  date.getMonth() === now.getMonth() &&
+  date.getDate() === now.getDate();
+
+const year = now.getFullYear();
+const month = now.getMonth();
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+// 当前月份天数
+const daysInMonth = new Date(year, month + 1, 0).getDate();
+const firstDay = new Date(year, month, 1).getDay();
+
+// 构建日历格子
+const calendarDays = [];
+for (let i = 0; i < firstDay; i++) calendarDays.push(null);
+for (let day = 1; day <= daysInMonth; day++) calendarDays.push(day);
+
+---
+<div class="calendar-container">
+    <!-- 标题 -->
+    <h1 class="calendar-title">Calendar</h1>
+
+    <!-- 日历网格 -->
+    <div class="calendar-grid-container">
+        <div class="calendar-header">
+            <h3>{monthNames[month]} {year}</h3>
+        </div>
+
+        <div class="calendar-grid">
+            {daysOfWeek.map(day => (
+                <div class="calendar-day-week">{day}</div>
+            ))}
+
+            {calendarDays.map(day => {
+                if (!day) return <div class="calendar-day empty"></div>;
+
+                const dateObj = new Date(year, month, day);
+                const todayClass = isToday(dateObj) ? "today" : "";
+
+                return (
+                    <div class={`calendar-day ${todayClass}`}>{day}</div>
+                );
+            })}
+
+        </div>
+    </div>
+
+    <!-- 统计数据 -->
+    <div class="calendar-stats">
+        <h4>Statistics</h4> 
+    </div>
+</div>
+

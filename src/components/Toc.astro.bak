@@ -1,0 +1,57 @@
+---
+const { headings } = Astro.props;
+import '../styles/Toc.css';
+
+import type { MarkdownHeading } from 'astro';
+
+type HeadingWithSubheadings = MarkdownHeading & {
+    subheadings?: HeadingWithSubheadings[];
+};
+
+const grouppedHeadings = headings.reduce((array, heading) => {
+    if (heading.depth === 1) {
+        // h1 作为一级主题
+        array.push({ ...heading, subheadings: [] });
+    } else if (heading.depth === 2) {
+        // 如果没有 h1，则把 h2 当作一级主题
+        if (array.length === 0) {
+            array.push({ ...heading, subheadings: [] });
+        } else {
+            array.at(-1)?.subheadings?.push({ ...heading, subheadings: [] });
+        }
+    } else if (heading.depth === 3) {
+        const last = array.at(-1);
+        const lastSub = last?.subheadings?.at(-1);
+
+        // 如果没有 h1 或 h2，则 h3 直接挂上一级
+        if (!last) {
+            array.push({ ...heading, subheadings: [] });
+        } else if (!lastSub) {
+            last.subheadings?.push({ ...heading, subheadings: [] });
+        } else {
+            lastSub.subheadings?.push({ ...heading });
+        }
+    }
+
+    return array;
+}, [] as HeadingWithSubheadings[]);
+
+
+---
+<nav class="toc">
+    <h2>Table of Contents</h2>
+    <ol>
+    {(()=>{
+
+        const h = (heading:HeadingWithSubheadings,number:string) => (
+            <li>
+                <a href={`#${heading.slug}`}>{number}. {heading.text}</a>
+                { heading.subheadings && <ol> { heading.subheadings.map((subheading, i) => h(subheading,`${number}.${i+1}`)) } </ol> }
+            </li>
+        )
+        return grouppedHeadings.map((heading, i)=> h(heading,`${i+1}`))
+
+    })()}
+</ol>
+</nav>
+

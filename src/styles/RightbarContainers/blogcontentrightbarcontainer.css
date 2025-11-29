@@ -1,0 +1,20 @@
+.blogcontentrightbarcontainer {
+    padding: 0px;
+    margin-right: 27px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 400px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 60px;
+    max-height: 850px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+@media (max-width: 1200px) {
+    .blogcontentrightbarcontainer {
+        display: none;
+    }
+}

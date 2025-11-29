@@ -1,0 +1,27 @@
+{
+  "name": "cactus",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.5",
+    "@astrojs/mdx": "^4.3.12",
+    "@astrojs/node": "^9.5.1",
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/rss": "^4.0.14",
+    "@astrojs/sitemap": "^3.6.0",
+    "@iconify-json/simple-icons": "^1.2.59",
+    "aplayer": "^1.10.1",
+    "astro": "^5.16.0",
+    "astro-icon": "^1.1.5",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sharp": "^0.34.3",
+    "typescript": "^5.9.3"
+  }
+}

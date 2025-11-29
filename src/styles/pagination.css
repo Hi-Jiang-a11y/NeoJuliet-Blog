@@ -1,0 +1,39 @@
+/* Pagination container */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 40px 0;
+    font-size: 15px;
+}
+
+/* Default page link */
+.pagination a {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 6px;
+    border: 2px solid rgb(255, 183, 192 , 0.75);
+    text-decoration: none;
+    color: rgb(255, 183, 192);
+    transition: all 0.2s ease;
+}
+
+/* Hover effect */
+.pagination a:hover {
+    background-color: rgb(255, 183, 192, 0.15);
+}
+
+/* Active page */
+.pagination a.active {
+    background-color: rgb(255, 183, 192, 0.5);
+    color: #fff;
+    border-color: rgb(255, 183 ,192, 0.75);
+}
+
+/* Prev / Next */
+.pagination a.prev,
+.pagination a.next {
+    font-weight: 600;
+}
+

@@ -1,0 +1,63 @@
+---
+import { SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+---
+
+<header>
+	<nav>
+		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<div class="internal-links">
+			<HeaderLink href="/">Home</HeaderLink>
+            
+            <HeaderLink href="/archive">Archive</HeaderLink>
+
+            <HeaderLink href="/about">About</HeaderLink>
+
+            <HeaderLink href="/tag">Tags</HeaderLink>
+		</div>
+    </nav>
+</header>
+<style>
+	header {
+		margin: 0;
+		padding: 0 1em;
+		background: white;
+		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+	}
+	h2 {
+		margin: 0;
+		font-size: 1em;
+	}
+
+	h2 a,
+	h2 a.active {
+		text-decoration: none;
+	}
+	nav {
+		display: flex;
+		align-items: center;
+        justify-content: space-between;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        padding: 1em 2em;
+        height: 20px;
+        background: rgb(255, 182, 193, 0.07);
+	}
+	nav a {
+		padding: 1em 0.5em;
+		color: var(--black);
+		border-bottom: 4px solid transparent;
+		text-decoration: none;
+	}
+	nav a.active {
+		text-decoration: none;
+        border-bottom-color: rgb(255, 182, 193, 0.8);
+	}
+    .internal-links {
+        display: flex;
+        gap: 1em;
+        margin-right: 3em;
+    }
+    @media (max-width: 720px) {
+	}
+</style>

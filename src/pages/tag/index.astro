@@ -1,0 +1,64 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BaseHead from '../../components/BaseHead.astro';
+import { getCollection } from 'astro:content';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import '../../styles/blog-card.css';
+import '../../styles/text-effect-typing.css';
+import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
+import '../../styles/pagination.css';
+import '../../styles/tag.css';
+import SideAnnouncement from '../../components/Side-Announcement.astro';
+import Calendar from '../../components/Calendar.astro';
+
+
+const allPosts = await getCollection('blog');
+
+// 收集所有标签及数量
+const tagMap = {};
+allPosts.forEach(post => {
+    if (post.data.tags) {
+        post.data.tags.forEach(tag => {
+            if (!tagMap[tag]) tagMap[tag] = 0;
+            tagMap[tag]++;
+        });
+    }
+});
+
+const tags = Object.entries(tagMap).sort((a, b) => b[1] - a[1]); // 按文章数量降序
+---
+<Layout>
+    <BaseHead slot="head" title={`Tags - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+
+    <h2 id="typing"></h2>
+    <script type="module">
+        import { initTyping } from '/scripts/text-effect-typing.js';
+        
+        const runTyping = () => {
+            const el = document.getElementById('typing');
+            el.textContent = ''; // 清空之前内容
+            initTyping('typing', "Tags...", 120, 5000);
+        };
+        // 等 DOM 加载完成再执行
+        window.addEventListener('DOMContentLoaded', runTyping);
+        window.addEventListener('astro:navigation-end', runTyping);
+    </script>
+
+        <!--简介--!>
+        <p>
+            All the tags are listed here
+        </p>
+
+    <ul class="tag-list">
+        {tags.map(([tag, count]) => (
+            <li>
+                <a href={`/tag/${tag}/`}># {tag}({count})</a>
+            </li>
+        ))}
+    </ul>
+    <div slot="rightbar" class="homepagerightbarcontainer">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
+</Layout>
+

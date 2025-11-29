@@ -1,0 +1,59 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BaseHead from '../../components/BaseHead.astro';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import '../../styles/blog-card.css';
+import SideAnnouncement from '../../components/Side-Announcement.astro';
+import Calendar from '../../components/Calendar.astro';
+import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
+
+export async function getStaticPaths() {
+    const allPosts = await getCollection('blog');
+
+    const tagsSet = new Set();
+    allPosts.forEach(post => post.data.tags?.forEach(tag => tagsSet.add(tag)));
+
+    return Array.from(tagsSet).map(tag => ({ params: { tag } }));
+}
+
+const allPosts = await getCollection('blog');
+const currentTag = Astro.params.tag;
+
+// 过滤当前标签的文章
+const posts = allPosts
+    .filter(post => post.data.tags?.includes(currentTag))
+    .sort((a, b) => {
+        if (a.data.pinned && !b.data.pinned) return -1;
+        if (!a.data.pinned && b.data.pinned) return 1;
+        return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+    });
+---
+<Layout>
+    <BaseHead slot="head" title={`${currentTag} - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+
+    <h1>Tag: {currentTag}</h1>
+
+    {posts.length > 0 ? (
+        posts.map(post => (
+            <article class={`blog-card ${post.data.pinned ? 'pinned' : ''}`}>
+                <h2 class="blog-title">
+                    <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                </h2>
+                <p class="blog-meta">
+                    {post.data.author && <>By {post.data.author} - </>} 
+                    <FormattedDate date={post.data.pubDate} />
+                </p>
+                {post.data.description && <p class="blog-description">{post.data.description}</p>}
+            </article>
+        ))
+    ) : (
+        <p>No posts found for this tag.</p>
+    )}
+    <div slot="rightbar" class="homepagerightbarcontainer">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
+</Layout>
+

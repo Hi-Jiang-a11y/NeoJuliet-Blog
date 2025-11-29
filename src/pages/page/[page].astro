@@ -1,0 +1,114 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BaseHead from '../../components/BaseHead.astro';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import '../../styles/blog-card.css'
+import '../../styles/text-effect-typing.css';
+import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
+import '../../styles/pagination.css';
+import SideAnnouncement from '../../components/Side-Announcement.astro';
+import Calendar from '../../components/Calendar.astro';
+
+// 用于路由生成
+export async function getStaticPaths() {
+    const allPosts = (await getCollection('blog')).sort((a, b) => {
+        if (a.data.pinned && !b.data.pinned) return -1;
+        if (!a.data.pinned && b.data.pinned) return 1;
+        return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+    });
+
+    const POSTS_PER_PAGE = 5;
+    const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+
+    return Array.from({ length: totalPages }, (_, i) => ({
+        params: { page: String(i + 1) },
+        props: {},
+    }));
+}
+
+// 页面渲染逻辑
+const POSTS_PER_PAGE = 5;
+const currentPage = Number(Astro.params.page || 1);
+
+const allPosts = (await getCollection('blog')).sort((a, b) => {
+    if (a.data.pinned && !b.data.pinned) return -1;
+    if (!a.data.pinned && b.data.pinned) return 1;
+    return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+});
+
+const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+---
+
+
+<Layout>
+    <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    
+    <!--主页内容--!>
+
+    <!--打字机特效--!>    
+    <h2 id="typing"></h2>
+    <script type="module">
+        import { initTyping } from '/scripts/text-effect-typing.js';
+        
+        const runTyping = () => {
+            const el = document.getElementById('typing');
+            el.textContent = ''; // 清空之前内容
+            initTyping('typing', "Welcome to Juliet's Site!", 90, 5000);
+        };
+        // 等 DOM 加载完成再执行
+        window.addEventListener('DOMContentLoaded', runTyping);
+        window.addEventListener('astro:navigation-end', runTyping);
+    </script>
+
+        <!--简介--!>
+        <p>
+            What you love is your life.
+        </p>
+
+        <!--Blog Cards--!>
+        <h3>Blog Posts</h3>
+            {posts.map(post => (
+                <article class={`blog-card ${post.data.pinned ? 'pinned' : ''}`}>
+                    <h2 class="blog-title">
+                        <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                    </h2>
+                    <!--author and data--!>
+                    <p class="blog-meta">
+                        {post.data.author && <>By {post.data.author} - </>} 
+                        <FormattedDate date={post.data.pubDate} />
+                    </p>
+                    
+                    <!--description--!>
+                    
+                    {post.data.description && (
+                        <p class="blog-description">
+                            {post.data.description}
+                        </p> )}
+                    <!--tags--!>
+                    {post.data.tags && (
+                        <div class="blog-tags">
+                            {post.data.tags.map(tag => (
+                                <span class="tag"># {tag}</span> ))}
+                        </div> )}
+                </article> ))}
+
+            <!--分页导航--!>
+            <nav class="pagination">
+                {currentPage > 1 && <a href={`/page/${currentPage - 1}`} class="prev">Previous</a>}
+                {Array.from({ length: totalPages }, (_, i) => (
+                    <a href={`/page/${i + 1}`} class={i + 1 === currentPage ? 'active' : ''}>{i + 1}</a>
+                ))}
+                {currentPage < totalPages && <a href={`/page/${currentPage + 1}`} class="next">Next</a>}
+            </nav>
+
+            <!--右边栏--!>
+            <div slot="rightbar" class="homepagerightbarcontainer">
+                <SideAnnouncement />
+                <Calendar />
+            </div>
+</Layout>
+

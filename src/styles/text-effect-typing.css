@@ -1,0 +1,18 @@
+#typing {
+  font-family: monospace;
+  white-space: pre; /* 保留空格 */
+  display: inline-block;
+  border-right: 2px solid #ff69b4; /* 光标颜色 */
+  padding-right: 2px;
+  overflow: hidden;
+}
+
+@keyframes blink {
+  0%, 50% { border-color: #ff69b4; }
+  51%, 100% { border-color: transparent; }
+}
+
+#typing.blinking {
+  animation: blink 1s step-start infinite;
+}
+

@@ -1,0 +1,36 @@
+.tag-list {
+    list-style: none;
+    flex-wrap: wrap;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.tag-list li {
+    background-color: rgb(255, 183, 192, 0.07);
+    padding: 20px; /* 增加内部空间 */
+    border-radius: 12px; /* 圆角 */
+    text-align: center;
+    font-size: 1.5rem; /* 字体稍大 */
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    min-height: 40px;
+}
+
+.tag-list li:hover  {
+    transform: translateY(-6px); /* 向上跳动 */
+}
+
+.tag-list li a {
+    padding: 4px 8px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.2s;
+}
+
+.tag-list li a:hover {
+    color: #ff69b4;
+}
+

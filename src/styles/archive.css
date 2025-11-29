@@ -1,0 +1,97 @@
+.archive-month {
+    position: relative;
+    font-size: 2rem;
+    margin: 1.5rem 0 0.5rem 0;
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    padding-left: 30px; /* 对齐时间轴线 */
+    gap: 15px;
+}
+
+.archive-month .month-circle { 
+    width: 10px; /* 圆点直径 */
+    height: 10px; 
+    border-radius: 50%; /* 变成圆形 */
+    flex-shrink: 0; /* 不被压缩 */
+    background-color: #ffbce1; /* 圆点颜色 */
+}
+
+.blog-card {
+    padding: 5px 65px;
+    margin: 0;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.blog-card:hover {
+    border-radius: 12px;
+    background-color: rgba(255, 182, 193, 0.15);
+}
+
+.card-line {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* 日期 */
+.date {
+    flex-shrink: 0;
+    width: 80px;
+    font-size: 1.25rem;
+    color: #60739f;
+    margin-right: 10px;
+    margin-left: 38px;
+}
+
+/* 时间轴竖线和圆点 */
+.timeline {
+    position: relative;
+    width: 3px;
+    display: flex;
+    justify-content: center;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: repeating-linear-gradient(
+        to bottom,
+        #999 0 2px,
+        transparent 1px 1px
+    );
+    border-radius: 2px;
+}
+
+.circle {
+    width: 5px;
+    height: 5px;
+    background: #999;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+/* 鼠标悬停时圆点变竖线 */
+.blog-card:hover .circle {
+    width: 3px;
+    height: 20px;
+    border-radius: 2px;
+    background: #ffb6c1;
+    margin-top: 0px; /* 调整到竖线中间 */
+}
+
+/* 标题 */
+.title a {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #222939;
+    text-decoration: none;
+    padding-left: 10px;
+}
+

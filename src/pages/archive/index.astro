@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BaseHead from '../../components/BaseHead.astro';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+import '../../styles/text-effect-typing.css';
+import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
+import SideAnnouncement from '../../components/Side-Announcement.astro';
+import Calendar from '../../components/Calendar.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import '../../styles/archive.css';
+
+// 获取Blog集合
+const posts = (await getCollection('blog')).sort(
+    (a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
+);
+
+// 按Year-Month分组
+const postsByMonth: Record<string, typeof posts> = {};
+posts.forEach(post => {
+    const date = new Date(post.data.pubDate);
+    const key = `${date.getFullYear()} ${date.toLocaleString('en-US', { month: 'short' })}`;
+    if (!postsByMonth[key]) postsByMonth[key] = [];
+    postsByMonth[key].push(post);
+});
+
+---
+
+<Layout>
+    <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    
+    <!--主页内容--!>
+
+    <!--打字机特效--!>    
+    <h2 id="typing"></h2>
+    <script type="module">
+        import { initTyping } from '/src/scripts/text-effect-typing.js';
+        
+        const runTyping = () => {
+            const el = document.getElementById('typing');
+            el.textContent = ''; // 清空之前内容
+            initTyping('typing', "Archive...", 160, 5000);
+        };
+        //首次加载
+        runTyping();
+        //SPA 导航后执行
+        window.addEventListener('astro:navigation-start', () => {
+            runTyping();
+        });
+    </script>
+
+        <!--简介--!>
+        <p>Time flies</p>
+        
+        <!--时间轴--!>
+        {Object.entries(postsByMonth).map(([yearMonth, monthPosts]) => (
+            <>
+                <h2 class="archive-month">
+                    {yearMonth}
+                    <span class="month-circle"></span>
+                </h2>
+                {monthPosts.map(post => (
+                    <article class={`blog-card ${post.data.pinned ? 'pinned' : ''}`}>
+                        <div class="card-line">
+                            <span class="date">
+                                {new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}
+                            </span>
+                            <span class="timeline">
+                                <span class="circle"></span>
+                            </span>
+
+                            <span class="title">
+                                <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                            </span>
+                        </div>
+                    </article>
+                ))}
+            </>
+        ))}
+
+        <!--右边栏--!>
+        <div slot="rightbar" class="homepagerightbarcontainer">
+            <SideAnnouncement />
+            <Calendar />
+        </div>
+</Layout>
+
