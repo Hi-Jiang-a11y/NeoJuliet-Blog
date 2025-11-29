@@ -79,11 +79,11 @@ const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
 
             <!--分页导航--!>
             <nav class="pagination">
-                {currentPage > 1 && <a href={`/page/${currentPage - 1}`} class="prev">Previous</a>}
+                {currentPage > 1 && <a href={`/page/${currentPage - 1}`} class="prev">PREV</a>}
                 {Array.from({ length: totalPages }, (_, i) => (
                     <a href={`/page/${i + 1}`} class={i + 1 === currentPage ? 'active' : ''}>{i + 1}</a>
                 ))}
-                {currentPage < totalPages && <a href={`/page/${currentPage + 1}`} class="next">Next</a>}
+                {currentPage < totalPages && <a href={`/page/${currentPage + 1}`} class="next">NEXT</a>}
             </nav>
 
             <!--右边栏--!>

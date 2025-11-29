@@ -28,7 +28,7 @@
 }
 
 .date {
-  text-align: center;
+  text-align: left;
   color: rgb(var(--gray));
   font-size: 0.9em;
   margin-bottom: 1em;
@@ -41,6 +41,76 @@
 
 .prose {
   line-height: 1.7;
-  color: rgb(var(--gray-dark));
+  /*color: rgb(var(--gray-dark));*/
 }
 
+/*markdown content*/
+
+/*link*/
+.prose a {
+    color: rgb(255, 183, 192);           /* 链接颜色 */
+    text-decoration: none;    /* 连接样式 */
+    font-weight: 500;
+}
+
+.prose a:hover {
+    color: rgb(255, 183, 192);           /* 你喜欢的颜色 */
+    text-decoration: none;    /* 去下划线 */
+    font-weight: 600;
+}
+
+/*blockquote*/
+.prose blockquote {
+    border-left: 4px solid #ff7ba5;  /* 更改竖线颜色 */
+    background: rgb(255, 183, 192, 0.05);
+    border-radius: 2px;
+    padding-left: 0.75rem 1rem;
+    color: #555;
+    font-style: normal;
+}
+
+/*table*/
+.prose table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.prose th,
+.prose td {
+    border: 1px solid #ccc;  /* 竖线 & 横线 */
+    padding: 8px 12px;
+}
+
+.prose th {
+    background: #f3f3f3;     /* 表头背景 */
+    font-weight: 600;
+}
+
+/*code block*/
+.prose pre {
+    background: rgb(255, 230, 245, 0.20) !important;
+    padding: 1rem !important;
+    border-radius:12px;
+    overflow-x: auto;
+}
+
+.prose pre code,
+code[class*="language-"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    color: inherit !important; /* 保留语法高亮颜色，不覆盖 */
+}
+
+.prose pre code :not(.token) {
+    color: #555 !important; /* 普通文本颜色，自定义灰色或深粉 */
+}
+
+.prose :not(pre) > code {
+    background: rgba(255, 183, 192, 0.20);
+    color: rgb(255, 105, 180);
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 0.95em;
+}
