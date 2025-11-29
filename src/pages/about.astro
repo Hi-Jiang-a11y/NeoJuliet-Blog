@@ -15,7 +15,15 @@ import '../styles/RightbarContainers/homepagerightbarcontainer.css';
     <h2 id="typing"></h2>
     <script type="module">
         import { initTyping } from '/src/scripts/text-effect-typing.js';
-        initTyping('typing', "About Me ...", 90, 4000);
+        
+        const runTyping = () => {
+            const el = document.getElementById('typing');
+            el.textContent = ''; // 清空之前内容
+            initTyping('typing', "About Me...", 100, 5000);
+        };
+        // 等 DOM 加载完成再执行
+        window.addEventListener('DOMContentLoaded', runTyping);
+        window.addEventListener('astro:navigation-end', runTyping);
     </script>
 
     <h3>Nothing Here Yet.</h3>
