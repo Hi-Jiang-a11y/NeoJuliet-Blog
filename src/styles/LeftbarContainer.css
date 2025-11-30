@@ -55,3 +55,22 @@
         display: none;
     }
 }
+
+@media (max-width: 480px) {
+    .LeftbarContainer{
+        width: 80%;
+        border-left: none;
+        border-top: 1px solid #e5e5e5;
+        order: 1;
+        height: auto;
+        padding: 30px;
+    }
+
+    .Leftbar-moduleB {
+        display: none;
+    }
+
+    .Leftbar-moduleC {
+        display: none;
+    }
+}

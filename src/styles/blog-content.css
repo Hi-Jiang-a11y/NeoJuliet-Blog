@@ -114,3 +114,101 @@ code[class*="language-"] {
     border-radius: 8px;
     font-size: 0.95em;
 }
+
+
+@media (max-width: 720px) {
+
+    /* 整体文章容器压缩 */
+    .blog-post {
+        padding: 0.5em;
+        border-radius: 10px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    /* 主标题缩小、减小 margin */
+    .title {
+        font-size: 1.5em;
+        margin: 0.4em 0;
+    }
+
+    .date,
+    .last-updated {
+        font-size: 0.75em;
+        margin-bottom: 0.6em;
+    }
+
+    /* 正文字体、行距略微压缩 */
+    .prose {
+        font-size: 0.8em;
+        line-height: 1.55;
+        word-break: break-word;
+    }
+
+    /* 图片：避免外溢 */
+    .hero-image img {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 0.8em;
+    }
+
+    /* blockquote 调整缩进与字体 */
+    .prose blockquote {
+        border-left-width: 3px;
+        padding: 0.5em 0.8em;
+        font-size: 0.9em;
+        margin: 0.5em 0;
+    }
+
+    /* 代码块：高度、padding 缩小 */
+    .prose pre {
+        padding: 0.8rem !important;
+        font-size: 0.85em;
+        border-radius: 10px;
+        overflow-x: auto;
+    }
+
+    /* 行内 code 更紧凑 */
+    .prose :not(pre) > code {
+        padding: 2px 6px;
+        font-size: 0.85em;
+        border-radius: 6px;
+    }
+
+    /* 表格横向滚动，避免 UI 爆炸 */
+    .prose table {
+        display: block;
+        overflow-x: auto;
+        border-radius: 8px;
+    }
+
+    .prose th,
+    .prose td {
+        padding: 6px 10px;
+        font-size: 0.85em;
+    }
+
+    /* 整体内容区域两侧收紧 */
+    .blog-content {
+        padding: 0 0.3em;
+    }
+
+    .prose h1 {
+        font-size: 1.3rem;
+    }
+    .prose h2 {
+        font-size: 1.2rem;
+    }
+    .prose h3 {
+        font-size: 1rem;
+    }
+    .prose h4 {
+        font-size: 0.9rem;
+    }
+    .prose h5 {
+        font-size: 0.8rem;
+    }
+    .prose h6 {
+        font-size: 0.75rem;
+    }
+}
+

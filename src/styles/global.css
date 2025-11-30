@@ -195,6 +195,26 @@ hr {
 }
 
 @media (max-width: 1200px) {
+
+    .layout {
+        flex-direction: column;
+     }
+
+    .sidebar-modules{
+        width: 89%;
+        border-left: none;
+        border-top: 1px solid #e5e5e5;
+        order: 1;
+        height: 60vh;
+    }
+
+    .content {
+        padding: 20px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
     body {
         font-size: 14px; /* 适当缩小字体 */
         line-height: 0.8;
@@ -209,8 +229,8 @@ hr {
     .layout {
         flex-direction: column;
         width: 100%;
-        padding-left: 0px;
-        padding-right: 0px;
+        padding: 0px;
+        min-height: auto;
      }
     
     .sidebar-modules{
@@ -224,7 +244,9 @@ hr {
     .content {
         font-size: 1em;
         width: 100%;
-        padding-right: 0px;
-        padding-left: 15px;
+        padding: 30px;
+        height: auto;
     }
 }
+
+
