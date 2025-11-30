@@ -1,0 +1,52 @@
+.Leftbar-moduleA {
+    padding: 20px;
+    border-radius: 12px;
+    border: 0px solid #e5e5e5;
+    background: rgb();
+}
+
+.Leftbar-moduleA .avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: 80% 5%;
+    margin: 0 auto 15px;
+    display: block;
+    border: 2px solid rgb(255, 182, 192, 0.5);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.nickname {
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.motto {
+    font-size: 1.2rem;
+    color: rgb(var(--gray));
+    text-align: center;
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+.leftbar-social-links {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+/* 图标尺寸和 hover 效果 */
+.leftbar-social-links svg {
+    width: 28px;
+    height: 28px;
+    color: rgb(var(--gray-dark));
+    transition: 0.2s ease;
+}
+
+.leftbar-social-links a:hover svg {
+    color: rgb(255, 105, 180, 0.5);
+    transform: translateY(-2px);
+}
