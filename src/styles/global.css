@@ -195,13 +195,26 @@ hr {
 }
 
 @media (max-width: 1200px) {
+    body {
+        font-size: 14px; /* 适当缩小字体 */
+        line-height: 0.8;
+        padding: 0;
+    }
     
+    main {
+        width: 100%;
+        padding: 1em;
+    }
+
     .layout {
         flex-direction: column;
+        width: 100%;
+        padding-left: 0px;
+        padding-right: 0px;
      }
     
     .sidebar-modules{
-        width: 89%;
+        max-width: 100%;
         border-left: none;
         border-top: 1px solid #e5e5e5;
         order: 1;
@@ -209,7 +222,9 @@ hr {
     }
      
     .content {
-        padding: 60px;
+        font-size: 1em;
         width: 100%;
+        padding-right: 0px;
+        padding-left: 15px;
     }
 }

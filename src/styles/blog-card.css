@@ -105,3 +105,88 @@
     color: rgb(255, 20, 147);
     transform: translateY(-2px);
 }
+
+@media (max-width: 480px) {
+    /* 卡片宽度自适应全屏 */
+    .blog-card {
+        width: 80%;
+        padding-right: 0px;
+        max-width: 100%;
+        min-height: auto;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* 阴影更柔和 */
+    }
+
+    /* 卡片置顶标记缩小 */
+    .blog-card.pinned::before {
+        border-top: 20px solid #ffb6c1;
+        border-right: 20px solid transparent;
+    }
+
+    /* 标题字体缩小，装饰条保持比例 */
+    .blog-title {
+        font-size: 0.8rem;
+        margin: 0 0 0 0;
+    }
+
+    .blog-title::before {
+        width: 3px;
+        margin: 0 0 0 0;
+        
+    }
+
+    .blog-title a::after {
+        margin-left: 0.2em;
+        transform: translateX(2px);
+    }
+
+    /* 元信息 & 描述 */
+    .blog-meta {
+        font-size: 0.9rem;
+    }
+
+    .blog-description {
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+
+    /* 标签 */
+    .blog-tags {
+        gap: 6px;
+    }
+
+    .tag {
+        font-size: 0.7em;
+        padding: 2px 6px;
+    }
+
+    /* Hover 效果优化为轻微移动，避免过大 */
+    .blog-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+    }
+
+    .tag:hover {
+        transform: translateY(-0.5px);
+    }
+}
+
+@media (max-width: 1200px) {
+
+    .layout {
+        flex-direction: column;
+     }
+
+    .sidebar-modules{
+        width: 89%;
+        border-left: none;
+        border-top: 1px solid #e5e5e5;
+        order: 1;
+        height: 60vh;
+    }
+
+    .content {
+        padding: 60px;
+        width: 100%;
+    }
+}

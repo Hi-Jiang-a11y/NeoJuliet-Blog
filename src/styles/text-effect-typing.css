@@ -16,3 +16,14 @@
   animation: blink 1s step-start infinite;
 }
 
+@media (max-width: 480px) {
+    #typing {
+        font-size: 1rem;     /* 手机端字体更小 */
+        padding: 0 0.5rem;     /* 左右留边 */
+        max-width: 100%;          /* 不超过父容器 */
+        word-wrap: break-word;    /* 必要时换行 */
+        white-space: normal;      /* 允许换行 */
+        line-height: 1.4;
+    }
+}
+
