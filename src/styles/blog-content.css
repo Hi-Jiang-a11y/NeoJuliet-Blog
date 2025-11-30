@@ -67,6 +67,7 @@
     padding-left: 0.75rem 1rem;
     color: #555;
     font-style: normal;
+    font-size: 1.2rem;
 }
 
 /*table*/
@@ -109,10 +110,29 @@ code[class*="language-"] {
 
 .prose :not(pre) > code {
     background: rgba(255, 183, 192, 0.20);
-    color: rgb(255, 105, 180);
+    color: rgb(255, 105, 180, 0.7);
     padding: 3px 8px;
     border-radius: 8px;
     font-size: 0.95em;
+}
+
+.prose h1 {
+    font-size: 3rem;
+}
+.prose h2 {
+    font-size: 2.3rem;
+}
+.prose h3 {
+    font-size: 2rem;
+}
+.prose h4 {
+    font-size: 1.8rem;
+}
+.prose h5 {
+    font-size: 1.8rem;
+}
+.prose h6 {
+    font-size: 1.6rem;
 }
 
 
