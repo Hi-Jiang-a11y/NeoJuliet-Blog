@@ -1,0 +1,55 @@
+# A Simple Theme for Astro Blog
+
+## Features
+* [x] 100/100 Lighthouse performance
+* [x] SEO-friendly with canonical URLs and OpenGraph data
+* [x] Sitemap support
+* [x] RSS Feed support
+* [x] Markdown & MDX support
+* [x] Elegant web design
+* [x] Pinned support
+## Components
++ Blog-cards
++ Tags
++ Archive
++ Announcement
++ Calendar(under maintaing)
++ Auto-generated table of contents
+## Why this theme
+idk, I wrote it for fun, just want to build my own blog.  
+The color of this theme is light pink, of course you can modify it.
+...
+## Installation
+```bash
+npm create astro@latest -- --template Hi-Jiang-a11y/NeoJuliet-Blog
+  #or you can use👇
+git clone https://github.com/Hi-Jiang-a11y/NeoJuliet-Blog.git
+  #change the working directory
+cd NeoJuliet-Blog
+  #install the package need
+npm insatll
+```
+## Project structure
+```
+.
+├── README.md
+├── astro.config.mjs
+├── package-lock.json
+├── package.json
+├── public
+│   ├── assets
+│   ├── favicon.svg
+│   ├── fonts
+│   └── scripts
+├── src
+│   ├── assets
+│   ├── components
+│   ├── consts.ts
+│   ├── content
+│   ├── content.config.ts
+│   ├── layouts
+│   ├── pages
+│   ├── scripts
+│   └── styles
+└── tsconfig.json
+```
