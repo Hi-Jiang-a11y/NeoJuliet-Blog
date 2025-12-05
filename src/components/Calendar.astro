@@ -1,60 +1,71 @@
 ---
-import '../styles/Calendar.css';
-
-const now = new Date();
-
-const isToday = (date) =>
-  date.getFullYear() === now.getFullYear() &&
-  date.getMonth() === now.getMonth() &&
-  date.getDate() === now.getDate();
-
-const year = now.getFullYear();
-const month = now.getMonth();
-const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-// 当前月份天数
-const daysInMonth = new Date(year, month + 1, 0).getDate();
-const firstDay = new Date(year, month, 1).getDay();
-
-// 构建日历格子
-const calendarDays = [];
-for (let i = 0; i < firstDay; i++) calendarDays.push(null);
-for (let day = 1; day <= daysInMonth; day++) calendarDays.push(day);
-
+import "../styles/Calendar.css";
 ---
+
 <div class="calendar-container">
-    <!-- 标题 -->
     <h1 class="calendar-title">Calendar</h1>
 
-    <!-- 日历网格 -->
-    <div class="calendar-grid-container">
-        <div class="calendar-header">
-            <h3>{monthNames[month]} {year}</h3>
-        </div>
+    <!-- 这里由客户端 JS 动态渲染 -->
+    <div id="calendar-root"></div>
 
-        <div class="calendar-grid">
-            {daysOfWeek.map(day => (
-                <div class="calendar-day-week">{day}</div>
-            ))}
-
-            {calendarDays.map(day => {
-                if (!day) return <div class="calendar-day empty"></div>;
-
-                const dateObj = new Date(year, month, day);
-                const todayClass = isToday(dateObj) ? "today" : "";
-
-                return (
-                    <div class={`calendar-day ${todayClass}`}>{day}</div>
-                );
-            })}
-
-        </div>
-    </div>
-
-    <!-- 统计数据 -->
     <div class="calendar-stats">
-        <h4>Statistics</h4> 
+        <h4>Statistics</h4>
     </div>
 </div>
+
+<!-- 客户端 JS：确保在浏览器执行，而不是构建时执行 -->
+<script>
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    // 当前月份天数与本月第一天是星期几
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDay = new Date(year, month, 1).getDay();
+
+    function isToday(date) {
+        return (
+            date.getFullYear() === now.getFullYear() &&
+            date.getMonth() === now.getMonth() &&
+            date.getDate() === now.getDate()
+        );
+    }
+
+    const calendarRoot = document.getElementById("calendar-root");
+
+    // 标题
+    const header = `
+        <div class="calendar-header">
+            <h3>${monthNames[month]} ${year}</h3>
+        </div>
+    `;
+
+    // 网格
+    let grid = `<div class="calendar-grid">`;
+
+    // 星期栏
+    for (const d of daysOfWeek) {
+        grid += `<div class="calendar-day-week">${d}</div>`;
+    }
+
+    // 前置空白格
+    for (let i = 0; i < firstDay; i++) {
+        grid += `<div class="calendar-day empty"></div>`;
+    }
+
+    // 日期格
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateObj = new Date(year, month, day);
+        const cls = isToday(dateObj) ? "today" : "";
+        grid += `<div class="calendar-day ${cls}">${day}</div>`;
+    }
+
+    grid += `</div>`;
+
+    // 渲染到页面
+    calendarRoot.innerHTML = header + grid;
+</script>
 

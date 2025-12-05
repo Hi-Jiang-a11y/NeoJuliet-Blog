@@ -5,6 +5,7 @@ description: 'How to write reference part in blogs'
 pubDate: 'Nov 11 2025'
 tags: ["blog", "hugo", "markdown"]
 pinned: false
+license: "CC BY-SA 4.0"
 ---
 ## **The Basic Method**
 

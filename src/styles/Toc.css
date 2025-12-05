@@ -1,43 +1,21 @@
 .toc {
-    top: 60px;
-    padding: 0.75rem 1rem;
+    padding: 1rem 1rem;
     background: rgba(255,255,255,0.98);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     font-size: 1rem;
     line-height: 1.5;
-    max-height: 850px;
-    overflow: auto;
-    border-radius: 12px 
+    border-radius: 12px;
 }
 
-/* 滚动条样式 */
-.toc::-webkit-scrollbar {
-    width: 6px;
-}
-
-.toc::-webkit-scrollbar-track {
-    background: rgba(255, 182, 193, 0.15);
-    border-radius: 10px;
-}
-
-.toc::-webkit-scrollbar-thumb {
-    background: rgba(255, 182, 193, 0.5);
-    border-radius: 10px;
-}
-
-.toc::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 182, 193, 0.9);
-}
-
-.toc h1 {
-    margin: 0 0 1rem 0;
-    font-size: 1.5rem;
-    font-weight: 600;
+.toc-title {
     position: relative;
+    top: 0;
+    margin: 0 0 1rem 0;
+    font-size: 1.8rem;
+    font-weight: 600;
     padding-left: 1rem;
 }
 
-.toc h1::before {
+.toc-title::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -48,6 +26,12 @@
     background: #ffb6c1;
     font-size: 1.5rem;
     border-radius: 2px;
+}
+
+.toc-content {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 0.5rem; /* 给滚动条留空间 */
 }
 
 .toc ol {

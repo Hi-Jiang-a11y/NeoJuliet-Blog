@@ -16,6 +16,7 @@ const blog = defineCollection({
             author: z.string().optional(),
             pinned: z.boolean().optional(),
             tags: z.array(z.string()).optional(),
+            license: z.string().default("NONE"),
 		}),
 });
 
@@ -25,6 +26,7 @@ const announce = defineCollection({
         title: z.string(),
         date: z.string(),
         pinned: z.boolean().optional(),
+        description: z.string().optional(),
     }),
 });
 

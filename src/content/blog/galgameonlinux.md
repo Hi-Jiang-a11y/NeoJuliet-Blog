@@ -1,10 +1,12 @@
 ---
-title: 'Linux上优雅地玩Galgame心得(Updating)'
+title: 'Linux上优雅地运行Galgame心得(Updating)'
 author: 'Juliet'
 description: 'Play galgames on Linux ELEGANTLY'
 pubDate: 'Dec 1 2025'
+updatedDate: 'Dec 3 2025'
 tags: ["galgame", "linux", "tool", "share"]
 pinned: false
+license: "CC BY-SA 4.0"
 ---
 > *wine 指北*  
 Galgame 是精神食粮，Linux 是生活方式。你会发现`Girls & Love`确实可以跨平台。但在享受`Girls & Love`的前一秒，你可能会先经历 Wine 崩、窗口黑屏、字体爆炸、乱码满天飞...  

@@ -3,7 +3,8 @@ title: 'Experience on Writing Blogs Using Hugo and Nginx'
 author: 'Juliet'
 description: 'Create your own blog with hugo&nginx'
 pubDate: 'Oct 18 2025'
-tags: ["blog", "hugo", "turorial"]
+tags: ["blog", "hugo", "tutorial"]
+license: "CC BY-SA 4.0"
 ---
 By ***Juliet***, last edited on Oct.18th
 

@@ -1,0 +1,151 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BaseHead from '../../components/BaseHead.astro';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
+import SideAnnouncement from '../../components/Side-Announcement.astro';
+import Calendar from '../../components/Calendar.astro';
+import { Content } from 'astro:content';
+
+export async function getStaticPaths() {
+    const posts = await getCollection('announce');
+
+    return posts.map(post => ({
+        params: { slug: post.slug },
+        props: { post }
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+
+<Layout>
+    <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
+        <h1>{post.data.title}🎉</h1>
+        <p>📅    {post.data.date}</p>
+        <article class="announcecontent">
+            <Content />
+        </article>   
+
+
+        <!--右边栏-->
+        <div slot="rightbar" class="homepagerightbarcontainer">
+            <SideAnnouncement />
+            <Calendar />
+        </div>
+</Layout>
+<style is:global>
+.announcecontent {
+    line-height: 1.75;
+    font-size: 1.2rem;
+    color: #222;
+}
+
+/* 标题 */
+.announcecontent h1 {
+    font-size: 2.5rem !important;
+}
+.announcecontent h2 {
+    font-size: 2.3rem !important;
+}
+.announcecontent h3 {
+    font-size: 2rem;
+}
+
+/* 段落 */
+.announcecontent p {
+    margin: 0.8em 0;
+}
+
+/* 引用块 */
+.announcecontent blockquote {
+    border-left: 4px solid #ff7ba5;
+    background: rgb(255, 183, 192, 0.05);
+    border-radius: 2px;
+    padding-left: 0.75rem 1rem;
+    color: #555;
+    font-style: normal;
+    font-size: 1.2rem;
+}
+
+/* 列表 */
+.announcecontent ul,
+.announcecontent ol {
+    padding-left: 1.5em;
+    margin: 0.6em 0;
+}
+.announcecontent li {
+    margin: 0.3em 0;
+}
+
+/* 行内代码 */
+.announcecontent code {
+    background: #f5f5f5;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+
+/* 代码块 */
+.announcecontent pre code {
+    display: block;
+    padding: 14px;
+    border-radius: 8px;
+    background: #f3f3f3;
+    overflow-x: auto;
+}
+
+/* 链接 */
+.announcecontent a {
+    color: rgb(255, 183, 192);
+    text-decoration: none;
+    font-weight: 500;
+}
+.announcecontent a:hover {
+    text-decoration: underline;
+    color: rgb(255, 183, 192);
+}
+
+/*To do list样式*/
+.announcecontent .task-list-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.1em;
+    height: 1.1em;
+    border: 2px solid var(--gray);
+    border-radius: 4px;
+    margin-right: 0.5em;
+    cursor: default;
+    vertical-align: middle;
+}
+
+/* 未选中 */
+.announcecontent .task-list-item input[type="checkbox"]:not(:checked) {
+    background: rgb(255, 183, 192, 0.3);
+}
+
+/* 选中样式 */
+.announcecontent .task-list-item input[type="checkbox"]:checked {
+    background: rgb(255, 183, 192);
+    position: relative;
+}
+
+/* 打勾符号 */
+.announcecontent .task-list-item input[type="checkbox"]:checked::after {
+    content: "✔";
+    color: white;
+    position: absolute;
+    font-size: 0.8em;
+    left: 4px;
+    top: 1px;
+}
+
+/* 列表项样式 */
+.announcecontent .task-list-item {
+    list-style: none;
+}
+</style>

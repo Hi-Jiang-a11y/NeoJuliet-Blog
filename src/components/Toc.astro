@@ -35,7 +35,8 @@ if (!groupedHeadings || groupedHeadings.length === 0) {
 }
 ---
 <nav class="toc" aria-label="Table of contents">
-    <h1>Table of Contents</h1>
+    <h1 class="toc-title">Table of Contents</h1>
+    <div class="toc-content">
     <ol>
         {groupedHeadings.map((root, i) => (
             <li>
@@ -61,6 +62,7 @@ if (!groupedHeadings || groupedHeadings.length === 0) {
             </li>
         ))}
     </ol>
+    </div>
 </nav>
 
 <script type="module" client:load>

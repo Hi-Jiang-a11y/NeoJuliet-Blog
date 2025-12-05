@@ -5,6 +5,7 @@ description: 'How to use samba for file sharing'
 pubDate: 'Oct 20 2025'
 tags: ["linux", "tool"]
 pinned: false
+license: "CC BY-SA 4.0"
 ---
 By ***Juliet***
 

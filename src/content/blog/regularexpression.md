@@ -3,8 +3,9 @@ title: 'Simple Introduction to Regular Expressions'
 author: 'Juliet'
 description: 'Learning regular expressions'
 pubDate: 'Oct 19 2025'
-tags: ["linux", "turorial"]
-pinned: true
+tags: ["linux", "tutorial"]
+pinned: false
+license: "CC BY-SA 4.0"
 ---
 ## Introduction to Regex
 ### What are Regular Expressions

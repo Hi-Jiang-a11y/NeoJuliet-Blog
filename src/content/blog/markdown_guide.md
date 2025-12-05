@@ -3,7 +3,7 @@ title: 'Markdown Turorial'
 author: 'Juliet'
 description: 'A Simple Guidance of Writing Markdown'
 pubDate: 'Nov 07 2025'
-tags: ["blog", "turorial", "markdown"]
+tags: ["blog", "tutorial", "markdown"]
 pinned: false
 ---
 

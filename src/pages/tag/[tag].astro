@@ -8,6 +8,7 @@ import '../../styles/blog-card.css';
 import SideAnnouncement from '../../components/Side-Announcement.astro';
 import Calendar from '../../components/Calendar.astro';
 import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
+import BookIcon from '../../icons/BookIcon.astro';
 
 export async function getStaticPaths() {
     const allPosts = await getCollection('blog');
@@ -33,7 +34,7 @@ const posts = allPosts
 <Layout>
     <BaseHead slot="head" title={`${currentTag} - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 
-    <h1>Tag: {currentTag}</h1>
+    <h1># {currentTag}</h1>
 
     {posts.length > 0 ? (
         posts.map(post => (
@@ -45,7 +46,7 @@ const posts = allPosts
                     {post.data.author && <>By {post.data.author} - </>} 
                     <FormattedDate date={post.data.pubDate} />
                 </p>
-                {post.data.description && <p class="blog-description">{post.data.description}</p>}
+                {post.data.description && <p class="blog-description"><BookIcon />{post.data.description}</p>}
             </article>
         ))
     ) : (

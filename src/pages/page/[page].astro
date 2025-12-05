@@ -10,6 +10,7 @@ import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
 import '../../styles/pagination.css';
 import SideAnnouncement from '../../components/Side-Announcement.astro';
 import Calendar from '../../components/Calendar.astro';
+import BookIcon from '../../icons/BookIcon.astro';
 
 // 用于路由生成
 export async function getStaticPaths() {
@@ -86,13 +87,14 @@ const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
                     
                     {post.data.description && (
                         <p class="blog-description">
+                            <BookIcon />
                             {post.data.description}
                         </p> )}
                     <!--tags--!>
                     {post.data.tags && (
                         <div class="blog-tags">
                             {post.data.tags.map(tag => (
-                                <span class="tag"># {tag}</span> ))}
+                                <a class="tag" href={`/tag/${tag}`}># {tag}</a> ))}
                         </div> )}
                 </article> ))}
 

@@ -79,7 +79,10 @@
 }
 
 .blog-description {
+    display: flex;
+    align-items: center;
     margin: 0.5em 0 1em 0;
+    gap: 6px;
     color: rgb(var(--gray-dark));
     font-size: 0.9em;
 }

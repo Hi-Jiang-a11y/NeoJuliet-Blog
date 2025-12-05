@@ -5,6 +5,7 @@ import { type CollectionEntry, getCollection, render } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import '../../styles/blog-content.css';
 import '../../styles/RightbarContainers/blogcontentrightbarcontainer.css';
+import '../../styles/license.css';
 import Toc from '../../components/Toc.astro';
 type Props = CollectionEntry<'blog'>;
 
@@ -19,7 +20,19 @@ export async function getStaticPaths() {
 
 const post = Astro.props;
 const { Content, headings } = await render(post);
-const { title, description, pubDate, updatedDate, author } = post.data;
+const { title, description, pubDate, updatedDate, author, license } = post.data;
+
+const LICENSE_MAP = {
+  "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+  "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "CC BY-ND 4.0": "https://creativecommons.org/licenses/by-nd/4.0/",
+  "CC BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "CC BY-NC-SA 4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "CC BY-NC-ND 4.0": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+  "NONE": null,
+};
+
+const licenseUrl = LICENSE_MAP[license] || null;
 ---
 <Layout>
     <BaseHead slot="head" title={title} description={description} />
@@ -28,13 +41,12 @@ const { title, description, pubDate, updatedDate, author } = post.data;
         <!-- 文章内容 -->
         <article class="blog-post" style="flex:1;" id="article-content">
             <h1 class="title">{title}</h1>
-
+            <div class="author">By {author}</div>
             <div class="date">
-                <FormattedDate date={pubDate} />
+                Pubilshed on <FormattedDate date={pubDate} />
                 {updatedDate && ( <div class="last-updated"> 
                     Last updated on <FormattedDate date={updatedDate} />
-                </div>
-                )}
+                </div>)}
             </div>
             <hr />
 
@@ -46,5 +58,34 @@ const { title, description, pubDate, updatedDate, author } = post.data;
     <!--右边目录栏--!>
     <div slot="rightbar" class="blogcontentrightbarcontainer">
         <Toc headings={headings} />
+        <div class="license-container">
+            <h1>Article License</h1>
+            <div class="license-card">
+                <h1 class="license-title">{title}</h1>
+                <p class="blog-link">
+                    <a href={`/blog/${post.id}`}>https://neojulietblog.netlify.app/blog/{post.id}</a>
+                </p>
+                <div class="license-meta">
+                    <span class="license-meta-item">
+                        <span class="label">Author</span>
+                        <span class="value">{author}</span>
+                    </span>
+                    <span class="license-meta-item">
+                        <span class="label">Published</span>
+                        <span class="value"><FormattedDate date={pubDate} /></span>
+                    </span>
+                    <span class="license-meta-item">
+                        <span class="label">License:</span>
+                        {licenseUrl ? (
+                            <a class="license-link" href={licenseUrl} target="_blank" rel="noopener noreferrer">
+                                {license}
+                            </a>
+                        ) : (
+                            <span class="value">{license}</span>
+                        )}
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 </Layout>

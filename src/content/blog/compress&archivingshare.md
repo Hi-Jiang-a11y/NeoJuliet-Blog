@@ -3,8 +3,9 @@ title: 'Compressing and Archiving'
 author: 'Juliet'
 description: 'A Simple Guidance For Compressing and Archiving'
 pubDate: 'Oct 26 2025'
-tags: ["linux", "turorial", "tool"]
-pinned: true
+tags: ["linux", "tutorial", "tool"]
+pinned: false
+license: "CC BY-SA 4.0"
 ---
 By ***Juliet***
 ## **Compressing Files**
