@@ -30,4 +30,20 @@ const announce = defineCollection({
     }),
 });
 
-export const collections = { blog, announce, };
+const friendlinks = defineCollection({
+    type: 'content',
+    schema: z.object({
+        name: z.string(),
+        url: z.string().url(),
+        avatar: z.string().url(),
+        description: z.string().optional(),
+    }),
+});
+
+const about = defineCollection({
+    type: 'content',
+    schema: z.object({
+    }),
+});
+
+export const collections = { blog, announce, friendlinks, about, };

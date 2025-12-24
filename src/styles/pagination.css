@@ -13,7 +13,7 @@
     display: inline-block;
     padding: 5px 15px;
     border-radius: 6px;
-    border: 2px solid rgb(255, 183, 192 , 0.75);
+    border: 2px solid rgb(var(--juliet-pink)/0.75);
     text-decoration: none;
     color: #808080;
     transition: all 0.2s ease;
@@ -21,14 +21,14 @@
 
 /* Hover effect */
 .pagination a:hover {
-    background-color: rgb(255, 183, 192, 0.15);
+    background-color: rgb(var(--juliet-pink)/0.15);
 }
 
 /* Active page */
 .pagination a.active {
-    background-color: rgb(255, 183, 192, 0.5);
+    background-color: rgb(var(--juliet-pink)/0.5);
     color: #fff;
-    border-color: rgb(255, 183 ,192, 0.75);
+    border-color: rgb(var(--juliet-pink)/0.75);
 }
 
 /* Prev / Next */

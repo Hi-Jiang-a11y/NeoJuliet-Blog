@@ -1,6 +1,5 @@
 .toc {
     padding: 1rem 1rem;
-    background: rgba(255,255,255,0.98);
     font-size: 1rem;
     line-height: 1.5;
     border-radius: 12px;
@@ -23,7 +22,7 @@
     transform: translateY(-50%);
     width: 4px;
     height: 72%;
-    background: #ffb6c1;
+    background: rgb(var(--juliet-pink));
     font-size: 1.5rem;
     border-radius: 2px;
 }
@@ -54,11 +53,11 @@
 }
 
 .toc a:hover {
-    color: rgb(255, 182, 193);
+    color: rgb(var(--juliet-pink));
 }
 
 .toc a.active {
-    color: #ffb6c1;
+    color: rgb(var(--juliet-pink));
     font-weight: 600;
 }
 
@@ -69,7 +68,7 @@
     height: 1.1rem;
     margin-right: 0.6rem;
     vertical-align: middle;
-    background: #ffb6c1;
+    background: rgb(var(--juliet-pink));
     border-radius: 2px;
 }
 

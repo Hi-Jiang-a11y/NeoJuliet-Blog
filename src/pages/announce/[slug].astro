@@ -7,7 +7,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
 import SideAnnouncement from '../../components/Side-Announcement.astro';
 import Calendar from '../../components/Calendar.astro';
-import { Content } from 'astro:content';
+import CommentSection from '../../components/Giscus.astro';
 
 export async function getStaticPaths() {
     const posts = await getCollection('announce');
@@ -30,7 +30,12 @@ const { Content } = await post.render();
         <article class="announcecontent">
             <Content />
         </article>   
-
+        <hr />
+        <div class="comment-container">
+            <h1>Comments</h1>
+            <p>Comment freeeeely</p>
+            <CommentSection />
+        </div>
 
         <!--右边栏-->
         <div slot="rightbar" class="homepagerightbarcontainer">
@@ -63,8 +68,8 @@ const { Content } = await post.render();
 
 /* 引用块 */
 .announcecontent blockquote {
-    border-left: 4px solid #ff7ba5;
-    background: rgb(255, 183, 192, 0.05);
+    border-left: 4px solid rgb(var(--juliet-hotpink));
+    background: rgb(var(--juliet-pink)/0.05);
     border-radius: 2px;
     padding-left: 0.75rem 1rem;
     color: #555;
@@ -101,13 +106,13 @@ const { Content } = await post.render();
 
 /* 链接 */
 .announcecontent a {
-    color: rgb(255, 183, 192);
+    color: rgb(var(--juliet-pink));
     text-decoration: none;
     font-weight: 500;
 }
 .announcecontent a:hover {
     text-decoration: underline;
-    color: rgb(255, 183, 192);
+    color: rgb(var(--juliet-pink));
 }
 
 /*To do list样式*/
@@ -125,12 +130,12 @@ const { Content } = await post.render();
 
 /* 未选中 */
 .announcecontent .task-list-item input[type="checkbox"]:not(:checked) {
-    background: rgb(255, 183, 192, 0.3);
+    background: rgb(var(--juliet-pink)/0.3);
 }
 
 /* 选中样式 */
 .announcecontent .task-list-item input[type="checkbox"]:checked {
-    background: rgb(255, 183, 192);
+    background: rgb(var(--juliet-pink));
     position: relative;
 }
 
@@ -147,5 +152,18 @@ const { Content } = await post.render();
 /* 列表项样式 */
 .announcecontent .task-list-item {
     list-style: none;
+}
+
+/*评论区*/
+.comment-container {
+    padding-top: 2rem;
+}
+
+.comment-container h1 {
+    font-size: 3rem;
+}
+
+.comment-container p {
+    font-size: 1.5rem;
 }
 </style>

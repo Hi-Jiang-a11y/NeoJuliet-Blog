@@ -14,14 +14,27 @@ import HeaderLink from './HeaderLink.astro';
             <HeaderLink href="/about">About</HeaderLink>
 
             <HeaderLink href="/tag">Tags</HeaderLink>
-		</div>
+
+            <HeaderLink href="/friendlink">Links</HeaderLink>
+        </div>
+        <!-- 主题切换按钮 -->
+        <div class="theme-switcher">
+            <button id="theme-toggle" aria-label="Theme menu">🎨</button>
+            <ul id="theme-menu" hidden>
+                <li><button data-theme="default">Default</button></li>
+                <li><button data-theme="purple">Purple</button></li>
+                <li><button data-theme="green">Green</button></li>
+                <li><button data-theme="dark">Dark Mode</button></li>
+            </ul>
+        </div>
     </nav>
 </header>
+
+
 <style>
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: white;
 		box-shadow: 0 2px 8px rgba(var(--black), 5%);
 	}
 	h2 {
@@ -39,25 +52,72 @@ import HeaderLink from './HeaderLink.astro';
         justify-content: space-between;
         border-bottom-left-radius: 12px;
         border-bottom-right-radius: 12px;
-        padding: 1em 2em;
+        padding: 1em 0;
         height: 20px;
-        background: rgb(255, 182, 193, 0.07);
+        background: rgb(var(--juliet-pink)/0.07);
 	}
 	nav a {
-		padding: 1em 0.5em;
+		padding: 0.5em 0.2em;
 		color: var(--black);
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
 	}
 	nav a.active {
 		text-decoration: none;
-        border-bottom-color: rgb(255, 182, 193, 0.8);
+        border-bottom-color: rgb(var(--juliet-pink)/0.8);
 	}
     .internal-links {
         display: flex;
         gap: 1em;
-        margin-right: 3em;
+        margin-left: auto;
+        margin-right: 1em;
     }
+    .theme-switcher {
+        position: relative;
+    }
+    #theme-toggle {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2em;
+        padding: 0.5em;
+        color: var(--black);
+    }
+    #theme-menu {
+        position: absolute;
+        right: 0;
+        top: 120%;
+        list-style: none;
+        margin: 0;
+        padding: 0 0;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        z-index: 100;
+        min-width: 120px;
+        border: 2px solid rgb(var(--juliet-pink));
+    }
+
+    #theme-menu li {
+        margin: 2px 0; /* 列表项之间留一点点空隙 */
+    }
+
+    #theme-menu button {
+        width: 100%;
+        background: none;
+	    border: none;
+	    padding: 0.8em 0.8em;
+	    text-align: left;
+        cursor: pointer;
+        font-size: 0.7em;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    #theme-menu button:hover {
+	    background: rgb(var(--juliet-pink) / 0.25);
+    }
+
     @media (max-width: 480px) {
         header {
             padding: 0 0.5em;
@@ -70,7 +130,7 @@ import HeaderLink from './HeaderLink.astro';
             flex-direction: column;
             align-items: flex-start;
             gap: 0.3em;
-            background: rgba(255, 182, 193, 0.10);
+            background: rgba(var(--juliet-pink)/0.10);
         }
 
         h2 {

@@ -8,7 +8,7 @@
 }
 
 @keyframes blink {
-  0%, 50% { border-color: #ff69b4; }
+  0%, 50% { border-color: rgb(var(--juliet-hotpink)); }
   51%, 100% { border-color: transparent; }
 }
 

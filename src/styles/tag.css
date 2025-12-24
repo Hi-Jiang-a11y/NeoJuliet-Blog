@@ -8,7 +8,7 @@
 }
 
 .tag-list li {
-    background-color: rgb(255, 183, 192, 0.07);
+    background-color: rgb(var(--juliet-pink)/0.07);
     padding: 20px; /* 增加内部空间 */
     border-radius: 12px; /* 圆角 */
     text-align: center;
@@ -31,6 +31,6 @@
 }
 
 .tag-list li a:hover {
-    color: #ff69b4;
+    color: rgb(var(--juliet-hotpink)/0.6);
 }
 

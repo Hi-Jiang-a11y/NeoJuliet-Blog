@@ -6,7 +6,6 @@
 .blog-post {
     margin: 0 auto;
     padding: 1em;
-    background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
@@ -25,7 +24,7 @@
 }
 
 .title:hover {
-  color: rgb(255, 105, 180, 0.45);
+  color: rgb(var(--juliet-hotpink)/0.45);
 }
 
 .author {
@@ -55,20 +54,20 @@
 
 /*link*/
 .prose a {
-    color: rgb(255, 183, 192);           /* 链接颜色 */
+    color: rgb(var(--juliet-pink));           /* 链接颜色 */
     text-decoration: none;    /* 连接样式 */
     font-weight: 500;
 }
 
 .prose a:hover {
-    color: rgb(255, 183, 192);           /* 你喜欢的颜色 */
+    color: rgb(var(--juliet-pink));
     text-decoration: underline;
 }
 
 /*blockquote*/
 .prose blockquote {
-    border-left: 4px solid #ff7ba5;  /* 更改竖线颜色 */
-    background: rgb(255, 183, 192, 0.05);
+    border-left: 4px solid rgb(var(--juliet-hotpink));  /* 更改竖线颜色 */
+    background: rgb(var(--juliet-pink)/0.05);
     border-radius: 2px;
     padding-left: 0.75rem 1rem;
     color: #555;
@@ -89,13 +88,12 @@
 }
 
 .prose th {
-    background: #f3f3f3;     /* 表头背景 */
     font-weight: 600;
 }
 
 /*code block*/
 .prose pre {
-    background: rgb(255, 230, 245, 0.20) !important;
+    background: rgb(var(--juliet-palepink)/0.20) !important;
     padding: 1rem !important;
     border-radius:12px;
     overflow-x: auto;
@@ -115,8 +113,8 @@ code[class*="language-"] {
 }
 
 .prose :not(pre) > code {
-    background: rgba(255, 183, 192, 0.20);
-    color: rgb(255, 105, 180, 0.7);
+    background: rgba(var(--juliet-pink)/0.20);
+    color: rgb(var(--juliet-hotpink)/0.7);
     padding: 3px 8px;
     border-radius: 8px;
     font-size: 0.95em;
@@ -141,6 +139,21 @@ code[class*="language-"] {
     font-size: 1.6rem;
 }
 
+.comment-content-divider {
+    padding-top: 2rem;
+}
+
+.comment-container {
+    padding-top: 2rem;
+}
+
+.comment-container h1 {
+    font-size: 3rem;
+}
+
+.comment-container p {
+    font-size: 1.5rem;
+}
 
 @media (max-width: 720px) {
 

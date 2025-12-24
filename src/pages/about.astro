@@ -3,11 +3,15 @@ import Layout from '../layouts/Layout.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro'; 
+import { getEntryBySlug } from 'astro:content';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import '../styles/text-effect-typing.css';
 import SideAnnouncement from '../components/Side-Announcement.astro';
 import Calendar from '../components/Calendar.astro';
 import '../styles/RightbarContainers/homepagerightbarcontainer.css';
+
+const entry = await getEntryBySlug('about', 'about');
+const { Content } = await entry.render();
 ---
 <Layout>
     <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
@@ -21,26 +25,112 @@ import '../styles/RightbarContainers/homepagerightbarcontainer.css';
             el.textContent = ''; // 清空之前内容
             initTyping('typing', "About Me...", 90, 5000);
         };
-        // 等 DOM 加载完成再执行
         window.addEventListener('DOMContentLoaded', runTyping);
         window.addEventListener('astro:navigation-end', runTyping);
     </script>
-
-    <h3>Nothing Here Yet.</h3>
-    <h3>Nothing Here Yet.</h3>
-    <h3>Nothing Here Yet.</h3>
-    <h3>Nothing Here Yet.</h3>
-    <h3>Nothing Here Yet.</h3>
-    <h3>Nothing Here Yet.</h3>
-    <h3>Nothing Here Yet.</h3>
-    <h3>Nothing Here Yet.</h3>
-    <h3>Nothing Here Yet.</h3>
-    <h3>Nothing Here Yet.</h3>
     
-    <!--右边栏--!>
-            <div slot="rightbar" class="homepagerightbarcontainer">
-                <SideAnnouncement />
-                <Calendar />
-            </div>
-</Layout>
+    <article class="AboutContent">
+        <Content />
+    </article>
 
+    <!--右边栏--!>
+    <div slot="rightbar" class="homepagerightbarcontainer">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
+</Layout>
+<style is:global>
+.AboutContent {
+  line-height: 1.7;
+  /*color: rgb(var(--gray-dark));*/
+}
+
+/*markdown content*/
+
+/*link*/
+.AboutContent a {
+    color: rgb(var(--juliet-pink));           /* 链接颜色 */
+    text-decoration: none;    /* 连接样式 */
+    font-weight: 500;
+}
+
+.AboutContent a:hover {
+    color: rgb(var(--juliet-pink));
+    text-decoration: underline;
+}
+
+/*blockquote*/
+.AboutContent blockquote {
+    border-left: 4px solid rgb(var(--juliet-hotpink));  /* 更改竖线颜色 */
+    background: rgb(var(--juliet-pink)/0.05);
+    border-radius: 2px;
+    padding-left: 0.75rem 1rem;
+    color: #555;
+    font-style: normal;
+    font-size: 1.2rem;
+}
+
+/*table*/
+.AboutContent table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.AboutContent th,
+.AboutContent td {
+    border: 1px solid #ccc;  /* 竖线 & 横线 */
+    padding: 8px 12px;
+}
+
+.AboutContent th {
+    font-weight: 600;
+}
+
+/*code block*/
+.AboutContent pre {
+    background: rgb(var(--juliet-palepink)/0.20) !important;
+    padding: 1rem !important;
+    border-radius:12px;
+    overflow-x: auto;
+}
+
+.AboutContent pre code,
+code[class*="language-"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    color: inherit !important; /* 保留语法高亮颜色，不覆盖 */
+}
+
+.AboutContent pre code :not(.token) {
+    color: #555 !important; /* 普通文本颜色，自定义灰色或深粉 */
+}
+
+.AboutContent :not(pre) > code {
+    background: rgba(var(--juliet-pink)/0.20);
+    color: rgb(var(--juliet-hotpink)/0.7);
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 0.95em;
+}
+
+.AboutContent h1 {
+    font-size: 2.5rem;
+}
+.AboutContent h2 {
+    font-size: 2.3rem;
+}
+.AboutContent h3 {
+    font-size: 2rem;
+}
+.AboutContent h4 {
+    font-size: 1.8rem;
+}
+.AboutContent h5 {
+    font-size: 1.8rem;
+}
+.AboutContent h6 {
+    font-size: 1.6rem;
+}
+</style>

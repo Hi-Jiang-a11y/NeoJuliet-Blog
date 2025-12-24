@@ -1,0 +1,67 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BaseHead from '../../components/BaseHead.astro';
+import { getCollection } from 'astro:content';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import '../../styles/text-effect-typing.css';
+import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
+import '../../styles/pagination.css';
+import '../../styles/friendlinks.css';
+import SideAnnouncement from '../../components/Side-Announcement.astro';
+import Calendar from '../../components/Calendar.astro';
+
+const links = await getCollection('friendlinks');
+---
+<Layout>
+    <BaseHead slot="head" title={`Friends - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+
+    <h2 id="typing"></h2>
+    <script type="module">
+        import { initTyping } from '/scripts/text-effect-typing.js';
+        
+        const runTyping = () => {
+            const el = document.getElementById('typing');
+            el.textContent = ''; // 清空之前内容
+            initTyping('typing', "FriendLinks...", 120, 5000);
+        };
+        // 等 DOM 加载完成再执行
+        window.addEventListener('DOMContentLoaded', runTyping);
+        window.addEventListener('astro:navigation-end', runTyping);
+    </script>
+
+        <!--简介-->
+    <p>
+        Here are the friendlinks
+    </p>
+
+    <!-- FriendLink Cards -->
+    <div class="friendlinks-container">
+        {links.map(({ data }) => (
+            <div class="friendlink-card">
+                <img src={data.avatar} alt={data.name} class="friendlink-avatar" />
+                <div class="friendlink-info">
+                    <h3><a href={data.url} target="_blank" rel="noopener noreferrer">{data.name}</a></h3>
+                    <p>{data.description}</p>
+                </div>
+            </div>
+        ))}
+    </div>
+    
+    <div class="mylinks-container">
+        <h1>Exchange Links</h1>
+        <p>Welcome! Contact me via <a href="mailto:youchjiang@gmail.com" target="_blank" rel="noopener noreferrer">email</a></p>
+        <ul>
+            <li>Name: NeoJuliet</li>
+            <li>URL: https://neojulietblog.netlify.app/</li>
+            <li>Avatar: https://neojulietblog.netlify.app/images/avatar.JPG/</li>
+            <li>Description: 似乎来到了没有知识存在的荒原？？</li>
+        </ul>
+
+    </div>
+
+    <div slot="rightbar" class="homepagerightbarcontainer">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
+</Layout>
+

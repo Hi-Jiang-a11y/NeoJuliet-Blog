@@ -1,0 +1,82 @@
+.friendlinks-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.friendlink-card {
+    display: flex;
+    gap: 20px;
+    padding: 18px;
+    height: 95px;
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.friendlink-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px #00000020;
+}
+
+.friendlink-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+    object-position: center;
+    flex-shrink: 0;
+}
+
+.friendlink-info h3 {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    position: relative;
+    padding-left: 0.5em;
+
+}
+
+.friendlink-info h3::before {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 80%;
+    background-color: rgb(var(--juliet-pink));
+    border-radius: 2px;
+}
+
+.friendlink-info h3 a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #333;
+}
+
+.friendlink-info p {
+    color: #666;
+    margin: 0;
+    opacity: 0.85;
+    font-size: 1.2rem;
+}
+
+.mylinks-container {
+    margin-top: 50px;
+}
+
+.mylinks-container h1 {
+    font-size: 3rem;
+}
+
+.mylinks-container p {
+    font-size: 1.8rem;
+}
+
+.mylinks-container a {
+    text-decoration: underline;
+    color: rgb(var(--juliet-pink));
+}

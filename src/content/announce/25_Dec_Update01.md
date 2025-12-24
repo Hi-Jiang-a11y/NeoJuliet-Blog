@@ -1,7 +1,7 @@
 ---
 title: "十二月第一次更新公告"
 date: "2025-12-05"
-pinned: true
+pinned: false
 description: "click to view full content"
 ---
 # 站点内容更新💡

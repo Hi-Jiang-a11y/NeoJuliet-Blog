@@ -2,7 +2,7 @@
     border-radius: 12px;
     width: 95%;
     padding: 12px;
-    background-color: rgb(255, 182,193,0.05);
+    background-color: rgb(var(--juliet-pink)/0.05);
     box-sizing: border-box;
 }
 
@@ -23,7 +23,7 @@
     transform: translateY(-50%);
     width: 4px;
     height: 72%;
-    background-color: #ffb6c1;
+    background-color: rgb(var(--juliet-pink));
     border-radius: 2px;
 }
 
@@ -49,21 +49,20 @@
 
 .calendar-day {
     text-align: center;
-    /*padding: 6px 0;*/
     border-radius: 100px;
     cursor: pointer;
     transition: background 0.2s ease;
 }
 
 .calendar-day.today {
-    color: rgb(255, 182, 193);
+    color: rgb(var(--juliet-pink));
     font-weight: 600;
     border-radius: 100px;
 }
 
 
 .calendar-day:hover {
-    background-color: #ffb6c1;
+    background-color: rgb(var(--juliet-pink));
     color: #fff;
 }
 

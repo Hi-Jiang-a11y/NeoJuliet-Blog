@@ -7,6 +7,7 @@ import '../../styles/blog-content.css';
 import '../../styles/RightbarContainers/blogcontentrightbarcontainer.css';
 import '../../styles/license.css';
 import Toc from '../../components/Toc.astro';
+import CommentSection from '../../components/Giscus.astro';
 type Props = CollectionEntry<'blog'>;
 
 
@@ -53,6 +54,13 @@ const licenseUrl = LICENSE_MAP[license] || null;
             <div class="prose">
                 <Content />
             </div>
+            <hr class="commet-content-divider" />
+            <div class="comment-container">
+                <h1>Comments</h1>
+                <p>Comment freeeeely</p>
+                <CommentSection />
+            </div>
+
         </article>
     </div>
     <!--右边目录栏--!>

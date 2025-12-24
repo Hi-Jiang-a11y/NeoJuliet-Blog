@@ -14,22 +14,54 @@
 
 
 .Leftbar-moduleB {
-    background-color: rgba(255, 182, 193, 0.15);
     padding: 20px;
     border-radius: 12px;
     border: 0px solid #e5e5e5;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+}
+
+.Leftbar-moduleB h1 {
+    font-size: 1.8rem;
+    position: relative;
+    padding-left: 0.8rem;
+}
+
+.Leftbar-moduleB h1::before {
+    position: absolute;
+    content: "";
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 75%;
+    background-color: rgb(var(--juliet-pink));
+    border-radius: 2px;
 }
 
 .Leftbar-moduleC {
-    background-color: rgba(255, 182, 193, 0.15);
     padding: 20px;
     border-radius: 12px;
     border: 0px solid #e5e5e5;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
 }
 
+.Leftbar-moduleC h1 {
+    font-size: 1.8rem;
+    position: relative;
+    padding-left: 0.8rem;
+}
 
+.Leftbar-moduleC h1::before {
+    position: absolute;
+    content: "";
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 75%;
+    background-color: rgb(var(--juliet-pink));
+    border-radius: 2px;
+}
 
 @media (max-width: 1200px) {
     .LeftbarContainer{

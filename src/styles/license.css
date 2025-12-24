@@ -20,14 +20,14 @@
     transform: translateY(-50%);
     width: 4px;
     height: 72%;
-    background: #ffb6c1;
+    background: rgb(var(--juliet-pink));
     font-size: 1.5rem;
     border-radius: 2px;
 }
 
 /* 卡片样式 */
 .license-card {
-    background-color: rgb(255, 182, 192, 0.03); /* 背景色 */
+    background-color: rgb(var(--juliet-pink)/0.03); /* 背景色 */
     border-radius: 12px;     /* 圆角 */
     padding: 1.2rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* 轻微阴影 */
@@ -43,7 +43,7 @@
 
 /* 链接样式 */
 .blog-link a {
-    color: #ff69b4;
+    color: rgb(var(--juliet-hotpink)/0.7);
     text-decoration: none;
     word-break: break-all; /* 防止链接过长撑破布局 */
     font-size: 1.2rem;
@@ -78,12 +78,12 @@
 }
 
 .license-link {
-    color: #ffa1d1;
+    color: rgb(var(--juliet-hotpink)/0.7);
     text-decoration: underline;
     font-weight: 600;
 }
 
 .license-link:hover {
-    color: #ff85c3;
+    color: rgb(var(--juliet-hotpink)/0.85);
 }
 

@@ -13,7 +13,7 @@
     height: 10px; 
     border-radius: 50%; /* 变成圆形 */
     flex-shrink: 0; /* 不被压缩 */
-    background-color: #ffbce1; /* 圆点颜色 */
+    background-color: rgb(var(--juliet-pink)); /* 圆点颜色 */
 }
 
 .blog-card {
@@ -25,7 +25,7 @@
 
 .blog-card:hover {
     border-radius: 12px;
-    background-color: rgba(255, 182, 193, 0.15);
+    background-color: rgb(var(--juliet-pink)/0.15);
 }
 
 .card-line {
@@ -82,7 +82,7 @@
     width: 3px;
     height: 20px;
     border-radius: 2px;
-    background: #ffb6c1;
+    background: rgb(var(--juliet-pink));
     margin-top: 0px; /* 调整到竖线中间 */
 }
 
@@ -142,7 +142,7 @@
     .blog-card:hover .circle {
         width: 2px;
         height: 14px;
-        background: #ffb6c1;
+        background: rgb(var(--juliet-pink));
     }
 
     /* 标题缩小 + 减少 padding */

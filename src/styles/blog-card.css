@@ -19,7 +19,7 @@
   left: 0;
   width: 0;
   height: 0;
-  border-top: 30px solid #ffb6c1;
+  border-top: 30px solid rgb(var(--juliet-pink));
   border-right: 30px solid transparent;
 }
 
@@ -43,7 +43,7 @@
     transform: translateY(-50%);
     width: 4px;
     height: 100%;
-    background-color: #ffb6c1;
+    background-color: rgb(var(--juliet-pink));
     border-radius: 2px;
 }
 
@@ -55,7 +55,7 @@
 .blog-title a:hover {
     content: " >";
     opacity: 1;
-    color: #ffb6c1;
+    color: rgb(var(--juliet-pink));
 }
 
 .blog-title a::after {
@@ -69,7 +69,7 @@
 .blog-title a:hover::after {
     content: ">";
     opacity: 1;
-    color: #ffb6c1;
+    color: rgb(var(--juliet-pink));
 }
 
 .blog-meta {
@@ -95,8 +95,8 @@
 }
 
 .tag {
-    background: rgba(255,182,193,0.15);
-    color: rgb(255,105,180);
+    background: rgba(var(--juliet-pink)/0.15);
+    color: rgb(var(--juliet-hotpink));
     padding: 2px 8px;
     border-radius: 6px;
     font-size: 0.8em;
@@ -104,8 +104,8 @@
 }
 
 .tag:hover {
-    background: rgba(255, 105, 180, 0.15);
-    color: rgb(255, 20, 147);
+    background: rgba(var(--juliet-hotpink)/0.15);
+    color: rgb(var(--juliet-deeppink));
     transform: translateY(-2px);
 }
 
@@ -121,7 +121,7 @@
 
     /* 卡片置顶标记缩小 */
     .blog-card.pinned::before {
-        border-top: 20px solid #ffb6c1;
+        border-top: 20px solid rgb(var(--juliet-pink));
         border-right: 20px solid transparent;
     }
 

@@ -2,7 +2,6 @@
     padding: 20px;
     border-radius: 12px;
     border: 0px solid #e5e5e5;
-    background: rgb();
 }
 
 .Leftbar-moduleA .avatar {
@@ -13,7 +12,7 @@
     object-position: 80% 5%;
     margin: 0 auto 15px;
     display: block;
-    border: 2px solid rgb(255, 182, 192, 0.5);
+    border: 2px solid rgb(var(--juliet-pink)/0.5);
     box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 }
 
@@ -47,6 +46,6 @@
 }
 
 .leftbar-social-links a:hover svg {
-    color: rgb(255, 105, 180, 0.5);
+    color: rgb(var(--juliet-hotpink)/0.5);
     transform: translateY(-2px);
 }

@@ -9,7 +9,6 @@
     position: sticky;
     top: 60px;
     height: 100vh;
-    /*background-color: rgb(255, 182, 92);*/
 }
 
 @media (max-width: 1200px) {

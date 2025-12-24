@@ -1,5 +1,60 @@
-<div class="Leftbar-moduleB">
-  <h5>正在施工🚧...</h5>
-  <p></p>
-</div>
+---
+import { getCollection } from 'astro:content';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 
+const allPosts = await getCollection('blog');
+
+// 收集所有标签及数量
+const tagMap = {};
+allPosts.forEach(post => {
+    if (post.data.tags) {
+        post.data.tags.forEach(tag => {
+            if (!tagMap[tag]) tagMap[tag] = 0;
+            tagMap[tag]++;
+        });
+    }
+});
+
+const tags = Object.entries(tagMap).sort((a, b) => b[1] - a[1]); // 按文章数量降序
+---
+
+<div class="Leftbar-moduleB">
+    <h1>Tags</h1>
+    <ul class="leftbar-tag-list">
+        {tags.map(([tag, count]) => (
+            <li>
+                <a href={`/tag/${tag}/`}># {tag}</a>
+            </li>
+        ))}
+    </ul>
+</div>
+<style>
+    .leftbar-tag-list {
+        list-style: none;
+        flex-wrap: wrap;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .leftbar-tag-list li {
+        background-color: rgb(var(--juliet-pink)/0.2);
+        padding: 3px;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        min-height: 5px;
+    }
+    
+    .leftbar-tag-list li:hover  {
+        transform: translateY(-6px);
+    }
+    .leftbar-tag-list li a{
+        text-decoration: none;
+        color: rgb(var(--juliet-hotpink)/0.7);
+    }
+</style>

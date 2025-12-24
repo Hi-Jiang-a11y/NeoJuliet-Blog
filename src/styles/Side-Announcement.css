@@ -23,7 +23,7 @@
     transform: translateY(-50%);
     width: 4px;
     height: 72%;
-    background-color: #ffb6c1;
+    background-color: rgb(var(--juliet-pink));
     border-radius: 2px;
 }
 
@@ -40,7 +40,7 @@
 .announcement-item {
     padding: 8px;
     border-radius: 8px;
-    background: rgba(255,182,193,0.05);
+    background: rgb(var(--juliet-pink)/0.05);
     border: 1px solid rgba(0,0,0,0.04);
     transition: box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
     cursor: pointer;
@@ -53,7 +53,7 @@
 .announcement-item:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    background: rgba(255,182,193,0.12);
+    background: rgb(var(--juliet-pink)/0.12);
 }
 
 /* header: 标题和日期在同一行，title 可缩放并省略 */
@@ -110,7 +110,7 @@
 
 /* pinned：默认展开（无需 hover） */
 .announcement-item.pinned {
-    background: rgba(255, 182, 193, 0.12);
+    background: rgb(var(--juliet-pink)/0.12);
     position: relative;
 }
 
@@ -123,7 +123,7 @@
     width: 0;
     height: 0;
     border-left: 15px solid transparent;
-    border-top: 15px solid #ffb6c1;
+    border-top: 15px solid rgb(var(--juliet-pink));
 }
 
 .announcement-link {
