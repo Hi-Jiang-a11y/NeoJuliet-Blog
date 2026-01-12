@@ -8,6 +8,7 @@ import '../../styles/RightbarContainers/blogcontentrightbarcontainer.css';
 import '../../styles/license.css';
 import Toc from '../../components/Toc.astro';
 import CommentSection from '../../components/Giscus.astro';
+import ShareCardClient from '../../components/ShareCardClient.jsx';
 type Props = CollectionEntry<'blog'>;
 
 
@@ -60,8 +61,15 @@ const licenseUrl = LICENSE_MAP[license] || null;
                 <p>Comment freeeeely</p>
                 <CommentSection />
             </div>
-
         </article>
+        <ShareCardClient 
+            client:load
+            title={title}
+            description={description}
+            pubDate={pubDate}
+            author={author}
+            license={license}
+        />
     </div>
     <!--右边目录栏--!>
     <div slot="rightbar" class="blogcontentrightbarcontainer">
