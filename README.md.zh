@@ -58,6 +58,6 @@ npm insatll
 |command|action|
 |:---:|:---:|
 |`npm run dev`|本地启动开发服务器|
-|`npm run preview`本地预览|
+|`npm run preview`|本地预览|
 |`npm run build`|构建到 ./dist|
 |`npm run astro ...`|运行 CLI指令，比如 `astro add`, `astro check`|
