@@ -129,11 +129,6 @@ body {
 	font-size: 20px;
 	line-height: 1.7;
 }
-main {
-	width: 720px;
-	max-width: calc(100% - 2em);
-	padding: 3em 1em;
-}
 h1,
 h2,
 h3,
@@ -242,6 +237,7 @@ hr {
 
 .layout {
     display: flex;
+    flex-wrap: wrap;
     min-height: 100vh;
     gap: 20px;
     box-sizing: border-box;

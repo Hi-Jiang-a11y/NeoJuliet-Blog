@@ -15,6 +15,7 @@ const blog = defineCollection({
 			heroImage: image().optional(),
             author: z.string().optional(),
             pinned: z.boolean().optional(),
+            zh: z.boolean().default(false),
             tags: z.array(z.string()).optional(),
             license: z.string().default("NONE"),
 		}),

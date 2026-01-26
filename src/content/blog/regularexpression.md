@@ -5,6 +5,7 @@ description: 'Learning regular expressions'
 pubDate: 'Oct 19 2025'
 tags: ["linux", "tutorial"]
 pinned: false
+zh: true
 license: "CC BY-SA 4.0"
 ---
 # Introduction
@@ -45,7 +46,7 @@ Here list some basic metacharacters:
 (Exact avability depends on BRE/ERE, see Section3)
 * * *
 
-# BRE v.s. ERE(POSIX Standards)
+# BRE v.s. ERE (POSIX Standards)
 POSIX defines two regex syntaxes:
 +  BRE(Basic Regular Expression): default for `grep`, `sed`, `ed`.
 +  ERE(Extended Regular Expression): used by `grep -E`, `egrep`, `awk`.
@@ -161,7 +162,7 @@ Quantifiers specify how many times the preceding element may occur (ERE syntax s
 |{m}|Exactly m times|
 |{m,}|At least m times|
 |{m, n}|Between m and n times|
-+ `[0-9]+` matches one or more digits .
++ `[0-9]+` matches one or more digits.
 + `[A-Za-z]{3,5}` matches 3~5 letters.
 
 
@@ -186,7 +187,22 @@ To combine alternation with other regular expression elements, we can use ```()`
 ```
 + This will match the stings that start with bz or contains gz or contains zip
 # Practical Examples
-## Email Matching(Simplified)
-```
-^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$
-```
+> Email (simplified)  
+> `^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$`  
+> user@example.com  
+> a_b-c@sub.domain.org
+
+> Phone Number  
+> `^1[3-9][0-9]{9}$`  
+> 13912345678  
+> 18412345678
+
+> Timestamp  
+> `[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}`  
+> 2025-01-01 10:09:59  
+> 1999-12-31 23:59:59
+
+# Reference
+[1] Wikipedia, "Regular expression," [Online]. Available: https://en.wikipedia.org/wiki/Regular_expression. [Accessed: Jan. 19, 2026].  
+[2] W. E. Shotts, Jr., *The Linux Command Line: A Complete Introduction*, 2nd ed. San Francisco, CA, USA: No Starch Press, 2019. 
+

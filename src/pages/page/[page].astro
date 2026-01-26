@@ -29,11 +29,17 @@ export async function getStaticPaths() {
     }));
 }
 
+const allPostsRaw = await getCollection('blog');
+const englishPosts = allPostsRaw.filter(post => {
+  const id = String(post.id).replace(/^[.\/\\]+/, '').toLowerCase();
+  return !id.startsWith('zh/'); // 过滤掉中文文章
+});
+
 // 页面渲染逻辑
 const POSTS_PER_PAGE = 5;
 const currentPage = Number(Astro.params.page || 1);
 
-const allPosts = (await getCollection('blog')).sort((a, b) => {
+const allPosts = englishPosts.sort((a, b) => {
     if (a.data.pinned && !b.data.pinned) return -1;
     if (!a.data.pinned && b.data.pinned) return 1;
     return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();

@@ -1,3 +1,4 @@
+[English](README.md) | [中文](README.zh.md)
 # A Simple Theme for Astro Blog
 
 ## Features
@@ -22,12 +23,12 @@ The color of this theme is light pink, of course you can modify it.
 ## Installation
 ```bash
 npm create astro@latest -- --template Hi-Jiang-a11y/NeoJuliet-Blog
-  #or you can use👇
+  # or you can use👇
 git clone https://github.com/Hi-Jiang-a11y/NeoJuliet-Blog.git
-  #change the working directory
+  # change the working directory
 cd NeoJuliet-Blog
-  #install the package need
-npm insatll
+  # install the package need
+npm install
 ```
 ## Project structure
 ```

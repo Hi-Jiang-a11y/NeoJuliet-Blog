@@ -13,7 +13,16 @@ import Calendar from '../components/Calendar.astro';
 import BookIcon from '../icons/BookIcon.astro';
 
 // max number of blogcards
-const allPosts = (await getCollection('blog')).sort((a, b) => {
+const allPostsRaw = await getCollection('blog');
+console.log('ALL IDS:', allPostsRaw.map(p => p.id));
+
+const englishPosts = allPostsRaw.filter(post => {
+    const id = String(post.id).replace(/^[.\/\\]+/, '').toLowerCase();
+    return !id.startsWith('zh/');
+});
+console.log('ENGLISH IDS:', englishPosts.map(p => p.id));
+
+const allPosts = englishPosts.sort((a, b) => {
     if (a.data.pinned && !b.data.pinned) return -1;
     if (!a.data.pinned && b.data.pinned) return 1;
     return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();

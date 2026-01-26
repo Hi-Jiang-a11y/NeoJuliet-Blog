@@ -1,0 +1,112 @@
+---
+// src/pages/404.astro
+---
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oops</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .container {
+        animation: fadeIn 1s ease forwards;
+        max-width: 400px;
+        padding: 2rem;
+      }
+
+      h1 {
+        font-size: 10rem;
+        margin: 0;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        margin: 1rem 0 2rem;
+        font-weight: normal;
+      }
+
+      p {
+        font-size: 1.2rem;
+        color: #555;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+      }
+      
+      .contacts {
+        margin: 1rem 0 2rem;
+      }
+
+      .contacts a {
+        display: inline-block;
+        margin: 0.3rem 0.6rem;
+        color: #333;
+        text-decoration: none;
+        padding: 0.4rem 0.8rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .contacts a:hover {
+        background-color: #333;
+        color: #fff;
+      }
+
+      a.button {
+        display: inline-block;
+        padding: 0.6rem 1.5rem;
+        border: 2px solid #333;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+
+      a.button:hover {
+        background-color: #333;
+        color: #fff;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>404</h1>
+      <h2>Page Not Found</h2>
+      <p>
+      Congratulations🎉!    
+      You’ve discovered a page that doesn’t exist. 
+      </p>
+      <p>
+        If you think this is a bug, feel free to reach out via:
+      </p>
+      <div class="contacts">
+        <a href="mailto:youchjiang@gmail.com">Email</a>
+        <a href="https://github.com/Hi-Jiang-a11y" target="_blank">GitHub</a>
+        <a href="https://t.me/Juliet_YCc" target="_blank">Telegram</a>
+      </div>
+      <a href="/" class="button">Back to Home</a>
+    </div>
+  </body>
+</html>
