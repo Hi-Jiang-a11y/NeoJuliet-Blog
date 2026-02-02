@@ -1,5 +1,5 @@
 ---
-title: "十二月第一次更新公告"
+title: "十二月第一次更新"
 date: "2025-12-05"
 pinned: false
 description: "click to view full content"
