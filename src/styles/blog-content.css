@@ -161,22 +161,31 @@ code[class*="language-"] {
 }
 
 .prose h1 {
-    font-size: 2.5rem;
+    font-size: 2.7rem;
+    font-weight: 800;
+    margin: 2.5rem 0 1.5rem;
 }
 .prose h2 {
-    font-size: 2.3rem;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 2.2rem 0 1.2rem;
 }
 .prose h3 {
     font-size: 2rem;
+    font-weight: 600;
+    margin: 1.8rem 0 0.8rem;
 }
 .prose h4 {
     font-size: 1.8rem;
+    font-weight: 500;
 }
 .prose h5 {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
+    font-weight: 500;
 }
 .prose h6 {
     font-size: 1.6rem;
+    font-weight: 500;
 }
 
 .comment-content-divider {
