@@ -1,9 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import BaseHead from '../../components/BaseHead.astro';
-import { getCollection } from 'astro:content';
-import FormattedDate from '../../components/FormattedDate.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { getCollection, render } from 'astro:content';
 import SideAnnouncement from '../../components/Side-Announcement.astro';
 import Calendar from '../../components/Calendar.astro';
 import CommentSection from '../../components/Giscus.astro';
@@ -12,168 +10,46 @@ import ModuleB from '../../components/sidebar/moduleB.astro';
 import ModuleC from '../../components/sidebar/moduleC.astro';
 
 export async function getStaticPaths() {
-    const posts = await getCollection('announce');
-
-    return posts.map(post => ({
-        params: { slug: post.slug },
-        props: { post }
-    }));
+  const posts = await getCollection('announce');
+  return posts.map(post => ({
+    params: { slug: post.id } // ⚠ 用 id 当 URL
+  }));
 }
 
-const { post } = Astro.props;
-const { Content } = await post.render();
+// 页面里用 URL param 找 post
+const { slug } = Astro.params;
+const posts = await getCollection('announce');
+const post = posts.find(p => p.id === slug);
+if (!post) throw new Error(`Announce post not found: ${slug}`);
+
+// 渲染正文
+const { Content } = await render(post);
 ---
-
-
 <Layout>
-    <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  <BaseHead slot="head" title={post.data.title} description={post.data.description || ""} />
 
-    <!--左边栏-->
-    <div slot="leftbar">
-        <ModuleA />
-        <ModuleB />
-        <ModuleC />
-    </div>
-    <!--右边栏-->
-    <div slot="rightbar">
-        <SideAnnouncement />
-        <Calendar />
-    </div>
+  <div slot="leftbar">
+    <ModuleA />
+    <ModuleB />
+    <ModuleC />
+  </div>
 
-        <h1>{post.data.title}🎉</h1>
-        <p>📅    {post.data.date}</p>
-        <article class="announcecontent">
-            <Content />
-        </article>
-        <hr />
-        <div class="comment-container">
-            <h1>Comments</h1>
-            <p>Comment freeeeely</p>
-            <CommentSection />
-        </div>
+  <div slot="rightbar">
+    <SideAnnouncement />
+    <Calendar />
+  </div>
 
+  <h1>{post.data.title} 🎉</h1>
+  <p>📅 {post.data.date}</p>
+
+  <article class="announcecontent">
+    <Content />
+  </article>
+
+  <hr />
+  <div class="comment-container">
+    <h1>Comments</h1>
+    <p>Comment freeeeely</p>
+    <CommentSection />
+  </div>
 </Layout>
-<style is:global>
-.announcecontent {
-    line-height: 1.75;
-    font-size: 1.2rem;
-    color: #222;
-}
-
-/* 标题 */
-.announcecontent h1 {
-    font-size: 2.5rem !important;
-}
-.announcecontent h2 {
-    font-size: 2.3rem !important;
-}
-.announcecontent h3 {
-    font-size: 2rem;
-}
-
-/* 段落 */
-.announcecontent p {
-    margin: 0.8em 0;
-}
-
-/* 引用块 */
-.announcecontent blockquote {
-    border-left: 4px solid rgb(var(--juliet-hotpink));
-    background: rgb(var(--juliet-pink)/0.05);
-    border-radius: 2px;
-    padding-left: 0.75rem 1rem;
-    color: #555;
-    font-style: normal;
-    font-size: 1.2rem;
-}
-
-/* 列表 */
-.announcecontent ul,
-.announcecontent ol {
-    padding-left: 1.5em;
-    margin: 0.6em 0;
-}
-.announcecontent li {
-    margin: 0.3em 0;
-}
-
-/* 行内代码 */
-.announcecontent code {
-    background: #f5f5f5;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-size: 0.95em;
-}
-
-/* 代码块 */
-.announcecontent pre code {
-    display: block;
-    padding: 14px;
-    border-radius: 8px;
-    background: #f3f3f3;
-    overflow-x: auto;
-}
-
-/* 链接 */
-.announcecontent a {
-    color: rgb(var(--juliet-pink));
-    text-decoration: none;
-    font-weight: 500;
-}
-.announcecontent a:hover {
-    text-decoration: underline;
-    color: rgb(var(--juliet-pink));
-}
-
-/*To do list样式*/
-.announcecontent .task-list-item input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 1.1em;
-    height: 1.1em;
-    border: 2px solid var(--gray);
-    border-radius: 4px;
-    margin-right: 0.5em;
-    cursor: default;
-    vertical-align: middle;
-}
-
-/* 未选中 */
-.announcecontent .task-list-item input[type="checkbox"]:not(:checked) {
-    background: rgb(var(--juliet-pink)/0.3);
-}
-
-/* 选中样式 */
-.announcecontent .task-list-item input[type="checkbox"]:checked {
-    background: rgb(var(--juliet-pink));
-    position: relative;
-}
-
-/* 打勾符号 */
-.announcecontent .task-list-item input[type="checkbox"]:checked::after {
-    content: "✔";
-    color: white;
-    position: absolute;
-    font-size: 0.8em;
-    left: 4px;
-    top: 1px;
-}
-
-/* 列表项样式 */
-.announcecontent .task-list-item {
-    list-style: none;
-}
-
-/*评论区*/
-.comment-container {
-    padding-top: 2rem;
-}
-
-.comment-container h1 {
-    font-size: 3rem;
-}
-
-.comment-container p {
-    font-size: 1.5rem;
-}
-</style>

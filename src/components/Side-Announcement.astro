@@ -15,7 +15,7 @@ const sorted = announcements.sort((a, b) => {
     <div class="announcement-list">
         {sorted.length > 0 ? (
             sorted.map(a => (
-                <a href={`/announce/${a.slug}`} class="announcement-link">
+                <a href={`/announce/${a.id.replace(/\.md$/, '')}`} class="announcement-link">
                     <div class={`announcement-item ${a.data.pinned ? 'pinned' : ''}`}>
                         <div class="announcement-header">
                             <span class="title">{a.data.title}</span>
