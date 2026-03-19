@@ -12,37 +12,64 @@ const tagCount = new Set(
 
 ---
 
-<div class="Leftbar-moduleC">
+<div class="sidebar-module">
     <h1>Statistics</h1>
     <ul class="leftbar-statistic">
         <li>Total Posts: {postCount}</li>
         <li>Total Tags: {tagCount}</li>
     </ul>
 </div>
+
 <style>
-    .leftbar-statistic {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .leftbar-statistic li {
-        padding: 3px;
-        border-radius: 5px;
-        text-align: center;
-        font-size: 1rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-        min-height: 5px;
-    }
-    
-    .leftbar-statistic li:hover  {
-        transform: translateY(-6px);
-    }
+
+.sidebar-module {
+    padding: 18px;
+    border-radius: 16px;
+
+    background: rgb(var(--juliet-pink) / 0.08);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sidebar-module:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.10);
+}
+
+/* 标题 */
+.sidebar-module h1 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 10px;
+}
+
+.sidebar-module h1::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background: rgb(var(--juliet-pink));
+    border-radius: 2px;
+}
+/* 统计 */
+.leftbar-statistic {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 单项 */
+.leftbar-statistic li {
+    background: rgb(var(--juliet-pink)/0.1);
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
 </style>
-
-
-

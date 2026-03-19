@@ -1,17 +1,16 @@
 .blog-card {
     display: block;
-    width: 91%;
-    min-height: 150px;
-    background-color: #fff;
-    border-radius: 12px;
-    margin-bottom: 35px;
-    padding: 40px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto 35px auto;
+    padding: 18px;
+    box-sizing: border-box;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border-radius: 12px;
     border: 1px solid #e5e5e5;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
 }
-
 .blog-card.pinned::before {
   content: "";
   position: absolute;
@@ -27,10 +26,9 @@
     transform: translateY(-10px);
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
-
 .blog-title {
     margin: 0 0 0.5em 0;
-    font-size: 2rem;
+    font-size: 1.5rem;
     position: relative;
     padding-left: 0.5em;
 }
@@ -46,7 +44,6 @@
     background-color: rgb(var(--juliet-pink));
     border-radius: 2px;
 }
-
 .blog-title a {
     text-decoration: none;
     color: var(--black);
@@ -71,29 +68,28 @@
     opacity: 1;
     color: rgb(var(--juliet-pink));
 }
-
+.blog-description {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgb(var(--gray-dark));
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0.5em 0 1em 0;
+}
 .blog-meta {
     margin: 0 0 1em 0;
     color: rgb(var(--gray));
     font-size: 1rem;
+    line-height: 1.4;
 }
-
-.blog-description {
-    display: flex;
-    align-items: center;
-    margin: 0.5em 0 1em 0;
-    gap: 6px;
-    color: rgb(var(--gray-dark));
-    font-size: 0.9em;
-}
-
 .blog-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 0.5em;
 }
-
+/*
 .tag {
     background: rgba(var(--juliet-pink)/0.15);
     color: rgb(var(--juliet-hotpink));
@@ -108,7 +104,22 @@
     color: rgb(var(--juliet-deeppink));
     transform: translateY(-2px);
 }
+*/
+.tag {
+    background: rgba(var(--juliet-pink)/0.1);
+    color: rgb(var(--juliet-hotpink));
+    padding: 3px 10px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    text-decoration: none;
+    transition: transform 0.15s, background 0.15s;
+}
 
+.tag:hover {
+    background: rgba(var(--juliet-hotpink)/0.2);
+    color: rgb(var(--juliet-deeppink));
+    transform: translateY(-2px);
+}
 @media (max-width: 480px) {
     /* 卡片宽度自适应全屏 */
     .blog-card {

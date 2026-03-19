@@ -2,14 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-import ModuleA from '../components/sidebar/moduleA.astro';
-import ModuleB from '../components/sidebar/moduleB.astro';
-import ModuleC from '../components/sidebar/moduleC.astro';
-
-import '../styles/LeftbarContainer.css';
-
 const { rightbar } = Astro.props ?? {};
-
 ---
 <html lang="en">
     <head>
@@ -20,19 +13,18 @@ const { rightbar } = Astro.props ?? {};
         <Header />
         <div class="layout">
             <!--左侧边栏--!>
-            <div class="LeftbarContainer">
-                <ModuleA />
-                <ModuleB />
-                <ModuleC />
-            </div>
+            <aside class="sidebar-left">
+                <slot name="leftbar" />
+            </aside>
 
             <!--中间内容--!>
             <main class="content">
                 <slot />
             </main>
-            
             <!--右侧边栏--!>
-            <slot name="rightbar" />
+            <aside class="sidebar-right">
+                <slot name="rightbar" />
+            </aside>
         </div>
         <Footer />
     </body>

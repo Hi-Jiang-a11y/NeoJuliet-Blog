@@ -4,10 +4,12 @@ import BaseHead from '../../components/BaseHead.astro';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
-import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
 import SideAnnouncement from '../../components/Side-Announcement.astro';
 import Calendar from '../../components/Calendar.astro';
 import CommentSection from '../../components/Giscus.astro';
+import ModuleA from '../../components/sidebar/moduleA.astro';
+import ModuleB from '../../components/sidebar/moduleB.astro';
+import ModuleC from '../../components/sidebar/moduleC.astro';
 
 export async function getStaticPaths() {
     const posts = await getCollection('announce');
@@ -25,11 +27,24 @@ const { Content } = await post.render();
 
 <Layout>
     <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
+
+    <!--左边栏-->
+    <div slot="leftbar">
+        <ModuleA />
+        <ModuleB />
+        <ModuleC />
+    </div>
+    <!--右边栏-->
+    <div slot="rightbar">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
+
         <h1>{post.data.title}🎉</h1>
         <p>📅    {post.data.date}</p>
         <article class="announcecontent">
             <Content />
-        </article>   
+        </article>
         <hr />
         <div class="comment-container">
             <h1>Comments</h1>
@@ -37,11 +52,6 @@ const { Content } = await post.render();
             <CommentSection />
         </div>
 
-        <!--右边栏-->
-        <div slot="rightbar" class="homepagerightbarcontainer">
-            <SideAnnouncement />
-            <Calendar />
-        </div>
 </Layout>
 <style is:global>
 .announcecontent {

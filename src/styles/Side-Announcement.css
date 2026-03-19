@@ -1,17 +1,13 @@
-/* Side-Announcement.css - 强制折叠/展开行为 */
-
 .side-announcement {
     border-radius: 12px;
     padding: 12px;
     box-sizing: border-box;
-    width: 100%;
 }
 
-/* 标题左侧竖线 */
 .side-announcement h1 {
     position: relative;
     margin: 0 0 10px 0;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     padding-left: 1rem;
 }
@@ -27,16 +23,15 @@
     border-radius: 2px;
 }
 
-/* 列表容器 */
 .announcement-list {
     max-height: 320px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    scrollbar-width: none;
 }
 
-/* 单条公告（外层） */
 .announcement-item {
     padding: 8px;
     border-radius: 8px;
@@ -45,18 +40,15 @@
     transition: box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
     cursor: pointer;
     position: relative;
-  /* 确保内部折叠时不溢出 */
     overflow: hidden;
 }
 
-/* 悬停外观 */
 .announcement-item:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     background: rgb(var(--juliet-pink)/0.12);
 }
 
-/* header: 标题和日期在同一行，title 可缩放并省略 */
 .announcement-header {
     display: flex;
     align-items: center;
@@ -65,17 +57,15 @@
     color: rgb(34,41,57);
 }
 
-/* title 占剩余空间并单行省略 */
 .announcement-header .title {
     flex: 1 1 auto;
-    min-width: 0; /* 允许 flex 项目收缩以触发省略 */
+    min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 1.25rem;
+    font-size: 1.05rem;
 }
 
-/* 日期小字 */
 .announcement-header .date {
     flex: 0 0 auto;
     margin-left: 12px;
@@ -84,7 +74,6 @@
     white-space: nowrap;
 }
 
-/* description（正文）——初始严格隐藏，不占空间 */
 .announcement-item .description {
     display: block;
     max-height: 0;
@@ -99,22 +88,19 @@
     font-size: 0.95rem;
 }
 
-/* 只有被悬停的那一条会展开 description（注意 specificity） */
 .announcement-item:hover .description {
-    visibility: visible;              /* 立即可见以便 opacity 动画 */
+    visibility: visible;
     transition-delay: 0s;
-    max-height: 400px;                /* 根据内容上限调整 */
+    max-height: 400px;
     opacity: 1;
     padding-top: 8px;
 }
 
-/* pinned：默认展开（无需 hover） */
 .announcement-item.pinned {
     background: rgb(var(--juliet-pink)/0.12);
     position: relative;
 }
 
-/* pinned 的角标 */
 .announcement-item.pinned::after {
     content: "";
     position: absolute;
@@ -136,7 +122,6 @@
 }
 
 
-/* 小屏限制展开高度，避免遮挡过多 */
 @media (max-width: 900px) {
     .announcement-list {
         max-height: 220px;

@@ -22,7 +22,7 @@ const blog = defineCollection({
 });
 
 const announce = defineCollection({
-    type: 'content',
+    loader: glob({ base: './src/content/announce', pattern: '**/*.md' }),
     schema: z.object({
         title: z.string(),
         date: z.string(),
@@ -42,9 +42,10 @@ const friendlinks = defineCollection({
 });
 
 const about = defineCollection({
-    type: 'content',
-    schema: z.object({
-    }),
+  loader: glob({ base: './src/content/about', pattern: '**/*.md' }),
+  schema: z.object({
+    title: z.string().optional(),
+  }),
 });
 
 export const collections = { blog, announce, friendlinks, about, };

@@ -4,11 +4,14 @@ import BaseHead from '../../components/BaseHead.astro';
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import '../../styles/blog-content.css';
-import '../../styles/RightbarContainers/blogcontentrightbarcontainer.css';
 import '../../styles/license.css';
 import Toc from '../../components/Toc.astro';
 import CommentSection from '../../components/Giscus.astro';
 import ShareCardClient from '../../components/ShareCardClient.jsx';
+import ModuleA from '../../components/sidebar/moduleA.astro';
+import ModuleB from '../../components/sidebar/moduleB.astro';
+import ModuleC from '../../components/sidebar/moduleC.astro';
+
 type Props = CollectionEntry<'blog'>;
 
 
@@ -39,11 +42,51 @@ const licenseUrl = LICENSE_MAP[license] || null;
 <Layout>
     <BaseHead slot="head" title={title} description={description} />
 
+    <!--左边栏-->
+    <div slot="leftbar">
+        <ModuleA />
+        <ModuleB />
+        <ModuleC />
+    </div>
+    <!--右边目录栏--!>
+    <div slot="rightbar">
+        <Toc headings={headings} />
+        <div class="license-container">
+            <h1>Article License</h1>
+            <div class="license-card">
+                <h1 class="license-title">{title}</h1>
+                <p class="blog-link">
+                <a href={`/blog/${post.id}`}>https://neojulietblog.netlify.app/blog/{post.id}</a>
+                </p>
+            <div class="license-meta">
+            <span class="license-meta-item">
+            <span class="label">Author</span>
+            <span class="value">{author}</span>
+            </span>
+            <span class="license-meta-item">
+            <span class="label">Published</span>
+            <span class="value"><FormattedDate date={pubDate} /></span>
+            </span>
+            <span class="license-meta-item">
+                <span class="label">License:</span>
+                {licenseUrl ? (
+                    <a class="license-link" href={licenseUrl} target="_blank" rel="noopener noreferrer">
+                        {license}
+                    </a>
+                    ) : (
+                        <span class="value">{license}</span>
+                    )}
+                </span>
+            </div>
+            </div>
+        </div>
+    </div>
+
     <div class="blog-content">
         <!-- 文章内容 -->
         <article class="blog-post" style="flex:1;" id="article-content">
             <h1 class="title">{title}</h1>
-        
+
             <div class="meta-row">
                 <div class="author">By {author}</div>
                 <div class="date">
@@ -78,38 +121,5 @@ const licenseUrl = LICENSE_MAP[license] || null;
             author={author}
             license={license}
         />
-    </div>
-    <!--右边目录栏--!>
-    <div slot="rightbar" class="blogcontentrightbarcontainer">
-        <Toc headings={headings} />
-        <div class="license-container">
-            <h1>Article License</h1>
-            <div class="license-card">
-                <h1 class="license-title">{title}</h1>
-                <p class="blog-link">
-                    <a href={`/blog/${post.id}`}>https://neojulietblog.netlify.app/blog/{post.id}</a>
-                </p>
-                <div class="license-meta">
-                    <span class="license-meta-item">
-                        <span class="label">Author</span>
-                        <span class="value">{author}</span>
-                    </span>
-                    <span class="license-meta-item">
-                        <span class="label">Published</span>
-                        <span class="value"><FormattedDate date={pubDate} /></span>
-                    </span>
-                    <span class="license-meta-item">
-                        <span class="label">License:</span>
-                        {licenseUrl ? (
-                            <a class="license-link" href={licenseUrl} target="_blank" rel="noopener noreferrer">
-                                {license}
-                            </a>
-                        ) : (
-                            <span class="value">{license}</span>
-                        )}
-                    </span>
-                </div>
-            </div>
-        </div>
     </div>
 </Layout>

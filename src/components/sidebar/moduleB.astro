@@ -18,7 +18,7 @@ allPosts.forEach(post => {
 const tags = Object.entries(tagMap).sort((a, b) => b[1] - a[1]); // 按文章数量降序
 ---
 
-<div class="Leftbar-moduleB">
+<div class="sidebar-module">
     <h1>Tags</h1>
     <ul class="leftbar-tag-list">
         {tags.map(([tag, count]) => (
@@ -28,33 +28,75 @@ const tags = Object.entries(tagMap).sort((a, b) => b[1] - a[1]); // 按文章数
         ))}
     </ul>
 </div>
+
 <style>
-    .leftbar-tag-list {
-        list-style: none;
-        flex-wrap: wrap;
-        padding: 0;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    
-    .leftbar-tag-list li {
-        background-color: rgb(var(--juliet-pink)/0.2);
-        padding: 3px;
-        border-radius: 5px;
-        text-align: center;
-        font-size: 0.95rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-        min-height: 5px;
-    }
-    
-    .leftbar-tag-list li:hover  {
-        transform: translateY(-6px);
-    }
-    .leftbar-tag-list li a{
-        text-decoration: none;
-        color: rgb(var(--juliet-hotpink)/0.7);
-    }
+/* 整体卡片 */
+.sidebar-module {
+    padding: 18px;
+    border-radius: 16px;
+
+    background: rgb(var(--juliet-pink) / 0.08);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sidebar-module:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.10);
+}
+
+/* 标题 */
+.sidebar-module h1 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 10px;
+}
+
+.sidebar-module h1::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background: rgb(var(--juliet-pink));
+    border-radius: 2px;
+}
+
+/* tag 容器 */
+.leftbar-tag-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* 单个 tag */
+.leftbar-tag-list li {
+    background: rgb(var(--juliet-pink) / 0.18);
+    border-radius: 999px;
+    padding: 4px 10px;
+
+    font-size: 0.85rem;
+    font-weight: 500;
+
+    transition: all 0.2s ease;
+}
+
+/* 链接 */
+.leftbar-tag-list li a {
+    text-decoration: none;
+    color: rgb(var(--juliet-hotpink) / 0.9);
+}
+
+/* hover（关键优化点） */
+.leftbar-tag-list li:hover {
+    background: rgb(var(--juliet-pink) / 0.35);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
 </style>

@@ -4,11 +4,13 @@ import BaseHead from '../../components/BaseHead.astro';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import '../../styles/text-effect-typing.css';
-import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
 import SideAnnouncement from '../../components/Side-Announcement.astro';
 import Calendar from '../../components/Calendar.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 import '../../styles/archive.css';
+import ModuleA from '../../components/sidebar/moduleA.astro';
+import ModuleB from '../../components/sidebar/moduleB.astro';
+import ModuleC from '../../components/sidebar/moduleC.astro';
 
 // 获取Blog集合
 const posts = (await getCollection('blog')).sort(
@@ -28,14 +30,24 @@ posts.forEach(post => {
 
 <Layout>
     <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
-    
-    <!--主页内容--!>
 
-    <!--打字机特效--!>    
+    <!--左边栏-->
+    <div slot="leftbar">
+        <ModuleA />
+        <ModuleB />
+        <ModuleC />
+    </div>
+    <!--右边栏--!>
+    <div slot="rightbar" class="homepagerightbarcontainer">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
+    <!--主页内容--!>
+    <!--打字机特效--!>
     <h2 id="typing"></h2>
     <script type="module">
         import { initTyping } from '/scripts/text-effect-typing.js';
-        
+
         const runTyping = () => {
             const el = document.getElementById('typing');
             el.textContent = ''; // 清空之前内容
@@ -48,7 +60,7 @@ posts.forEach(post => {
 
         <!--简介--!>
         <p>Time flies</p>
-        
+
         <!--时间轴--!>
         {Object.entries(postsByMonth).map(([yearMonth, monthPosts]) => (
             <>
@@ -75,10 +87,4 @@ posts.forEach(post => {
             </>
         ))}
 
-        <!--右边栏--!>
-        <div slot="rightbar" class="homepagerightbarcontainer">
-            <SideAnnouncement />
-            <Calendar />
-        </div>
 </Layout>
-

@@ -7,8 +7,10 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import '../../styles/blog-card.css';
 import SideAnnouncement from '../../components/Side-Announcement.astro';
 import Calendar from '../../components/Calendar.astro';
-import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
 import BookIcon from '../../icons/BookIcon.astro';
+import ModuleA from '../../components/sidebar/moduleA.astro';
+import ModuleB from '../../components/sidebar/moduleB.astro';
+import ModuleC from '../../components/sidebar/moduleC.astro';
 
 export async function getStaticPaths() {
     const allPosts = await getCollection('blog');
@@ -34,6 +36,17 @@ const posts = allPosts
 <Layout>
     <BaseHead slot="head" title={`${currentTag} - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 
+    <!--左边栏-->
+    <div slot="leftbar">
+        <ModuleA />
+        <ModuleB />
+        <ModuleC />
+    </div>
+    <!--右边栏-->
+    <div slot="rightbar">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
     <h1># {currentTag}</h1>
 
     {posts.length > 0 ? (
@@ -52,9 +65,5 @@ const posts = allPosts
     ) : (
         <p>No posts found for this tag.</p>
     )}
-    <div slot="rightbar" class="homepagerightbarcontainer">
-        <SideAnnouncement />
-        <Calendar />
-    </div>
 </Layout>
 

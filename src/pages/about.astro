@@ -3,15 +3,27 @@ import Layout from '../layouts/Layout.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro'; 
-import { getEntryBySlug } from 'astro:content';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import '../styles/text-effect-typing.css';
 import SideAnnouncement from '../components/Side-Announcement.astro';
 import Calendar from '../components/Calendar.astro';
-import '../styles/RightbarContainers/homepagerightbarcontainer.css';
+import { type CollectionEntry, getCollection, render } from 'astro:content';
 
-const entry = await getEntryBySlug('about', 'about');
-const { Content } = await entry.render();
+type Props = CollectionEntry<'about'>;
+
+// 获取 about.md 条目
+const aboutEntries = await getCollection('about');
+if (aboutEntries.length === 0) throw new Error('No about entry found!');
+const post = aboutEntries[0];
+
+// 直接 render 获取 Content 和 headings
+const { Content, headings } = await render(post);
+const { title, description, author } = post.data;
+
+// 如果 about.md 没有 frontmatter 的 author/title，可以设默认值
+const postTitle = title || 'About Me';
+const postDescription = description || 'About me page';
+const postAuthor = author || 'Juliet';
 ---
 <Layout>
     <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
@@ -19,7 +31,7 @@ const { Content } = await entry.render();
     <h2 id="typing"></h2>
     <script type="module">
         import { initTyping } from '/scripts/text-effect-typing.js';
-        
+
         const runTyping = () => {
             const el = document.getElementById('typing');
             el.textContent = ''; // 清空之前内容
@@ -28,7 +40,7 @@ const { Content } = await entry.render();
         window.addEventListener('DOMContentLoaded', runTyping);
         window.addEventListener('astro:navigation-end', runTyping);
     </script>
-    
+
     <article class="AboutContent">
         <Content />
     </article>

@@ -4,21 +4,35 @@ import BaseHead from '../../components/BaseHead.astro';
 import { getCollection } from 'astro:content';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import '../../styles/text-effect-typing.css';
-import '../../styles/RightbarContainers/homepagerightbarcontainer.css';
 import '../../styles/pagination.css';
 import '../../styles/friendlinks.css';
 import SideAnnouncement from '../../components/Side-Announcement.astro';
 import Calendar from '../../components/Calendar.astro';
+import ModuleA from '../../components/sidebar/moduleA.astro';
+import ModuleB from '../../components/sidebar/moduleB.astro';
+import ModuleC from '../../components/sidebar/moduleC.astro';
 
 const links = await getCollection('friendlinks');
 ---
 <Layout>
     <BaseHead slot="head" title={`Friends - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 
+    <!--左边栏-->
+    <div slot="leftbar">
+        <ModuleA />
+        <ModuleB />
+        <ModuleC />
+    </div>
+
+    <div slot="rightbar">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
+
     <h2 id="typing"></h2>
     <script type="module">
         import { initTyping } from '/scripts/text-effect-typing.js';
-        
+
         const runTyping = () => {
             const el = document.getElementById('typing');
             el.textContent = ''; // 清空之前内容
@@ -46,7 +60,7 @@ const links = await getCollection('friendlinks');
             </div>
         ))}
     </div>
-    
+
     <div class="mylinks-container">
         <h1>Exchange Links</h1>
         <p>Welcome! Contact me via <a href="mailto:youchjiang@gmail.com" target="_blank" rel="noopener noreferrer">email</a></p>
@@ -59,9 +73,5 @@ const links = await getCollection('friendlinks');
 
     </div>
 
-    <div slot="rightbar" class="homepagerightbarcontainer">
-        <SideAnnouncement />
-        <Calendar />
-    </div>
 </Layout>
 
