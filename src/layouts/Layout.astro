@@ -1,12 +1,13 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { ViewTransitions } from 'astro:transitions';
 
 const { rightbar } = Astro.props ?? {};
 ---
 <html lang="en">
     <head>
-        <!-- ✅ 关键：提前设置主题，防止闪烁 -->
+    <ViewTransitions />
         <script>
             const saved = localStorage.getItem("theme");
             if (saved && saved !== "default") {
@@ -19,7 +20,10 @@ const { rightbar } = Astro.props ?? {};
     <body>
         <!-- 保留，用于交互 -->
         <script src="/scripts/theme.js" defer></script>
-
+        <script type="module" src="/scripts/init-typing.js"></script>
+        <script type="module" src="/scripts/init-toc.js"></script>
+        <script type="module" src="/scripts/init-giscus.js"></script>
+        <script type="module" src="/scripts/init-calendar.js"></script>
         <Header />
         <div class="layout">
             <!--左侧边栏-->

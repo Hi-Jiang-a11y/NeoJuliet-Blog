@@ -51,23 +51,9 @@ const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
         <SideAnnouncement />
         <Calendar />
     </div>
- 
     <!--主页内容-->
     <!--打字机特效-->
-    <h2 id="typing"></h2>
-    <script type="module">
-        import { initTyping } from '/scripts/text-effect-typing.js';
-
-        const runTyping = () => {
-            const el = document.getElementById('typing');
-            el.textContent = ''; // 清空之前内容
-            initTyping('typing', "Welcome to NeoJuliet's Site!", 90, 5000);
-        };
-        // 等 DOM 加载完成再执行
-        window.addEventListener('DOMContentLoaded', runTyping);
-        window.addEventListener('astro:navigation-end', runTyping);
-    </script>
-
+    <h2 id="typing" data-text="Welcome to NeoJuliet's Site!"></h2>
         <!--简介--!>
         <p>
             What you love is your life.
@@ -82,7 +68,7 @@ const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
                     </h2>
                     <!--author and data--!>
                     <p class="blog-meta">
-                        {post.data.author && <>By {post.data.author} - </>} 
+                        {post.data.author && <>By {post.data.author} - </>}
                         <FormattedDate date={post.data.pubDate} />
                     </p>
 

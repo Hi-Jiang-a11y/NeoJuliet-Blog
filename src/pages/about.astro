@@ -43,18 +43,7 @@ const postAuthor = author || 'Juliet';
         <Calendar />
     </div>
 
-    <h2 id="typing"></h2>
-    <script type="module">
-        import { initTyping } from '/scripts/text-effect-typing.js';
-
-        const runTyping = () => {
-            const el = document.getElementById('typing');
-            el.textContent = ''; // 清空之前内容
-            initTyping('typing', "About Me...", 90, 5000);
-        };
-        window.addEventListener('DOMContentLoaded', runTyping);
-        window.addEventListener('astro:navigation-end', runTyping);
-    </script>
+    <h2 id="typing" data-text="About..."></h2>
 
     <article class="AboutContent">
         <Content />

@@ -29,20 +29,7 @@ const links = await getCollection('friendlinks');
         <Calendar />
     </div>
 
-    <h2 id="typing"></h2>
-    <script type="module">
-        import { initTyping } from '/scripts/text-effect-typing.js';
-
-        const runTyping = () => {
-            const el = document.getElementById('typing');
-            el.textContent = ''; // 清空之前内容
-            initTyping('typing', "FriendLinks...", 120, 5000);
-        };
-        // 等 DOM 加载完成再执行
-        window.addEventListener('DOMContentLoaded', runTyping);
-        window.addEventListener('astro:navigation-end', runTyping);
-    </script>
-
+    <h2 id="typing" data-text="Friendlinks..."></h2>
         <!--简介-->
     <p>
         Here are the friendlinks
