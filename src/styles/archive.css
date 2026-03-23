@@ -1,23 +1,23 @@
 .archive-month {
     position: relative;
-    font-size: 2rem;
+    font-size: 1.5rem;
     margin: 1.5rem 0 0.5rem 0;
     display: flex;
-    align-items: center; /* 垂直居中 */
-    padding-left: 30px; /* 对齐时间轴线 */
+    align-items: center;
+    padding-left: 30px;
     gap: 15px;
 }
 
-.archive-month .month-circle { 
-    width: 10px; /* 圆点直径 */
-    height: 10px; 
-    border-radius: 50%; /* 变成圆形 */
-    flex-shrink: 0; /* 不被压缩 */
-    background-color: rgb(var(--juliet-pink)); /* 圆点颜色 */
+.archive-month .month-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background-color: rgb(var(--juliet-pink));
 }
 
 .blog-card {
-    padding: 5px 65px;
+    padding: 5px 27px;
     margin: 0;
     position: relative;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -34,17 +34,15 @@
     position: relative;
 }
 
-/* 日期 */
 .date {
     flex-shrink: 0;
     width: 80px;
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: #60739f;
     margin-right: 10px;
     margin-left: 38px;
 }
 
-/* 时间轴竖线和圆点 */
 .timeline {
     position: relative;
     width: 3px;
@@ -77,7 +75,6 @@
     transition: all 0.3s ease;
 }
 
-/* 鼠标悬停时圆点变竖线 */
 .blog-card:hover .circle {
     width: 3px;
     height: 20px;
@@ -86,9 +83,8 @@
     margin-top: 0px; /* 调整到竖线中间 */
 }
 
-/* 标题 */
 .title a {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 500;
     color: #222939;
     text-decoration: none;

@@ -12,17 +12,15 @@ import ModuleC from '../../components/sidebar/moduleC.astro';
 export async function getStaticPaths() {
   const posts = await getCollection('announce');
   return posts.map(post => ({
-    params: { slug: post.id } // ⚠ 用 id 当 URL
+    params: { slug: post.id }
   }));
 }
 
-// 页面里用 URL param 找 post
 const { slug } = Astro.params;
 const posts = await getCollection('announce');
 const post = posts.find(p => p.id === slug);
 if (!post) throw new Error(`Announce post not found: ${slug}`);
 
-// 渲染正文
 const { Content } = await render(post);
 ---
 <Layout>

@@ -1,7 +1,7 @@
 ---
 title: "二月第一次更新"
 date: "2026-02-02"
-pinned: true
+pinned: false
 description: "click to view full content"
 ---
 ## 文章更新🧨

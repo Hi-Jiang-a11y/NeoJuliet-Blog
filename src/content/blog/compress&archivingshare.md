@@ -7,9 +7,8 @@ tags: ["linux", "tutorial", "tool"]
 pinned: false
 license: "CC BY-SA 4.0"
 ---
-By ***Juliet***
-## **Compressing Files**
-### **gzip**
+# **Compressing Files**
+## **gzip**
 The gzip is used to compress one or more files, when executed, it replaces the original files with a compressed version of the original
 ```bash
 Juliet@ArchJ ~$ ls -l /etc > test.txt
@@ -58,9 +57,9 @@ example/
 ```
 
 
-## **Archiving Files**
-### **tar**
-#### Basic Usage
+# **Archiving Files**
+## **tar**
+### Basic Usage
 The tar(*tape archive*) is a typical tool for archiving files  
 The command syntax works like this:
 ```bash
@@ -97,7 +96,7 @@ This command is used for listing the content of the archived file
 tar xf example.tar
 ```
 This command is used for extract the `example.tar` to present working directory
-#### Pathname Process
+### Pathname Process
 The pathname process of tar is interesting, the default for pathname is relative, rather than absolute, so tar does this by simply removing the leading slash `/` from the pathname when creating the archive, let's take an example:
 ```bash
 Juliet@ArchJ ~$ mkdir -p ~/example1/test
@@ -120,7 +119,7 @@ Juliet@ArchJ ~$ tree
             └──test
 ```
 This because in the archiving file `example1.tar` the path prefix(leading slash `/`) is removed, so after extracting in `~/example2`, tar will create `home/Juliet/...` again
-#### Advanced Usage
+### Advanced Usage
 When extracting an archive, it is possible to limit what is extracted from the archive, for example, if we want to extract one or more files from the archive:
 ```bash
 tar xvf ./example.tar <pathname1> <pathname2> <pathname3>
@@ -141,7 +140,7 @@ find ./example -name 'file-A' | tar cf - --files-from=- | gzip > example.tar.gz
 ```
 Here `tar cf - ` means writing the archived result to the standardout instead of a file, `--files-from` means archive the files from standardin
 
-#### **Use tar Savely**
+### **Use tar Savely**
 Sometimes it is **dangerous** to use tar without any check, because some malicious archive files may overwrite or contaminate system files  
 A better way to extract archive files is to list the archive contents first:
 ```bash
@@ -164,8 +163,8 @@ You can add `--keep-old-files` to avoid overwriting and `--skip-old-files` to sk
 tar xvf /path/to/example.tar --keep-old-files
 ```
 
-## **Other Useful Tools**
-### **zip**
+# **Other Useful Tools**
+## **zip**
 The `zip` program is both a compression tool and archiver  
 In it's most basic usage, zip is invoked like this:
 ```bash
@@ -185,5 +184,5 @@ Before extracting, you can add `-l` (and `-v`) option to list the content of the
 ```bash
 unzip -l /path/to/example.zip
 ```
-### **7zip**
+## **7zip**
 

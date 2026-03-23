@@ -8,6 +8,9 @@ import '../styles/text-effect-typing.css';
 import SideAnnouncement from '../components/Side-Announcement.astro';
 import Calendar from '../components/Calendar.astro';
 import { type CollectionEntry, getCollection, render } from 'astro:content';
+import ModuleA from '../components/sidebar/moduleA.astro';
+import ModuleB from '../components/sidebar/moduleB.astro';
+import ModuleC from '../components/sidebar/moduleC.astro';
 
 type Props = CollectionEntry<'about'>;
 
@@ -28,6 +31,18 @@ const postAuthor = author || 'Juliet';
 <Layout>
     <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
 
+    <!--左边栏-->
+    <div slot="leftbar">
+        <ModuleA />
+        <ModuleB />
+        <ModuleC />
+    </div>
+    <!--右边栏-->
+    <div slot="rightbar">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
+
     <h2 id="typing"></h2>
     <script type="module">
         import { initTyping } from '/scripts/text-effect-typing.js';
@@ -45,11 +60,6 @@ const postAuthor = author || 'Juliet';
         <Content />
     </article>
 
-    <!--右边栏--!>
-    <div slot="rightbar" class="homepagerightbarcontainer">
-        <SideAnnouncement />
-        <Calendar />
-    </div>
 </Layout>
 <style is:global>
 .AboutContent {

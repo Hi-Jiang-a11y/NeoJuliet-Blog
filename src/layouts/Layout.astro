@@ -6,22 +6,33 @@ const { rightbar } = Astro.props ?? {};
 ---
 <html lang="en">
     <head>
+        <!-- ✅ 关键：提前设置主题，防止闪烁 -->
+        <script>
+            const saved = localStorage.getItem("theme");
+            if (saved && saved !== "default") {
+                document.documentElement.dataset.theme = saved;
+            }
+        </script>
+
         <slot name="head" />
     </head>
     <body>
+        <!-- 保留，用于交互 -->
         <script src="/scripts/theme.js" defer></script>
+
         <Header />
         <div class="layout">
-            <!--左侧边栏--!>
+            <!--左侧边栏-->
             <aside class="sidebar-left">
                 <slot name="leftbar" />
             </aside>
 
-            <!--中间内容--!>
+            <!--中间内容-->
             <main class="content">
                 <slot />
             </main>
-            <!--右侧边栏--!>
+
+            <!--右侧边栏-->
             <aside class="sidebar-right">
                 <slot name="rightbar" />
             </aside>
@@ -29,4 +40,3 @@ const { rightbar } = Astro.props ?? {};
         <Footer />
     </body>
 </html>
-
