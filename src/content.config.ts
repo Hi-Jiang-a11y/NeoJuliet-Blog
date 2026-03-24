@@ -32,11 +32,11 @@ const announce = defineCollection({
 });
 
 const friendlinks = defineCollection({
-    type: 'content',
+    loader: glob({ base: './src/content/friendlinks', pattern: '**/*.md' }),
     schema: z.object({
         name: z.string(),
         url: z.string().url(),
-        avatar: z.string().url(),
+        avatar: z.string(),
         description: z.string().optional(),
     }),
 });
