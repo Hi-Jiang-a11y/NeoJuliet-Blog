@@ -14,12 +14,12 @@ license: "CC BY-SA 4.0"
 
 <div style="display: flex; gap: 5px;">
   <figure style="flex:1;">
-    <img src="/images/highschool.JPG
+    <img src="/images/highschool.webp
 " style="width:100%;">
     <figcaption>你高中</figcaption>
   </figure>
   <figure style="flex:1;">
-    <img src="/images/physicscomp.jpeg
+    <img src="/images/physicscomp.webp
 " style="width:100%;">
     <figcaption>有的都没翻开几次</figcaption>
   </figure>
@@ -40,12 +40,12 @@ license: "CC BY-SA 4.0"
 
 <div style="display: flex; gap: 5px;">
   <figure style="flex:1;">
-    <img src="/images/HPcalculator.JPG"
+    <img src="/images/HPcalculator.webp"
     style="width:100%;">
     <figcaption>HP 39 Gll</figcaption>
   </figure>
   <figure style="flex:1;">
-    <img src="/images/HPcalculator2.jpeg"
+    <img src="/images/HPcalculator2.webp"
     style="width:100%;">
     <figcaption>甚至能打中文</figcaption>
   </figure>
@@ -59,7 +59,7 @@ license: "CC BY-SA 4.0"
 
 <div style="display: flex; gap: 10px;">
    <figure>
-   <img src="/images/mp3.JPG" style="width: 50%;">
+   <img src="/images/mp3.webp" style="width: 50%;">
    <figcaption>MP3，还能看小说</figcaption>
    </figure>
 </div>
@@ -72,7 +72,7 @@ license: "CC BY-SA 4.0"
 
 <div style="display: flex; gap: 10px;">
    <figure>
-   <img src="/images/nocomments.jpg" style="width: 50%;">
+   <img src="/images/nocomments.webp" style="width: 50%;">
    <figcaption>传统艺能</figcaption>
    </figure>
 </div>
@@ -119,12 +119,12 @@ license: "CC BY-SA 4.0"
 
 <div style="display: flex; gap: 5px;">
   <figure style="flex:1;">
-    <img src="/images/qsl.jpeg"
+    <img src="/images/qsl.webp"
     style="width:100%;">
     <figcaption>精美的 QSL 卡片</figcaption>
   </figure>
   <figure style="flex:1;">
-    <img src="/images/qslback.jpeg"
+    <img src="/images/qslback.webp"
     style="width:100%;">
     <figcaption>精美的 QSL 卡片 正面</figcaption>
   </figure>
@@ -132,7 +132,7 @@ license: "CC BY-SA 4.0"
 
 <div style="display: flex; gap: 10px;">
    <figure>
-   <img src="/images/sstv.JPG" style="width: 50%;">
+   <img src="/images/sstv.webp" style="width: 50%;">
    <figcaption>抄收 SSTV</figcaption>
    </figure>
 </div>
@@ -206,7 +206,7 @@ license: "CC BY-SA 4.0"
 
 <div style="display: flex; gap: 10px;">
    <figure>
-   <img src="/images/eden.JPG" style="width: 50%;">
+   <img src="/images/eden.webp" style="width: 50%;">
    <figcaption>eden\*</figcaption>
    </figure>
 </div>

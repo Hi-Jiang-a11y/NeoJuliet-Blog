@@ -64,49 +64,32 @@
 }
 
 @font-face {
-	font-family: "Atkinson";
-	src: url("/fonts/atkinson-regular.woff") format("woff");
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face {
-	font-family: "Atkinson";
-	src: url("/fonts/atkinson-bold.woff") format("woff");
-	font-weight: 700;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face {
-    font-family: 'LXGW WenKai';
-    src: url('/fonts/LXGWWenKai-Regular.ttf') format('truetype');
+    font-family: 'WenKai';
+    src: url('/fonts/LXGWWenKai-Regular-subset.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
-@font-face {
-    font-family: 'LXGW WenKai';
-    src: url('/fonts/LXGWWenKai-Light.ttf') format('truetype');
-    font-weight: 300;
-}
-
-@font-face {
-    font-family: 'LXGW WenKai';
-    src: url('/fonts/LXGWWenKai-Medium.ttf') format('truetype');
-    font-weight: 500;
-}
 body {
-	font-family: "Atkinson", "LXGW WenKai", sans-serif;
-	margin: 0;
-	padding: 0;
-	text-align: left;
+    font-family:
+        'WenKai',
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        sans-serif;
+
+    margin: 0;
+    padding: 0;
+    text-align: left;
     background: var(--bg);
-	background-size: 100% 600px;
-	word-wrap: break-word;
-	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 16px;
-	line-height: 1.7;
+    background-size: 100% 600px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    color: rgb(var(--gray-dark));
+    font-size: 16px;
+    line-height: 1.7;
 }
 :root[data-theme="dark"] body {
     color: rgb(var(--gray-light));
