@@ -1,31 +1,12 @@
 .blog-card {
-    display: block;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto 35px auto;
-    padding: 18px;
-    box-sizing: border-box;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    border-radius: 12px;
-    border: 1px solid #e5e5e5;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    position: relative;
+    border-bottom: 1.5px solid #eee;
+    padding: 12px 0;
 }
-.blog-card.pinned::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  border-top: 30px solid rgb(var(--juliet-pink));
-  border-right: 30px solid transparent;
+.blog-card:hover {
+    transform: none;
+    box-shadow: none;
 }
 
-.blog-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-}
 .blog-title {
     margin: 0 0 0.5em 0;
     font-size: 1.5rem;
@@ -120,68 +101,59 @@
     color: rgb(var(--juliet-deeppink));
     transform: translateY(-2px);
 }
+
 @media (max-width: 480px) {
-    /* 卡片宽度自适应全屏 */
     .blog-card {
         width: 100%;
-        padding: 10px;
-        min-height: auto;
-        margin-bottom: 15px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* 阴影更柔和 */
+        padding: 8px 0;          /* 只保留上下间距 */
+        margin-bottom: 12px;
+
+        box-shadow: none;        /* ❗ 去掉阴影 */
+        border: none;
+        border-radius: 0;
+
+        border-bottom: 1px solid #eee;  /* 用分割线代替卡片 */
     }
 
-    /* 卡片置顶标记缩小 */
+    /* pinned 标记建议直接取消（否则很怪） */
     .blog-card.pinned::before {
-        border-top: 20px solid rgb(var(--juliet-pink));
-        border-right: 20px solid transparent;
+        display: none;
     }
 
-    /* 标题字体缩小，装饰条保持比例 */
     .blog-title {
-        font-size: 0.8rem;
+        font-size: 0.95rem;   /* 0.8 太小了，可读性差 */
         margin: 0 0 6px 0;
     }
 
     .blog-title::before {
         width: 3px;
-        margin: 0 0 0 0;
-        
     }
 
-    .blog-title a::after {
-        margin-left: 0.2em;
-        transform: translateX(2px);
-    }
-
-    /* 元信息 & 描述 */
     .blog-meta {
-        font-size: 0.6rem;
+        font-size: 0.75rem;
     }
 
     .blog-description {
-        font-size: 0.7rem;
-        line-height: 1.4;
+        font-size: 0.8rem;
+        line-height: 1.5;
     }
 
-    /* 标签 */
     .blog-tags {
-        gap: 2px;
+        gap: 4px;
     }
 
     .tag {
         font-size: 0.7em;
-        padding: 2px 2px;
+        padding: 2px 6px;
     }
 
-    /* Hover 效果优化为轻微移动，避免过大 */
+    /* ❗移动端基本不需要 hover */
     .blog-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+        transform: none;
+        box-shadow: none;
     }
 
     .tag:hover {
-        transform: translateY(-0.5px);
+        transform: none;
     }
 }
-
-

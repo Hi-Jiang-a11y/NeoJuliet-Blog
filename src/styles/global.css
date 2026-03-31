@@ -249,16 +249,26 @@ hr {
     box-sizing: border-box;
 }
 
-@media (max-width: 1200px) {
-    .layout {
-        grid-template-columns: 240px 1fr;
-    }
+@media (max-width: 1100px) {
 
+    .layout {
+        grid-template-columns: 1fr;
+        padding: 0 20px;   /* 核心：左右留白 */
+        box-sizing: border-box;
+    }
     .sidebar-right {
         display: none;
     }
-}
 
+    .sidebar-left {
+        position: static;   /* 取消 sticky */
+        order: 2;
+    }
+
+    .content {
+        order: 1;
+    }
+}
 @media (max-width: 768px) {
     .layout {
         grid-template-columns: 1fr;
