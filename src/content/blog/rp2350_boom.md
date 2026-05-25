@@ -1,5 +1,5 @@
 ---
-title: '依旧点灯(RP2350)'
+title: 'RP2350 裸机开发'
 author: 'Juliet'
 description: '亲自部署，亲自指挥的乐趣'
 pubDate: 'May 25 2026'
@@ -9,7 +9,7 @@ license: "CC BY-SA 4.0"
 ---
 > 今天亲自部署，亲自指挥 RP2350
 
-# Introduction
+# Intro
 在 MCU 的世界里，传统的巨头如意法(ST)或恩智浦(NXP)长期统治工业/消费级市场。然于 2021 年，凭借单板计算机(SBC)闻名全球的英国**树莓派基金会（Raspberry Pi）**，推出了其首款自研微控制器芯片 —— **RP2040**。
 
 RP2040 凭借独特的双核 Cortex-M0+ 架构、低廉的价格，以及极具革命性的 PIO(Programmable I/O) 状态机，瞬间引爆了开源硬件和嵌入式社区。
