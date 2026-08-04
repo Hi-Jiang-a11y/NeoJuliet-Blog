@@ -8,202 +8,386 @@ pinned: false
 license: "CC BY-SA 4.0"
 ---
 
-> 本文记录 SRT_IV 项目中对 KV Cache、量化与多核共享的一点探索。
-> 结论先写在前面：模型每次生成一个字，看起来很轻松，实际上在反复搬一大坨历史数据。
+> 本文记录对 KV Cache、量化的一点理解 & 探索。
 
-# Attention 到底在算什么？
+# Billions Must Use AI;;
 
-先不管“大模型”这个名字。对单个 attention head 而言，输入的 hidden states 记为 $X\in\mathbb{R}^{n\times d}$：$n$ 是目前已经出现的 token 数，$d$ 是模型的 hidden size。这个 head 用三组可训练矩阵把同一份 $X$ 投影成 Query、Key 与 Value：
+最近有一种很直观的感受：无论你正在做什么，最后似乎都会在某个地方遇见 AI。搞生物的用它预测蛋白质结构，搞数学和物理的用它找规律、加速仿真，搞软件的自然不用多说。
 
-$$
-Q=XW_Q,\qquad K=XW_K,\qquad V=XW_V,
-$$
+学 EE 的苦逼，也越来越频繁地在课程和项目里碰到 (帮我做模电作业)。AI 正在 (已经) 从一个相对独立的研究方向，变成多学科共同使用的基础设施。
 
-其中 $W_Q,W_K,W_V\in\mathbb{R}^{d\times d_k}$，所以 $Q,K,V\in\mathbb{R}^{n\times d_k}$。名字听起来很玄学，但可以先把它们理解为：**Q 是当前 token 想问的问题，K 是每个 token 的索引，V 是每个 token 真正携带的内容。**
+不过，不同人口中的“搞 AI”其实可以是完全不同的事情。有人研究模型原理和训练方法，有人关心具体应用，也有人试图解答一个更偏工程的问题：庞大的模型，究竟怎样才能跑起来，而且跑得多快好省？
 
-接下来，$QK^\mathsf{T}$ 让每一个 Query 都和所有 Key 做点积，得到“我该关注谁”的分数矩阵；除以 $\sqrt{d_k}$ 后做 Softmax，便得到注意力权重 $P$。最后以这些权重对 $V$ 加权求和：
+对于 EE 人来说，需要解决最后一个问题。模型最终要落在硬件上，受到存储容量、访存带宽、数据精度、并行方式和能耗的约束。
 
-$$
-S=\frac{QK^\mathsf{T}}{\sqrt{d_k}},\qquad
-P=\operatorname{Softmax}(S),\qquad
-H=PV.
-$$
+矩阵公式写在纸上很~~简洁~~，执行时却必须把每一个数字实实在在地储存、搬运、算完再搬走。作为 ~~工程师~~，暂且不必先回答 “ intelligence 是怎么产生的”，至少需要知道模型在推理时算了什么、数据怎样流动，再设法造出一台能把这些计算高效完成的机器。
 
-多头注意力只是把这一套操作并行做 $h$ 次：每个 head 使用较小的 $d_k$，最后将所有 $H^{(i)}$ 拼接，再乘输出矩阵 $W_O$。后文讨论 KV Cache 时，我们只需盯住其中一个 head；其余 head 做的是相同的事。
+好在「算什么，怎么算」这种事，前人已经为我们留下了一个足够经典的起点：**Attention Is All You Need**。
 
-## 图中每一块在做什么？
+这篇 2017 年的论文提出了 Transformer 架构，它最初解决的是机器翻译，但它的意义很快超出了翻译本身。此前的自然语言处理往往是“一个任务训练一个模型”——情感分析、翻译、问答、摘要各有各的模型、数据集和特征工程；Transformer 则为同一套模型从大规模文本中学习通用语言表示提供了一个足够有效的骨架。
 
-项目里的流程图把 $X\rightarrow Q/K/V\rightarrow QK^\mathsf{T}\rightarrow\operatorname{Softmax}\rightarrow PV$ 展开成了矩阵。以图中的例子为例，$d=12$、$h=4$，因此单个 head 的 $d_k=3$：输入的每一行是一个 token，投影后每个 head 只保留 3 个特征。
+随后，业界逐渐形成了今天熟悉的路径：先训练一个能够理解和生成文本的基础模型，再用微调、检索或 prompt 让它适配具体需求。GPT 系列采用 decoder-only Transformer，而 GPT-3 则让更多人直观看到：当模型和训练数据扩展到足够规模时，同一个文本生成模型可以仅凭少量示例或一段指令，完成问答、改写、摘要、翻译等多种任务。
 
-- `QKᵀ` 的输出是 $n\times n$ 的 score matrix：第 $a$ 行、第 $b$ 列表示 token $a$ 对 token $b$ 的关注分数。
-- causal mask 会遮住未来 token；因此在生成阶段，当前 token 只能看见自己和此前的历史。
-- `Softmax × V` 会将一行 attention weights 变成一行输出向量。它不是“从 V 里挑一个 token”，而是按权重混合所有可见的 V。
+今天人们所说的“大语言模型”，大多都沿着这条 Transformer 的路线发展而来。模型的规模、训练数据当然早已远超原论文，但推理时最基本的数据流，仍然可以从 Transformer 的 Attention 计算开始理解。
 
-这也是为什么 K 和 V 都不可省：K 用来计算权重，V 用来根据权重合成结果。
+我们先把文字送进 Transformer，看它怎样一步一步运算。
 
-# 生成一个新 token 时，发生了什么？
+> 这里先划定一下范围：本文不讨论模型如何从海量文本中训练出参数，也不试图解释「intelligence」；本文只关心训练完成之后的 **inference (推理)**。此时模型的权重已经确定，硬件要做的事情，就是按照既定的方法执行一连串矩阵乘法、归一化、非线性运算。
 
-语言模型不是一次把整段答案写完，而是自回归地执行 `token 1 → token 2 → ... → token n+1`。第一次把 prompt 喂给模型称为 **prefill**，它会并行计算整段输入；之后每一步只生成一个 token，称为 **decode**。
+# Attention Is NOT All You Need
 
-到了生成第 $n+1$ 个 token 的时候，真正新出现的输入只有 $x_{n+1}\in\mathbb{R}^{1\times d}$。新的 Query $q_{n+1}$、Key $k_{n+1}$ 和 Value $v_{n+1}$ 都必须计算，但历史 token 的 Key/Value 其实早在前面的步骤算过了。
+语言模型不能直接处理人类文字。在输入模型之前，文本会先经过 tokenizer，被切分成一串 **token**。
+一个 token 可能是一个汉字、单词、单词的一部分，或者标点符号；每个 token 都对应词表中的一个整数 ID。
 
-问题在于，新的 $q_{n+1}$ 仍然需要和 $K_{1:n+1}$ 做点积，并用所得权重读取 $V_{1:n+1}$。所以历史 K/V **不能不读**；KV Cache 省下的是重复的线性投影计算，不是让模型凭空忘掉历史。
-
-## 不使用 KV Cache：每次都把历史重新投影一遍
-
-`NoKVCache.pdf` 的流程图用红色标出了历史 token、蓝色标出了新 token。为了计算第 5 个 token 的输出，图中把 $X_{1:5}$ 整体分别乘以 $W_K$ 与 $W_V$：
-
-$$
-K_{1:5}=X_{1:5}W_K,\qquad V_{1:5}=X_{1:5}W_V.
-$$
-
-下一步生成第 6 个 token 时，又会计算 $X_{1:6}W_K$ 和 $X_{1:6}W_V$。前 5 行的结果与上一步完全相同，却又被重新算了一次。序列越长，红色的“旧工作”就越多；这正是没有 KV Cache 时 decode 会不断浪费计算的原因。
-
-## 使用 KV Cache：只算蓝色的一行，再接到绿色的历史后面
-
-`KVCache.pdf` 的第 (c) 张图展示了 cache 的版本。当前步骤只将蓝色的 $x_{n+1}$ 投影一次：
-
-$$
-q_{n+1}=x_{n+1}W_Q,\qquad
-k_{n+1}=x_{n+1}W_K,\qquad
-v_{n+1}=x_{n+1}W_V.
-$$
-
-然后将新的 $k_{n+1}$、$v_{n+1}$ append 到已经保存的绿色历史项：
-
-$$
-K_{1:n+1}=\operatorname{concat}(K_{\text{cache}},k_{n+1}),\qquad
-V_{1:n+1}=\operatorname{concat}(V_{\text{cache}},v_{n+1}).
-$$
-
-最后只需计算一行 score 和一行输出：
-
-$$
-s_{n+1}=\frac{q_{n+1}K_{1:n+1}^\mathsf{T}}{\sqrt{d_k}},\qquad
-o_{n+1}=\operatorname{Softmax}(s_{n+1})V_{1:n+1}.
-$$
-
-红色的历史投影变成了绿色的 cache reuse，蓝色部分则是这一轮不可避免的新工作。这样并不会改变 attention 的数学结果，只是避免把已知的 K/V 反复算出来。
-
-项目中的简单 simulation 也能看到这个差异：相对重新计算，使用 cache 后在 200、400、800 个 output tokens 时，生成速度分别约为 $2.02\times$、$2.97\times$ 与 $4.55\times$。
-
-# 好消息：不用重复算了；坏消息：要存不下了
-
-## KV Cache 有多大？
-
-KV Cache 的容量近似为：
-
-$$
-\text{Bytes} = 2 \times B \times L \times N \times H_{KV} \times d_h \times p.
-$$
-
-这里的 $2$ 代表 K 和 V 两份数据，$B$ 是 batch size，$L$ 是层数，$N$ 是当前上下文长度，$H_{KV}$ 是 KV heads 数，$d_h$ 是每个 head 的维度，$p$ 是每个元素占用的字节数。以 FP16、32 KV heads、$d_h=128$ 为例，4096 tokens 的**单层** cache 已约为 64 MiB；层数上去以后，显存容量与带宽都会开始难受。
-
-## Decode 不是算力不够，而是搬数据太多
-
-KV Cache 消除了历史投影，但每生成一个 token，仍要读取一遍历史 K/V 来完成 $qK^\mathsf{T}$ 和 $pV$。计算量相对每次读取的数据较小，因此长上下文 decode 很容易变成 memory-bound。
-
-多核同时处理不同 Query 时，问题还会加重：这些 core 可能需要同一个 KV tile，却各自从 L2 或 DRAM 读取一次。于是后面要讨论的量化与共享缓存，并不是为了替代 KV Cache，而是在 KV Cache 已经不可缺少之后，继续减少它的容量和搬运量。
-
-> 原来不是 AI 在思考，是内存控制器在加班。
-
-# 我的 KV Cache 实验
-
-## 从 HuggingFace 的 baseline 开始
-
-- 用 GPT-2 建立正常 FP16 cache baseline
-- 检查每一层 cache 的 shape：`[B, H, T, D]`
-- 分别观察 Key 和 Value 的分布
-
-<!-- TODO: 插入同一 head 跨 layer 的 K/V 对比图，以及 per-token 与 per-channel range 对比图。 -->
-
-## 一个发现：K 和 V 的脾气不太一样
-
-- K 存在稳定的大幅值 channel
-- V 的分布相对均匀
-- 因而不应强行用同一种量化分组策略
-
-# KIVI：给 KV Cache 上点强度
-
-## KIVI 做了什么？
-
-- Key：按 channel 分组量化
-- Value：按 token 分组量化
-- 最近的一段 token 保留 FP16 residual
-- 较旧部分压缩为 INT8 / INT4 / INT2
-
-建议配一张缓存结构图：
+例如，句子：
 
 ```text
-Old K/V (packed low-bit) | Recent residual (FP16)
+KV Cache saves memory bandwidth.
 ```
 
-## 我实现了什么？
-
-- INT2 / INT4 / INT8 的 pack 与 unpack
-- affine min-max group quantization
-- 流式 append 与 residual flush
-- quantized cache 的 dequantize 验证
-- teacher-forced 与 free-running generation correctness test
-
-## 结果怎么样？
-
-| Config | Teacher Match | Mean KL | Persistent bytes | Compression |
-| :--- | ---: | ---: | ---: | ---: |
-| FP16 | 100% | 0 | 4,792,320 | 1.00× |
-| INT8 | 100% | 0.000273 | 3,227,904 | 1.49× |
-| INT4 | 100% | 0.001134 | 2,333,952 | 2.05× |
-| INT2 | 93.75% | 0.028037 | 1,886,976 | 2.54× |
-
-- INT4 是这次实验里最平衡的选择
-- INT2 更省，但已经出现明显输出偏差
-- 实际压缩率低于理论值：residual 与 scale/offset metadata 都要占空间
-
-# 只压缩还不够：多核为什么还要共享 KV？
-
-## 重复搬运的问题
-
-- 多个 core 的 Query tile 都可能需要同一 KV tile
-- 若每个 core 各读一次，带宽会被重复消耗
-- 理想情况下，$C$ 个 core 可以共享一次 load
-
-$$
-\text{Traffic reduction} \approx 1 - \frac{1}{C}
-$$
-
-## 项目中的设想：Shared KV Tile Buffer
+可能会被拆成类似下面的序列：
 
 ```text
-L2 / DRAM
-    ↓
-Shared ping-pong KV buffer
-    ↓ broadcast
-Local L1 of each core
-    ↓
-QKᵀ → online Softmax → PV
+["KV", " Cache", " saves", " memory", " bandwidth", "."]
+                         |
+                         |  tokenizer
+                         V
+[token_1, token_2, token_3, token_4, token_5, token_6]
 ```
 
-- K/V immutable，硬件一致性问题比普通共享内存简单
-- 双缓冲让下一块加载与当前块计算重叠
-- tile-local dequantization：低比特数据尽量只在外部路径上传输
+具体怎样切分取决于模型使用的 tokenizer。对后面的计算来说，文本至此已经变成了一串整数 ID。这些 ID 经过 embedding table 的查表操作，被转换成一组向量。若输入中共有 $n$ 个 token、每个向量的宽度为 $d$，便可以将它们排列成一个 $n$ 行 $d$ 列的矩阵：
 
-# 但是，理论不是性能
+$$
+X\in\mathbb{R}^{n\times d}
+$$
 
-- Core 不一定同时请求同一块 KV
-- 广播本身也有互连成本
-- 完整反量化 Cache 会增加临时内存和转换开销
-- FlashAttention、量化、共享调度需要一起设计，不能各做各的
+矩阵中的每一行对应一个 token。模型还会通过位置编码或 RoPE 等机制注入位置信息，否则仅凭这些向量，它无法区分 token 的先后顺序。
 
-# 总结
+论文里面的原始 Transformer 是一个 **Encoder - Decoder** 架构：Encoder 读取输入序列；Decoder 在生成输出时，一边关注已经生成的前文，一边通过 Cross-Attention 读取 Encoder 的输出。这种结构适合机器翻译等“输入序列到输出序列”的任务。
 
-- KV Cache 解决了重复计算，却将 Decode 推向 memory-bound
-- KIVI 说明 K/V 应区别对待；本实验中 INT4 是较好的折中
-- 多核共享 KV 可以减少重复的上层存储流量
-- 下一步：trace/cycle-level simulation，测量 tile reuse、stall、实际带宽与吞吐
+<figure style="
+  --figure-width: 420px;
+  width: min(100%, var(--figure-width));
+  margin: 1.5rem auto;
+">
+  <img
+    src="/images/Transformer_Structure_Paper.webp"
+    alt="Attention Is All You Need 论文中的 Transformer Encoder--Decoder 架构"
+    style="
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    "
+  />
+  <figcaption style="
+    margin-top: 0.55rem;
+    color: #777;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    text-align: center;
+  ">
+    图 1：原始 Transformer 的 Encoder--Decoder 架构
+</figure>
 
-# Reference
+但是，**Attention 并非 All You Need**。一个语言模型不只包含 Attention，也不是把一句话塞进某公式后就能直接吐出答案。
 
-- Attention Is All You Need
-- FlashAttention / FlashAttention-2 / FlashAttention-3
-- KIVI
-- SpAtten
+一个 Transformer Layer (也就是图中的 Decoder block) 中主要包含一下几类计算：
++ Masked Self-Attention: 让当前位置只能读取自己和此前的 token；
++ Cross-Attention: 读取 Encoder 的信息；
++ Feed-Forward Network (FFN): 分别变换每个位置的向量。
++ 残差连接和归一化: 使这些 block 可以稳定地堆叠很多层。
+
+看不懂？没关系！大语言模型通常使用 **decoder-only Transformer**：去掉了 Encoder 和 Cross-Attention，只保留重复堆叠的 Layer。给定 prompt 后，模型从左到右预测下一个 token，刚生成的 token 会被接回输入，触发下一轮推理。这个过程持续到模型生成结束标记，或达到预设的最大生成长度为止。
+
+
+下图中的 **Transformer Layer 1** 到 **Transformer Layer L** 是 decoder-only 模型中依次执行的完整 Decoder block。
+
+<div style="display:flex; justify-content:center;">
+  <div style="
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    aspect-ratio: 4 / 1;
+    border: 3px solid #555;
+    border-radius: 12px;
+    overflow: hidden;
+  ">
+    <iframe
+      src="/assets/Transformer_FullFlow_LayerBlackBoxes.html"
+      title="Transformer 自回归生成流程"
+      style="
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      ">
+    </iframe>
+  </div>
+</div>
+<p style="
+    margin: 0.6rem 1rem 0;
+    text-align: center;
+    color: #777;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  ">
+    fig 1：Transformer 的自回归生成流程。这里取 n = 4 。
+</p>
+
+第 $1$ 层接收 $X^{(0)}$，输出 $X^{(1)}$，第 $\ell$ 层接收 $X^{(\ell-1)}$ 并输出 $X^{(\ell)}$，最终由第 $L$ 层输出 $X^{(L)}$：
+
+$$
+X^{(0)}\rightarrow X^{(1)}\rightarrow\cdots\rightarrow X^{(L)}
+$$
+
+最后一层的 $X^{(L)}$ 仍是一个 $n\times d$ 的矩阵。推理时，模型取其最后一行，经过一系列运算，得到下一个 token 。这个 token 再经过 embedding 与位置信息处理，成为 $x_{n+1}^{(0)}$，append 到最初的 $X^{(0)}$。输入从 $n\times d$ 增长为 $(n+1)\times d$，并开始下一轮推理；是谓 **自回归 (autoregressive)**。
+
+本文不展开整个 Transformer layer 的每一步，仅关注图 1 红色圆圈圈出的部分 —— **Masked Self-Attention**。
+
+Masked Self-Attention 必须让当前位置与之前的 token 发生交互。这是 Transformer 能利用长上下文的关键，也是计算量与数据流开始依赖序列长度的地方（当然也是和本文主题 KV Cache 相关的部分😋）。
+
+为了让符号更简洁，下面省略层编号，将这一层收到的 hidden states 统一记为：
+
+$$
+X\in\mathbb{R}^{n\times d}
+$$
+
+# Attention Is All You Need！
+
+上一节的 $X$ 指的是某个 Transformer layer 收到的 hidden states。我们可以把 Attention 运算想成一副“从上下文找信息”的镜头：当前 token 用它判断哪些位置和自己有关，再把那些位置的信息带回来。
+
+但一句话里的线索往往不只一种。比如读到一个词时，模型可能既要看紧邻的修饰词，也要找很前面的主语，还要参考某个代词究竟指向谁。如果只有一个 attention head，它只有一副镜头，只能用一种方式分配注意力；把这些不同线索全塞进一张权重表里并不理想。
+
+因此真实模型使用 **Multi-Head Attention（MHA）**，即多注意力头：同一份 $X$ 会同时交给 $h$ 个 attention head。它们像 $h$ 副不同的镜头，各自用自己的参数观察上下文；一个 head 可能更关注近处，另一个可能更关注远处或另一种关联。模型不会预先规定每个 head 的职责，而是在训练中自己学会怎样分工。最后再把各个 head 找到的信息合并起来。
+
+总 hidden size 为 $d$，若使用 $h$ 个等宽的 head，通常令
+
+$$
+d_k=\frac{d}{h}
+$$
+
+即，$d$ 个特征被分成 $h$ 份交给不同 head 处理，每个 head 只处理其中的 $d_k$ 个；每一个 head 运算结束后将结果拼接，最后得到的宽度仍是 $h\times d_k=d$。
+
+为了看清 MHA 内部真正发生的计算，接下来先拆开其中一个 head。若没有特别说明，讨论的都是同一个 layer 中第 $i$ 个 attention head：
+
+| 符号 | 含义 | 图中的取值 |
+| :---: | --- | :---: |
+| $n$ | 当前序列中的 token 数 | $4$ |
+| $d$ | 模型的 hidden size，即每个 token 向量的宽度 | $12$ |
+| $h$ | attention head 的数量 | $4$ |
+| $d_k$ | 单个 head 的 Key/Query/Value 宽度，通常有 $d_k=d/h$ | $3$ |
+| $i$ | attention head 的编号，$i=1,\ldots,h$ | - |
+| $X\in\mathbb{R}^{n\times d}$ | 该 layer 的输入；第 $t$ 行记作 $x_t$ | $4\times12$ |
+
+<div style="display:flex; justify-content:center; margin:1.5rem 0 0;">
+  <div style="
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    aspect-ratio: 2.80 / 1;
+    border: 2px solid #555;
+    border-radius: 10px;
+    overflow: hidden;
+  ">
+    <iframe
+      src="/assets/Attention_n4.html"
+      title="四个 Token 的 Masked Self-Attention 运算流程"
+      style="
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      ">
+    </iframe>
+  </div>
+</div>
+<p style="
+  margin: 0.6rem 1rem 0;
+  text-align: center;
+  color: #777;
+  font-size: 0.9rem;
+  line-height: 1.5;
+">
+  四个 token 的 Masked Self-Attention 运算示意
+</p>
+
+每个 head 都有自己独立的训练好的权重 $W_Q^{(i)},W_K^{(i)},W_V^{(i)}\in\mathbb{R}^{d\times d_k}$。它们把同一份输入 $X$ 投影成 Query、Key 与 Value：
+
+$$
+Q^{(i)}=XW_Q^{(i)},\qquad
+K^{(i)}=XW_K^{(i)},\qquad
+V^{(i)}=XW_V^{(i)}
+$$
+
+因此 $Q^{(i)},K^{(i)},V^{(i)}\in\mathbb{R}^{n\times d_k}$。可以把 $Q$ 看成“当前位置想找什么”，$K$ 看成“每个位置能被怎样匹配”，$V$ 则是“匹配成功后实际读出的内容”。三者都来自同一个 $X$，只是经过了不同的线性投影。
+
+接下来，$QK^{\mathsf{T}}$ 让每一个 Query 都和所有 Key 做点积，得到分数矩阵 $S$，再除以 $\sqrt{d_k}$；对于 decoder-only 模型，还要加入 causal mask，禁止当前位置读取未来 token:
+
+$$
+S^{(i)}=\frac{Q^{(i)}(K^{(i)})^\mathsf{T}}{\sqrt{d_k}},\qquad
+P^{(i)}=\operatorname{Softmax}\bigl(S^{(i)}+M\bigr)
+$$
+
+其中，$S^{(i)}$ 与 $P^{(i)}$ 的形状都是 $n\times n$。
+
+最后将 $P$ 矩阵与 Value 矩阵 $V$ 相乘得到 $H$:
+
+$$
+H^{(i)}=P^{(i)}V^{(i)}
+$$
+
+现在回到完整的 MHA: $h$ 个 attention head 并行执行以上操作，得到 $H^{(1)},\ldots,H^{(h)}$；再拼接并乘上输出投影 $W_O\in\mathbb{R}^{d\times d}$：
+
+$$
+O=\operatorname{Concat}\bigl(H^{(1)},\ldots,H^{(h)}\bigr)W_O
+$$
+
+图中最右侧的 $O$ 是当前 Transformer layer 的 Attention 计算的输出，不是此 layer 的输出。它还会经过残差连接、归一化和 FFN 等一系列操作，才成为下一层的输入；只有最后一个 layer 的**最后一行**，在经过 LM Head 后才会给出下一个 token 的概率分布。本文暂时把这些步骤省略，因为 KV Cache 保存和复用的正是前面 Attention 内部的 $K$ 与 $V$。
+
+> 🐱：真是复杂喵，为什么要使用 QKV 这三个矩阵，为什么要这么设计？
+
+> 😡：这是 ai 学家的事！我方对此无可奉告！
+
+
+# 有 Cache 无 Cache
+
+到这里，我们已经大致知道了 attention layer 里面的 attention 计算是什么样的。回忆第二个章节的内容：模型在经过 $1\cdots L$ 个 layer 后计算出下一个 token，将它 append 回最初的输入，再开始下一轮推理。
+
+然而贪婪的工程师总想要提升运算的速度，于是 KV Cache 诞生了。为了更好地解释为什么需要 KV Cache，下面不妨考虑第 $n+1$ 个 token 的诞生过程。
+
+<div style="display:flex; justify-content:center; margin:1.5rem 0 0;">
+  <div style="position:relative; width:100%; max-width:1400px; aspect-ratio:2.85 / 1; border:2px solid #555; border-radius:10px; overflow:hidden;">
+    <iframe src="/assets/KVCache_Figure.html?figure=no-cache" title="没有 KV Cache 时重新计算完整序列" style="position:absolute; inset:0; width:100%; height:100%; border:none;"></iframe>
+  </div>
+</div>
+<p style="margin:0.6rem 1rem 0; text-align:center; color:#777; font-size:0.9rem; line-height:1.5;">
+  (b) 没有保存中间结果时，下一次 decode 会重新计算完整的 $(n+1)$ token 序列。红色为历史行，蓝色为刚加入的新 token。滚轮可缩放，拖动可移动视图。
+</p>
+
+上一轮推理生成的 token 被 append 到 $X$，$X$ 变成了 $n+1$ 行 $d$ 列的矩阵（图中蓝色区域为 append 的行），接着和 $W_Q,W_K,W_V$ 进行矩阵乘法。观察结果不难发现，$Q/K/V$ 的红色区域是上一轮推理已经计算过的部分，而只有蓝色区域是需要重新计算的地方。
+
+接着观察 $PV$ 运算。图的上半部分对应长度为 $n$ 的序列；append 新 token 后，序列长度变为 $n+1$，得到下半部分的矩阵。此时 $V$ 增加一行，而 $P$ 同时增加一行和一列。由于 causal mask 会在 Softmax 前把 score 矩阵上三角的位置设为 $-\infty$，Softmax 后这些位置在 $P$ 中的概率就是 $0$。因此新旧两次计算中 $P$ 与 $V$ 的前 $n$ 行不变。相应地，长度为 $n+1$ 时得到的 $H=PV$，其前 $n$ 行与长度为 $n$ 时的结果完全相同；蓝色最后一行才是 token $n+1$ 新产生的输出。
+
+<div style="display:flex; justify-content:center; margin:1.5rem 0 0;">
+  <div style="position:relative; width:40%; max-width:400px; aspect-ratio:1.33 / 1; border:2px solid #555; border-radius:10px; overflow:hidden;">
+    <iframe src="/assets/PV_Compare.html" title="长度 n 与 n+1 的 PV 运算对比" style="position:absolute; inset:0; width:100%; height:100%; border:none;"></iframe>
+  </div>
+</div>
+
+Attention 输出经过多头拼接、输出投影、残差连接和 FFN 后，历史行仍然不变。因此第 $2\cdots L$ 层 Transformer layer 的输入相比上一轮推理也只增加了一行：
+
+$$
+X^{(1)}_{1:n}\longrightarrow X^{(1)}_{1:n+1} \qquad \cdots \qquad X^{(L-1)}_{1:n}\longrightarrow X^{(L-1)}_{1:n+1}
+$$
+
+既然生成的 token 只和最后一行有关，那么每次计算时为什么还要带着庞大的历史 token？于是工程师改进了方法：把不会改变、又会被后续 token 反复读取的 Key 和 Value 留下来。
+
+<div style="display:flex; justify-content:center; margin:1.5rem 0 0;">
+  <div style="position:relative; width:100%; max-width:1400px; aspect-ratio:3.02 / 1; border:2px solid #555; border-radius:10px; overflow:hidden;">
+    <iframe src="/assets/KVCache_Figure.html?figure=cache" title="使用 KV Cache 的单 token decode" style="position:absolute; inset:0; width:100%; height:100%; border:none;"></iframe>
+  </div>
+</div>
+<p style="margin:0.6rem 1rem 0; text-align:center; color:#777; font-size:0.9rem; line-height:1.5;">
+  使用 KV Cache 的单 token decode。绿色为已保存的历史 K/V，蓝色为当前新 token 产生的 K/V。
+</p>
+
+## Prefill
+
+第一次输入 prompt 时，假设其中有 $n$ 个 token，模型会将整个 $X_{1:n}^{(0)}\in\mathbb{R}^{n\times d}$ 一次送入第 1 层。每个 layer 计算这 $n$ 行对应的 $K/V$ 和 attention 输出，最后由第 $L$ 层的最后一行预测第一个生成 token。
+
+这个阶段称为 **prefill**。经过 prefill 后，每一层都已经计算得到这 $n$ 个 token 对应的 Key 和 Value：
+
+$$
+K_{1:n}^{(\ell)},\qquad V_{1:n}^{(\ell)},\qquad \ell=1,\ldots,L
+$$
+
+将这些 $K$ $V$ 暂时保存起来，是谓 KVCache。不同 layer，不同 head 的权重不同，所以它们各自拥有独立的 cache。
+
+## Decode
+
+模型从 prefill 的最后一行选出 token $n+1$ 后，将它 embedding 成一行新的 hidden state $x_{n+1}\in\mathbb{R}^{1\times d}$。如果完全不保存任何中间结果，最直接的实现方式就是把 append 后的 $X_{1:n+1}$ 整体重新送进每一层；这就是上图中红色历史行被重复计算的原因。
+
+此时每层只接收一行新 hidden state，只计算新的 $q_{n+1},k_{n+1},v_{n+1}$；随后把 $k/v$ append 到该层的历史 cache：
+
+$$
+K_{1:n+1}=\operatorname{concat}(K_{\mathrm{cache}},k_{n+1}),\qquad
+V_{1:n+1}=\operatorname{concat}(V_{\mathrm{cache}},v_{n+1})
+$$
+
+新的 Query 仍需要读取全部历史 K/V，但现在只需计算一行 score 和一行输出：
+
+$$
+s_{n+1}=\frac{q_{n+1}K_{1:n+1}^{\mathsf T}}{\sqrt{d_k}},\qquad
+o_{n+1}=\operatorname{Softmax}(s_{n+1})V_{1:n+1}
+$$
+
+> 历史 Query 和历史 Attention 输出不会再被未来 token 使用，因此不必缓存。
+
+KV Cache 省去了历史 token 的重复投影和重复 Attention 计算，但代价是每一层的 K/V 会随序列增长持续占用显存，并在 decode 时反复读取。这正是后文量化、压缩与共享 KV 数据的出发点。
+
+## 复杂度对比
+
+无 Cache 时，模型把长度为 $t$ 的整段序列一起送入 Attention：$Q,K,V$ 都是多行矩阵，$QK^{\mathsf T}$ 和 $PV$，以及 $Q/K/V$ 的计算都是 **矩阵-矩阵乘法** (GEMM)。
+
+$$
+H = \operatorname{Softmax}\left(\frac{QK^{\mathsf T}}{\sqrt{d_k}}+M\right)V, \qquad
+\left\{
+  \begin{aligned}
+  Q &= XW_Q\\
+  K &= XW_K\\
+  V &= XW_V
+  \end{aligned}
+\right.
+$$
+
+对比使用 KVCache 的情形，$qK^{\mathsf T}$ 与 $\operatorname{Softmax}(\cdots)V$ 、$q/K/V$ 的计算都是**向量-矩阵乘法** (GEVM)。
+
+
+$$
+h = \operatorname{Softmax}\left(\frac{qK^{\mathsf T}}{\sqrt{d_k}}\right)V, \qquad
+\left\{
+  \begin{aligned}
+  q & =xW_Q \\
+  K &= \operatorname{concat}\left(K_{\text{cache}}, xW_K\right)\\
+  V &= \operatorname{concat}\left(V_{\text{cache}}, xW_V\right)
+  \end{aligned}
+\right.
+$$
+
+# Time v.s. Space
+
+我操这么好的技术你怎么不早点告诉我。
+
+使用 KVCache，显著提高了 Attention 计算的速度，但是世上没有免费的午餐—— KV Cache 需要大量额外的显存空间。
+
+这里使用标准的 Multi-Head Attention 作为例子，第 $\ell$ 层、第 $i$ 个 head 在已有 token 数为 $n$ 时的历史 $K,V$ 都是 $n\times d_k$ 的矩阵。如果矩阵的每个数字使用 $b$ 个 bit 存储，$K, V$ 共需 $2 \times n \times d_k \times b$ 空间。对于共 $L$ 层 layer，每层 $h$ 个注意力头的模型，KVCache 大小为:
+$$
+2 \times n \times d_k \times b \times L \times h \text{ bits}
+$$
+
+以 GPT-2 small 为例，它有 $L=12$ 层、每层 $h=12$ 个 attention head，每个 head 的维度为 $d_k=64$；KVCache 使用 FP32 精度，即每个元素占 $b=32$ bits，那么：
+
+$$
+\begin{aligned}
+\text{KV Cache Size (Per token)}
+&=2\times64\times32\times12\times12\ \text{bits/token} \\
+&= 72\ \text{KiB/token}
+\end{aligned}
+$$
+
+当上下文长度达到 $1024$ 个 token 时，单个请求的 KV Cache 就大约需要：
+
+$$
+72\ \text{KiB/token}\times1024\ \text{token}
+=72\ \text{MiB}.
+$$
+
+如果同时处理多个请求，Cache 还会随着 batch size 线性增加。例如 batch size 为 $8$ 时，仅 GPT-2 small 的 KV Cache 就需要约 $576\ \text{MiB}$。
+
+对于更大的语言模型，这个数字会因为更多的 layer、更宽的 hidden size 和更长的上下文而继续增长。于是 KV Cache 的问题不再只是“能不能存下”，还包括每一步 decode 都要从显存中读取不断增长的历史 K/V：我们用显存保存了计算结果，却把性能压力转移到了存储容量和访存带宽上。
+然而，现在的大模型体量已经远远超过了 GPT-2 small。上面的计算更像是一个单位换算：每增加一个 token，模型都要在每一层、每一个 head 中新增一组 Key 和 Value；当 layer 数、head 数和 head 维度同时增大时，单个 token 对应的 Cache 也会随之增加。
+
+
