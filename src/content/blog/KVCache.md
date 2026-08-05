@@ -110,7 +110,7 @@ $$
     position: relative;
     width: 100%;
     max-width: 1400px;
-    aspect-ratio: 4 / 1;
+    aspect-ratio: 3.2 / 1;
     border: 3px solid #555;
     border-radius: 12px;
     overflow: hidden;
@@ -188,7 +188,7 @@ $$
     position: relative;
     width: 100%;
     max-width: 1400px;
-    aspect-ratio: 2.80 / 1;
+    aspect-ratio: 2.4 / 1;
     border: 2px solid #555;
     border-radius: 10px;
     overflow: hidden;
@@ -261,7 +261,7 @@ $$
 然而贪婪的工程师总想要提升运算的速度，于是 KV Cache 诞生了。为了更好地解释为什么需要 KV Cache，下面不妨考虑第 $n+1$ 个 token 的诞生过程。
 
 <div style="display:flex; justify-content:center; margin:1.5rem 0 0;">
-  <div style="position:relative; width:100%; max-width:1400px; aspect-ratio:2.85 / 1; border:2px solid #555; border-radius:10px; overflow:hidden;">
+  <div style="position:relative; width:100%; max-width:1600px; aspect-ratio:2.5 / 1; border:2px solid #555; border-radius:10px; overflow:hidden;">
     <iframe src="/assets/KVCache_Figure.html?figure=no-cache" title="没有 KV Cache 时重新计算完整序列" style="position:absolute; inset:0; width:100%; height:100%; border:none;"></iframe>
   </div>
 </div>
@@ -274,7 +274,7 @@ $$
 接着观察 $PV$ 运算。图的上半部分对应长度为 $n$ 的序列；append 新 token 后，序列长度变为 $n+1$，得到下半部分的矩阵。此时 $V$ 增加一行，而 $P$ 同时增加一行和一列。由于 causal mask 会在 Softmax 前把 score 矩阵上三角的位置设为 $-\infty$，Softmax 后这些位置在 $P$ 中的概率就是 $0$。因此新旧两次计算中 $P$ 与 $V$ 的前 $n$ 行不变。相应地，长度为 $n+1$ 时得到的 $H=PV$，其前 $n$ 行与长度为 $n$ 时的结果完全相同；蓝色最后一行才是 token $n+1$ 新产生的输出。
 
 <div style="display:flex; justify-content:center; margin:1.5rem 0 0;">
-  <div style="position:relative; width:40%; max-width:400px; aspect-ratio:1.33 / 1; border:2px solid #555; border-radius:10px; overflow:hidden;">
+  <div style="position:relative; width:55%; max-width:560px; aspect-ratio:1.33 / 1; border:2px solid #555; border-radius:10px; overflow:hidden;">
     <iframe src="/assets/PV_Compare.html" title="长度 n 与 n+1 的 PV 运算对比" style="position:absolute; inset:0; width:100%; height:100%; border:none;"></iframe>
   </div>
 </div>
@@ -288,14 +288,13 @@ $$
 既然生成的 token 只和最后一行有关，那么每次计算时为什么还要带着庞大的历史 token？于是工程师改进了方法: 把不会改变、又会被后续 token 反复读取的 Key 和 Value 留下来。
 
 <div style="display:flex; justify-content:center; margin:1.5rem 0 0;">
-  <div style="position:relative; width:100%; max-width:1400px; aspect-ratio:3.02 / 1; border:2px solid #555; border-radius:10px; overflow:hidden;">
+  <div style="position:relative; width:100%; max-width:1600px; aspect-ratio:2.6 / 1; border:2px solid #555; border-radius:10px; overflow:hidden;">
     <iframe src="/assets/KVCache_Figure.html?figure=cache" title="使用 KV Cache 的单 token decode" style="position:absolute; inset:0; width:100%; height:100%; border:none;"></iframe>
   </div>
 </div>
 <p style="margin:0.6rem 1rem 0; text-align:center; color:#777; font-size:0.9rem; line-height:1.5;">
   绿色为已保存的历史 K/V，蓝色为当前新 token 产生的 K/V。
 </p>
-
 ## Prefill
 
 第一次输入 prompt 时，假设其中有 $n$ 个 token，模型会将整个 $X_{1:n}^{(0)}\in\mathbb{R}^{n\times d}$ 一次送入第 1 层。每个 layer 计算这 $n$ 行对应的 $K/V$ 和 attention 输出，最后由第 $L$ 层的最后一行预测第一个生成 token。
