@@ -413,8 +413,30 @@ FlashAttention-2 进一步提高并行度，让更多线程组同时干活；还
 
 ## KIVI —非对称量化
 
-KV Cache 的大小和量化的 bit 数相关。用更少的 bit 量化能减少 KVCache 的大小，比如 2-bit，相比 FP32，减少了 16 倍，2 bits 只能表示 4 个数，而 FP32 能表示 $2^{32}$ 个数字，两者的精确度差别会直接把生成质量打烂。
+KV Cache 的大小和量化的 bit 数相关。用更少的 bit 量化能减少 KVCache 的大小，比如 2-bit，相比 FP32，减少了 16 倍，2 bits 只能表示 4 个数，而 FP32 能表示 $2^{32}$ 个数字，两者的精确度差别会直接把生成质量打烂。而 KIVI 提出了使用 2-bit 量化但是不明显降低质量的量化方法。
 
+论文首先统计了 KVCache 的分布特征，以论文里面的图为例：
+
+<figure style="
+  --figure-width: 700px;
+  width: min(80%, var(--figure-width));
+  margin: 1.5rem auto;
+">
+  <img
+    src="/images/KIVI_KV_view.webp"
+    alt="KIVI 的 K/V Cache"
+    style="display: block; width: 100%; height: auto; border-radius: 8px;"
+  />
+  <figcaption style="margin-top: 0.55rem; color: #777; font-size: 0.85rem; line-height: 1.5; text-align: center;">
+    Key 有明显的凸起值，Value 相对不明显
+</figure>
+
++ Key：在某些 channel 上在存在明显的凸起值 (outlier)。
+- Value：分布相对均匀。
+
+如果对 K 使用 per token 的量化，较大的 outlier 使每个 group 内部的值范围（$\text{max} - \text{min}$)过大，分配到每个量化 level 的步长更长，使精细度降低。
+
+KIVI 针对 Key 做 per-channel 量化，对 Value 保留 per-token 量化，因此称为”非对称量化“。
 
 ## Cross Layer Attention — 相邻层共用 cache
 
