@@ -2,7 +2,7 @@
 title: 'KVCache 笔记'
 author: 'Juliet'
 description: '本文记录对 KV Cache 的一点理解 & 探索。'
-pubDate: 'Aug 01 2026'
+pubDate: 'Aug 05 2026'
 tags: ["AI"]
 pinned: false
 license: "CC BY-SA 4.0"
