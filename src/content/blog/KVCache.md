@@ -359,7 +359,7 @@ $$
 
 # Time v.s. Space
 
-我操这么好的技术你怎么不早点告诉我。
+我操这么好的技术你咋不早点告诉我。
 
 使用 KVCache，显著提高了 Attention 计算的速度，但是世上没有免费的午餐—— KV Cache 需要大量额外的显存空间。
 
@@ -387,7 +387,46 @@ $$
 
 如果同时处理多个请求，Cache 还会随着 batch size 线性增加。例如 batch size 为 $8$ 时，仅 GPT-2 small 的 KV Cache 就需要约 $576\ \text{MiB}$。
 
-对于更大的语言模型，这个数字会因为更多的 layer、更宽的 hidden size 和更长的上下文而继续增长。于是 KV Cache 的问题不再只是“能不能存下”，还包括每一步 decode 都要从显存中读取不断增长的历史 K/V：我们用显存保存了计算结果，却把性能压力转移到了存储容量和访存带宽上。
-然而，现在的大模型体量已经远远超过了 GPT-2 small。上面的计算更像是一个单位换算：每增加一个 token，模型都要在每一层、每一个 head 中新增一组 Key 和 Value；当 layer 数、head 数和 head 维度同时增大时，单个 token 对应的 Cache 也会随之增加。
+对于更大的语言模型，这个问题会因为更多的 layer、更宽的 hidden size 和更长的上下文而继续放大。
+
+以 Llama-2-7B 为例：$L=32$ 层，$h=32$ 个 head，$d_k=128$；使用 FP16 精度时每个 token 的 KV Cache 约为 $512\ \text{KiB}$。当上下文达到 $4096$ 个 token 时，单个请求的 KVCache 已膨胀到 $2\ \text{GiB}$；batch size 为 $32$ 时，仅缓存就占据 $64\ \text{GiB}$，占一张 A100（80 GiB）的 80%。
+
+一个 7B 模型，单次推理的 KVCache 就能吞掉一张 A100 八成的显存。用户若想用 128k 上下文、批量服务 128 个请求，需要约 100 张 A100 的显存😰。
+
+于是抠门的计算机科学家开始想各种办法。不过动手之前，需要先区分**显存容量**和**显存带宽**。
+
+容量不够是指 cache 太大，装不下。带宽不够，即 cache 装得下，但每次 decode 都要把 KVCache 从显存读一遍，写入 SRAM 再给计算单元计算。随着计算单元的算力以及并行度的提升，数据搬运的速度跟不上计算的速度，导致计算单元闲置。
+
+后者其实在 FlashAttention 提出之前就相当严重了—— prefill 阶段 softmax 前面的 $n \times n$ 矩阵也要在 HBM 上反复读写，浪费大量带宽。
+
+## FlashAttention 系列
+
+[FlashAttention (2022)](https://arxiv.org/abs/2205.14135) 和 [FlashAttention-2 (2023)](https://arxiv.org/abs/2307.08691) 早已意识到前文的显存带宽问题随着生成序列增长，搬运数据的读写开销比矩阵乘法本身还大。
+
+FlashAttention 用 **tiling + online softmax** 把 Attention 拆成小块在 SRAM 里就地完成，全程不把完整的 $S$ 和 $P$ 写回 HBM。
+
+FlashAttention-2 进一步提高并行度，让更多线程组同时干活；还把非矩阵乘法运算的比例压到更低。
+
+到了 [FlashAttention-3 (2024)](https://arxiv.org/abs/2407.08608)，主要利用 NVIDIA Hopper 架构 (H100) 的异步硬件单元。TMA 负责在后台搬运数据，WGMMA 做异步矩阵乘法；论文设计了一套 producer-consumer warp specialization 和 ping-pong 调度，狠狠压榨硬件。
+
+> 这三个工作解决的核心问题是 **Attention 计算本身的 I/O 瓶颈**，和你的 KV Cache 有多大无关。但推理时 decode 阶段本身已经是 memory-bound，所以它们对 decode 的加速不如对 prefill 明显。
+
+## KIVI —非对称量化
+
+KV Cache 的大小和量化的 bit 数相关。用更少的 bit 量化能减少 KVCache 的大小，比如 2-bit，相比 FP32，减少了 16 倍，2 bits 只能表示 4 个数，而 FP32 能表示 $2^{32}$ 个数字，两者的精确度差别会直接把生成质量打烂。
 
 
+## Cross Layer Attention — 相邻层共用 cache
+
+[Cross-Layer Attention (CLA, 2024)](https://arxiv.org/abs/2405.12981) 发现相邻 Transformer Layer 的 Key/Value 表示有很高的相关性——既然这么像，相邻两层共用同一份 KV Cache 不就能压缩一倍 KVCache 了么。
+CLA 引入一个 **sharing factor**：比如 CLA2 表示每 2 层共享一份 K/V。Layer 1 和 Layer 2 用同一组 KVCache；Layer 3 和 Layer 4 用统一组 KVCache ...
+
+不过论文只在 1B-7B 等小规模模型上验证了这个方案，并且由于改变了模型的结构，必须从头预训练，无法直接应用于现成的预训练模型。
+
+## SpAtten — token 剪枝
+
+非常朴素的思路，直接少读几个 token，cache 就自然小了。
+
+[SpAtten (2020)](https://arxiv.org/abs/2004.03789) 提出的方案是 **cascade token pruning**：在推理时动态判断哪些 token 是"语气词"式的结构 token（如冠词 `a`、`the`），这些 token 对后续 Attention 的贡献极小，可以逐步丢弃。同时 SpAtten 还会做 cascade head pruning，把冗余的 attention head 一并去除。
+
+为了减少反复读取 HBM 的开销，SpAtten 还引入了 **progressive quantization**：默认只读 4-bit MSB 做粗略计算，仅在 Attention 概率分布过于平坦（置信度低）时才触发 LSB 的重新读取和完整精度重算。
