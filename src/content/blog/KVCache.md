@@ -1,7 +1,7 @@
 ---
-title: 'KVCache'
+title: 'KVCache 笔记'
 author: 'Juliet'
-description: '从 Transformer 推理到 KIVI 量化缓存的一点实验记录'
+description: '本文记录对 KV Cache 的一点理解 & 探索。'
 pubDate: 'Aug 01 2026'
 tags: ["AI"]
 pinned: false
