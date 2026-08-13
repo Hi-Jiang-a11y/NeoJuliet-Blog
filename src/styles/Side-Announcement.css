@@ -196,6 +196,25 @@
     border-top: 1px solid rgba(var(--gray), 0.3);
 }
 
+:root[data-theme="dark"] .announcement-item {
+    border-color: rgb(235 238 250 / 0.16);
+}
+
+:root[data-theme="dark"] .announcement-header,
+:root[data-theme="dark"] .announcement-item .description {
+    color: rgb(var(--gray-light));
+}
+
+:root[data-theme="dark"] .announcement-header .date,
+:root[data-theme="dark"] .announcecontent p {
+    color: rgb(var(--text-muted));
+}
+
+:root[data-theme="dark"] .announcecontent code {
+    background: rgb(var(--surface-muted));
+    color: rgb(var(--gray-light));
+}
+
 /* 图片 */
 .announcecontent img {
     margin: 1em 0;
@@ -211,4 +230,3 @@
         max-height: 160px;
     }
 }
-

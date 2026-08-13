@@ -1,45 +1,38 @@
+(() => {
+if (window.__neoJulietThemeInitialized) return;
+window.__neoJulietThemeInitialized = true;
+
 function initTheme() {
     const root = document.documentElement;
     const toggleBtn = document.getElementById("theme-toggle");
-    const menu = document.getElementById("theme-menu");
 
     // 初始化主题（可保留，安全）
     const saved = localStorage.getItem("theme");
-    if (saved && saved !== "default") {
+    if (saved === "dark") {
         root.dataset.theme = saved;
+    } else if (saved) {
+        delete root.dataset.theme;
+        localStorage.removeItem("theme");
     }
 
-    // 防止重复绑定（关键）
     if (toggleBtn) {
-        toggleBtn.onclick = (e) => {
-            e.stopPropagation();
-            menu.hidden = !menu.hidden;
+        const updateLabel = () => {
+            const isDark = root.dataset.theme === "dark";
+            toggleBtn.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+            toggleBtn.setAttribute("aria-pressed", String(isDark));
         };
-    }
-
-    if (menu) {
-        menu.onclick = (e) => {
-            const btn = e.target.closest("button");
-            if (!btn) return;
-
-            const theme = btn.dataset.theme;
-
-            if (theme === "default") {
+        updateLabel();
+        toggleBtn.onclick = () => {
+            if (root.dataset.theme === "dark") {
                 delete root.dataset.theme;
                 localStorage.removeItem("theme");
             } else {
-                root.dataset.theme = theme;
-                localStorage.setItem("theme", theme);
+                root.dataset.theme = "dark";
+                localStorage.setItem("theme", "dark");
             }
-
-            menu.hidden = true;
+            updateLabel();
         };
     }
-
-    // 全局点击（避免重复注册）
-    document.onclick = () => {
-        if (menu) menu.hidden = true;
-    };
 }
 
 /* 初次加载 */
@@ -49,3 +42,16 @@ initTheme();
 document.addEventListener("astro:page-load", () => {
     initTheme();
 });
+
+/* Preserve the active theme on Astro client-side navigations. Without this,
+   the incoming document briefly renders with the default light theme. */
+document.addEventListener("astro:before-swap", (event) => {
+    if (!event.newDocument) return;
+    const theme = document.documentElement.dataset.theme;
+    if (theme === "dark") {
+        event.newDocument.documentElement.dataset.theme = "dark";
+    } else {
+        delete event.newDocument.documentElement.dataset.theme;
+    }
+});
+})();

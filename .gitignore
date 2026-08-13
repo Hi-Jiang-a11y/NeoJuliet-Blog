@@ -22,3 +22,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# editor and OS leftovers
+*.swp
+*.swo
+.vscode/*.log
+
+# local deployment/debug output
+.netlify/
+.vercel/

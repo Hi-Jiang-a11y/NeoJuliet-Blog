@@ -1,5 +1,7 @@
 .license-container {
-    padding: 0.5rem;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(var(--juliet-pink) / 0.2);
 }
 
 .license-container h1 {
@@ -25,10 +27,11 @@
 }
 
 .license-card {
-    background-color: rgb(var(--juliet-pink)/0.03); /* 背景色 */
-    border-radius: 12px;
-    padding: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* 轻微阴影 */
+    background: rgb(var(--juliet-pink) / 0.045);
+    border: 1px solid rgb(var(--juliet-pink) / 0.18);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    box-shadow: 0 6px 18px rgb(40 30 70 / 0.05);
 }
 
 .license-title {
@@ -48,7 +51,7 @@
     text-decoration: none;
     word-break: break-all;
     font-size: 0.7rem;
-    line-height: 1; !important
+    line-height: 1 !important;
 }
 .blog-link a:hover {
     text-decoration: underline;
@@ -58,9 +61,19 @@
     display: flex;
     gap: 0.8rem;
     font-size: 0.55rem;
-    color: #666;
+    color: rgb(var(--gray));
     flex-wrap: wrap;
 }
+
+:root[data-theme="dark"] .license-container {
+    border-top-color: rgb(var(--border));
+}
+:root[data-theme="dark"] .license-card {
+    background: rgb(var(--surface));
+    border-color: rgb(var(--border));
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.2);
+}
+:root[data-theme="dark"] .license-meta { color: rgb(var(--text-muted)); }
 
 .license-meta-item {
     display: flex;
@@ -84,4 +97,3 @@
 .license-link:hover {
     color: rgb(var(--juliet-hotpink)/0.85);
 }
-

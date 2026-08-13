@@ -65,7 +65,7 @@
     font-weight: 500;
     border: 3px solid rgb(var(--juliet-pink));
     border-radius: 20px;
-    color: #24292f;
+    color: rgb(var(--gray-dark));
     text-decoration: none;
         transition:
         background-color 0.2s ease,
@@ -82,7 +82,7 @@
 }
 
 .lang-switcher a:active {
-    background-color: #eaeef2;
+    background-color: rgb(var(--gray-light));
 }
 
 .prose {
@@ -107,12 +107,21 @@
 /*blockquote*/
 .prose blockquote {
     border-left: 4px solid rgb(var(--juliet-hotpink));  /* 更改竖线颜色 */
-    background: rgb(var(--juliet-pink)/0.05);
+    background: rgb(var(--juliet-pink)/0.09);
     border-radius: 2px;
-    padding-left: 0.75rem 1rem;
-    color: #555;
+    margin: 1rem 0;
+    padding: 0.45rem 0.9rem;
+    color: rgb(var(--gray-dark));
     font-style: normal;
     font-size: 1rem;
+}
+
+:root:not([data-theme="dark"]) .prose blockquote {
+    color: #3d465d;
+}
+
+.prose blockquote p {
+    margin: 0.35rem 0;
 }
 
 /*table*/
@@ -123,7 +132,7 @@
 
 .prose th,
 .prose td {
-    border: 1px solid #ccc;  /* 竖线 & 横线 */
+    border: 1px solid rgb(var(--gray) / 0.35);  /* 竖线 & 横线 */
     padding: 8px 12px;
 }
 
@@ -134,6 +143,7 @@
 /*code block*/
 .prose pre {
     background: rgb(var(--juliet-palepink)/0.20) !important;
+    color: #24292f;
     padding: 1rem !important;
     border-radius:12px;
     overflow-x: auto;
@@ -149,7 +159,44 @@ code[class*="language-"] {
 }
 
 .prose pre code :not(.token) {
-    color: #555 !important; /* 普通文本颜色，自定义灰色或深粉 */
+    color: inherit !important;
+}
+
+/* Shiki emits both palettes; switch token variables with the active theme. */
+.prose pre.astro-code,
+.prose pre.astro-code code { color: var(--shiki-light, #24292f) !important; }
+.prose .astro-code span { color: var(--shiki-light, #24292f) !important; }
+:root[data-theme="dark"] .prose .astro-code {
+    background-color: var(--shiki-dark-bg, rgb(var(--surface-muted))) !important;
+    color: var(--shiki-dark, #e1e4e8) !important;
+}
+:root[data-theme="dark"] .prose pre.astro-code,
+:root[data-theme="dark"] .prose pre.astro-code code,
+:root[data-theme="dark"] .prose .astro-code span {
+    color: var(--shiki-dark, #e1e4e8) !important;
+}
+
+:root[data-theme="dark"] .blog-post {
+    color: rgb(var(--gray-light));
+}
+:root[data-theme="dark"] .prose blockquote {
+    background: rgb(var(--juliet-pink) / 0.1);
+    color: rgb(var(--gray-light));
+}
+:root[data-theme="dark"] .prose th,
+:root[data-theme="dark"] .prose td {
+    border-color: rgb(var(--gray) / 0.4);
+}
+:root[data-theme="dark"] .prose pre {
+    background: rgb(var(--surface-muted)) !important;
+    color: #e1e4e8;
+}
+:root[data-theme="dark"] .prose :not(pre) > code {
+    background: rgb(var(--juliet-pink) / 0.16);
+    color: #e8c8ff;
+}
+:root[data-theme="dark"] .lang-switcher a:active {
+    background: rgb(var(--surface-muted));
 }
 
 .prose :not(pre) > code {
@@ -208,15 +255,27 @@ code[class*="language-"] {
 
     /* 整体文章容器压缩 */
     .blog-post {
-        padding: 0.5em;
-        border-radius: 10px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     /* 主标题缩小、减小 margin */
     .title {
-        font-size: 1.5em;
-        margin: 0.4em 0;
+        font-size: clamp(1.55rem, 8vw, 2rem);
+        line-height: 1.22;
+        margin: 0.35em 0 0.5em;
+    }
+
+    .meta-row {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 0.35rem 0.7rem;
+    }
+
+    .lang-switcher {
+        width: 100%;
+        margin-left: 0;
     }
 
     .date,
@@ -227,8 +286,8 @@ code[class*="language-"] {
 
     /* 正文字体、行距略微压缩 */
     .prose {
-        font-size: 0.8em;
-        line-height: 1.55;
+        font-size: 1rem;
+        line-height: 1.72;
         word-break: break-word;
     }
 
@@ -242,10 +301,12 @@ code[class*="language-"] {
     /* blockquote 调整缩进与字体 */
     .prose blockquote {
         border-left-width: 3px;
-        padding: 0.5em 0.8em;
+        padding: 0.35em 0.7em;
         font-size: 0.9em;
         margin: 0.5em 0;
     }
+
+    .prose blockquote p { margin: 0.25em 0; }
 
     /* 代码块：高度、padding 缩小 */
     .prose pre {
@@ -277,26 +338,28 @@ code[class*="language-"] {
 
     /* 整体内容区域两侧收紧 */
     .blog-content {
-        padding: 0 0.3em;
+        padding: 0;
     }
 
     .prose h1 {
-        font-size: 1.3rem;
+        font-size: 1.75rem;
     }
     .prose h2 {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
     }
     .prose h3 {
-        font-size: 1rem;
+        font-size: 1.3rem;
     }
     .prose h4 {
-        font-size: 0.9rem;
+        font-size: 1.15rem;
     }
     .prose h5 {
-        font-size: 0.8rem;
+        font-size: 1.05rem;
     }
     .prose h6 {
-        font-size: 0.75rem;
+        font-size: 1rem;
     }
-}
 
+    .comment-container h1 { font-size: 1.75rem; }
+    .comment-container p { font-size: 1rem; }
+}

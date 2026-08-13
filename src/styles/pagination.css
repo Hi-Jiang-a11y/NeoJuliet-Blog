@@ -40,10 +40,12 @@
 @media (max-width: 480px) {
     .pagination {
         display: flex;
+        flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         margin: 20px 0;
         font-size: 15px;
     }
+    .pagination a { padding: 5px 11px; }
 }

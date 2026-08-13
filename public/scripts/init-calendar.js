@@ -1,3 +1,7 @@
+(() => {
+if (window.__neoJulietCalendarInitialized) return;
+window.__neoJulietCalendarInitialized = true;
+
 function initCalendar() {
     const root = document.getElementById("calendar-root");
     if (!root) return;
@@ -54,3 +58,4 @@ initCalendar();
 
 /* 页面切换 */
 document.addEventListener("astro:page-load", initCalendar);
+})();

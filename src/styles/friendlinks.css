@@ -84,3 +84,29 @@
     text-decoration: underline;
     color: rgb(var(--juliet-pink));
 }
+
+:root[data-theme="dark"] .friendlink-info h3 a {
+    color: rgb(var(--gray-light));
+}
+:root[data-theme="dark"] .friendlink-info p {
+    color: rgb(var(--text-muted));
+}
+
+@media (max-width: 720px) {
+    .friendlinks-container {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+        margin-top: 1rem;
+    }
+    .friendlink-card {
+        gap: 0.9rem;
+        height: auto;
+        min-height: 72px;
+        padding: 0.9rem;
+        border-radius: 14px;
+    }
+    .friendlink-avatar {
+        width: 60px;
+        height: 60px;
+    }
+}

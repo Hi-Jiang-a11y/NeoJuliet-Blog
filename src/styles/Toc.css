@@ -1,8 +1,11 @@
 .toc {
-    padding: 1rem 1rem;
+    padding: 1.1rem 1.15rem;
     font-size: 0.85rem;
     line-height: 1.5;
-    border-radius: 12px;
+    border-radius: 14px;
+    border: 1px solid rgb(var(--juliet-pink) / 0.18);
+    background: rgb(var(--juliet-pink) / 0.045);
+    box-shadow: 0 6px 18px rgb(40 30 70 / 0.06);
 }
 
 .toc-title {
@@ -47,10 +50,17 @@
 .toc a {
     display: inline-block;
     padding: 0.12rem 0;
-    color: #4a4a4a;
+    color: rgb(var(--gray-dark));
     text-decoration: none;
     transition: color 0.15s ease, background-color 0.25s ease;
 }
+
+:root[data-theme="dark"] .toc {
+    background: rgb(var(--surface));
+    border-color: rgb(var(--border));
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.2);
+}
+:root[data-theme="dark"] .toc a { color: rgb(var(--gray-light)); }
 
 .toc a:hover {
     color: rgb(var(--juliet-pink));
@@ -81,4 +91,3 @@ html {
 @media (max-width: 900px) {
     .toc { display: none; }
 }
-

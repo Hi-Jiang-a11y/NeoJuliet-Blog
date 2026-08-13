@@ -27,10 +27,12 @@ npm create astro@latest -- --template Hi-Jiang-a11y/NeoJuliet-Blog
 git clone https://github.com/Hi-Jiang-a11y/NeoJuliet-Blog.git
   #change the working directory
 cd NeoJuliet-Blog
-  #安装所需要的npm包
-npm insatll
+  #安装所需要的 npm 包
+npm install
 ```
 ## 目录结构🔽
+
+更详细的维护说明见 [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md)。
 ```
 .
 ├── README.md

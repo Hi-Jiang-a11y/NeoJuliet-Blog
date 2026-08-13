@@ -16,27 +16,12 @@
     --juliet-deeppink: 122 76 207;
     --juliet-lightpink: ;
     --juliet-palepink: 230 230 250;
-    --bg: linear-gradient(var(--juliet-pink-gradient)) no-repeat;
-}
-:root[data-theme="pink"] {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-    --pink-light: 255, 182, 193;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px
-		rgba(var(--gray), 33%);
-    --juliet-pink-gradient: rgba(var(--pink-light), 18%), #ffffff;
-    --juliet-pink: 255 183 192;
-    --juliet-hotpink: 255 105 180;
-    --juliet-deeppink: 255 20 147;
-    --juliet-lightpink: 220 208 255;
-    --juliet-palepink: 255 230 243;
-    --bg: linear-gradient(var(--juliet-pink-gradient)) no-repeat;
+    --page-background: #ffffff;
+    --page-glow-opacity: 1;
+    --surface: #ffffff;
+    --surface-muted: #f6f4fb;
+    --text-muted: #60739f;
+    --border: rgb(177 156 217 / 0.24);
 }
 :root[data-theme="dark"] {
     --accent: #8b9cff;
@@ -60,7 +45,12 @@
 
     --juliet-lightpink: 140 135 200;
     --juliet-palepink: 90 95 130;
-    --bg: rgb(var(--black));
+    --page-background: rgb(var(--black));
+    --page-glow-opacity: 0;
+    --surface: 28 33 45;
+    --surface-muted: 35 41 55;
+    --text-muted: 174 184 211;
+    --border: 139 156 255 / 0.25;
 }
 
 @font-face {
@@ -83,13 +73,72 @@ body {
     margin: 0;
     padding: 0;
     text-align: left;
-    background: var(--bg);
-    background-size: 100% 600px;
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--page-background);
     word-wrap: break-word;
     overflow-wrap: break-word;
     color: rgb(var(--gray-dark));
     font-size: 16px;
     line-height: 1.7;
+    transition:
+        background-color 440ms cubic-bezier(0.22, 1, 0.36, 1),
+        color 360ms ease;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        to bottom,
+        rgb(var(--purple-light) / 0.18),
+        transparent 600px
+    );
+    opacity: var(--page-glow-opacity);
+    transition: opacity 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body > header,
+.sidebar-module,
+.blog-card,
+.friendlink-card,
+.license-card,
+.toc,
+.announcement-item,
+pre,
+code,
+a,
+hr {
+    transition:
+        background-color 440ms cubic-bezier(0.22, 1, 0.36, 1),
+        color 360ms ease,
+        border-color 440ms ease,
+        box-shadow 440ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body,
+    body::before,
+    body > header,
+    .sidebar-module,
+    .blog-card,
+    .friendlink-card,
+    .license-card,
+    .toc,
+    .announcement-item,
+    pre,
+    code,
+    a,
+    hr {
+        transition: none !important;
+    }
 }
 :root[data-theme="dark"] body {
     color: rgb(var(--gray-light));
@@ -194,10 +243,10 @@ hr {
 }
 @media (max-width: 720px) {
 	body {
-		font-size: 18px;
+		font-size: 16px;
 	}
 	main {
-		padding: 1em;
+		padding: 0;
 	}
 }
 
@@ -224,7 +273,10 @@ hr {
     grid-template-columns: 240px 1fr 240px;
     gap: 50px;
     max-width: 1400px;
-    margin: 20px auto 0;
+    width: 100%;
+    flex: 1 0 auto;
+    margin: 32px auto 0;
+    box-sizing: border-box;
 }
 
 .sidebar-left {
@@ -237,17 +289,77 @@ hr {
 }
 .sidebar-right {
     position: sticky;
-    top: 20px;
+    /* Leave room for the sticky header while it is visible. */
+    top: 76px;
     align-self: start;
 }
 
 .content {
     min-width: 0;
-    width: 100%;
     max-width: 100%;       /* 不超出父容器 */
     width: 100%;
     box-sizing: border-box;
 }
+
+/* Shared dark-mode surfaces. Individual components can still add their accent. */
+:root[data-theme="dark"] .sidebar-module,
+:root[data-theme="dark"] .friendlink-card,
+:root[data-theme="dark"] .license,
+:root[data-theme="dark"] .calendar,
+:root[data-theme="dark"] .toc {
+    background: rgb(var(--surface)) !important;
+    border-color: rgb(var(--border)) !important;
+    color: rgb(var(--gray-light));
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.22);
+}
+:root[data-theme="dark"] body > header {
+    background: rgb(var(--surface));
+}
+
+:root[data-theme="dark"] .sidebar-module .motto,
+:root[data-theme="dark"] .sidebar-module .leftbar-social-links svg,
+:root[data-theme="dark"] .sidebar-module .leftbar-statistic,
+:root[data-theme="dark"] .sidebar-module h1,
+:root[data-theme="dark"] .side-announcement h1 {
+    color: rgb(var(--gray-light)) !important;
+}
+:root[data-theme="dark"] .sidebar-module .leftbar-tag-list li a {
+    color: #e0b8ff !important;
+}
+
+/* Keep the left profile/tag/stat areas lightweight in dark mode. The small
+   tag/stat pills retain their own accents, but the surrounding frames do not. */
+:root[data-theme="dark"] .sidebar-left .sidebar-module {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+:root[data-theme="dark"] .sidebar-left .sidebar-module:hover {
+    transform: none;
+    box-shadow: none !important;
+}
+
+/* The left sidebar uses a lightweight, frameless layout in light themes too. */
+:root:not([data-theme="dark"]) .sidebar-left .sidebar-module {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+:root:not([data-theme="dark"]) .sidebar-left .sidebar-module:hover {
+    transform: none;
+    box-shadow: none !important;
+}
+
+:root[data-theme="dark"] a { color: #aebcff; }
+:root[data-theme="dark"] a:hover { color: #d1d8ff; }
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] pre {
+    background: rgb(var(--surface-muted));
+    color: rgb(var(--gray-light));
+    border-color: rgb(var(--border));
+}
+:root[data-theme="dark"] hr { border-color: rgb(var(--border)); }
 
 @media (max-width: 1100px) {
 
@@ -272,11 +384,13 @@ hr {
 @media (max-width: 768px) {
     .layout {
         grid-template-columns: 1fr;
+        gap: 0;
+        margin-top: 1rem;
+        padding: 0 0.9rem;
     }
 
     .sidebar-left {
-        position: static;
-        order: 2;
+        display: none;
     }
 
     .content {

@@ -1,3 +1,7 @@
+(() => {
+if (window.__neoJulietTocInitialized) return;
+window.__neoJulietTocInitialized = true;
+
 let tocObserver = null;
 
 function initToc() {
@@ -79,3 +83,4 @@ initToc();
 
 /* 页面切换 */
 document.addEventListener('astro:page-load', initToc);
+})();

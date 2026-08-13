@@ -19,12 +19,7 @@ import HeaderLink from './HeaderLink.astro';
         </div>
         <!-- 主题切换按钮 -->
         <div class="theme-switcher">
-            <button id="theme-toggle" aria-label="Theme menu">🎨</button>
-            <ul id="theme-menu" hidden>
-                <li><button data-theme="default">Default</button></li>
-                <li><button data-theme="pink">Pink</button></li>
-                <li><button data-theme="dark">Dark Mode</button></li>
-            </ul>
+            <button id="theme-toggle" type="button" aria-label="Switch to dark mode" title="Toggle theme">🎨</button>
         </div>
     </nav>
 </header>
@@ -32,9 +27,22 @@ import HeaderLink from './HeaderLink.astro';
 
 <style>
 	header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
 		margin: 0;
 		padding: 0 1em;
 		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		transition: transform 0.24s ease, opacity 0.24s ease;
+		/* Keep the original pink tint, but make it opaque so revealed text
+		   cannot show through the bar. */
+		background: rgb(var(--juliet-pink) / 0.14);
+		backdrop-filter: none;
+	}
+	header.header-hidden {
+		transform: translateY(-110%);
+		opacity: 0;
+		pointer-events: none;
 	}
 	h2 {
 		margin: 0;
@@ -53,7 +61,7 @@ import HeaderLink from './HeaderLink.astro';
         border-bottom-right-radius: 12px;
         padding: 0em 0;
         height: auto;
-        background: rgb(var(--juliet-pink)/0.07);
+		background: transparent;
 	}
 	nav a {
 		padding: 0.5em 0.2em;
@@ -82,71 +90,57 @@ import HeaderLink from './HeaderLink.astro';
         padding: 0.5em;
         color: var(--black);
     }
-    #theme-menu {
-        position: absolute;
-        right: 0;
-        top: 120%;
-        list-style: none;
-        margin: 0;
-        padding: 0 0;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        z-index: 100;
-        min-width: 120px;
-        border: 2px solid rgb(var(--juliet-pink));
+    :global(:root[data-theme="dark"]) #theme-toggle {
+        color: rgb(var(--gray-light));
     }
-
-    #theme-menu li {
-        margin: 2px 0; /* 列表项之间留一点点空隙 */
-    }
-
-    #theme-menu button {
-        width: 100%;
-        background: none;
-	    border: none;
-	    padding: 0.8em 0.8em;
-	    text-align: left;
-        cursor: pointer;
-        font-size: 0.7em;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-    }
-
-    #theme-menu button:hover {
-	    background: rgb(var(--juliet-pink) / 0.25);
-    }
-
-    @media (max-width: 480px) {
+    @media (max-width: 720px) {
         header {
-            padding: 0 0.5em;
+            padding: 0 0.75rem;
         }
 
         nav {
-            padding: 0.3em 0.5em;
-            height: auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            padding: 0.35rem 0;
             border-radius: 0;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.3em;
-            background: rgba(var(--juliet-pink)/0.10);
+            gap: 0.2rem 0.5rem;
         }
 
         h2 {
-            font-size: 1.1em;
+            min-width: 0;
+            overflow: hidden;
+            font-size: 1rem;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         .internal-links {
+            grid-column: 1 / -1;
             width: 100%;
-            display: flex;
-            justify-content: space-between;
-            margin-right: 0;
-            gap: 0.5em;
+            gap: 1rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+            margin: 0;
+            padding-bottom: 0.1rem;
         }
-
+        .internal-links::-webkit-scrollbar {
+            display: none;
+        }
+        .theme-switcher {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        #theme-toggle {
+            padding: 0.25rem 0.35rem;
+            min-width: 2.25rem;
+            min-height: 2.25rem;
+        }
         nav a {
-            padding: 0.3em 0;
-            font-size: 0.9em;
+            flex: 0 0 auto;
+            padding: 0.25rem 0 0.2rem;
+            font-size: 0.84rem;
+            border-bottom-width: 3px;
+            white-space: nowrap;
         }
     }
 </style>
