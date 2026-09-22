@@ -1,0 +1,33 @@
+{
+  "name": "neojuliet-blog",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/mdx": "^5.0.2",
+    "@astrojs/node": "^10.0.2",
+    "@astrojs/react": "^5.0.1",
+    "@astrojs/rss": "^4.0.17",
+    "@astrojs/sitemap": "^3.7.1",
+    "@iconify-json/simple-icons": "^1.2.59",
+    "aplayer": "^1.10.1",
+    "astro": "^6.0.6",
+    "astro-icon": "^1.1.5",
+    "html2canvas": "^1.4.1",
+    "katex": "^0.18.1",
+    "qrcode": "^1.5.4",
+    "qrcodejs2": "^0.0.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "sharp": "^0.34.3",
+    "typescript": "^5.9.3"
+  }
+}

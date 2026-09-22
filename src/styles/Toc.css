@@ -1,0 +1,93 @@
+.toc {
+    padding: 1.1rem 1.15rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    border-radius: 14px;
+    border: 1px solid rgb(var(--juliet-pink) / 0.18);
+    background: rgb(var(--juliet-pink) / 0.045);
+    box-shadow: 0 6px 18px rgb(40 30 70 / 0.06);
+}
+
+.toc-title {
+    position: relative;
+    top: 0;
+    margin: 0 0 1rem 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding-left: 1rem;
+}
+
+.toc-title::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 72%;
+    background: rgb(var(--juliet-pink));
+    font-size: 1.5rem;
+    border-radius: 2px;
+}
+
+.toc-content {
+    max-height: 40vh;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc ol ol {
+    padding-left: 0.9rem;
+    margin-top: 0.3rem;
+}
+
+.toc a {
+    display: inline-block;
+    padding: 0.12rem 0;
+    color: rgb(var(--gray-dark));
+    text-decoration: none;
+    transition: color 0.15s ease, background-color 0.25s ease;
+}
+
+:root[data-theme="dark"] .toc {
+    background: rgb(var(--surface));
+    border-color: rgb(var(--border));
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.2);
+}
+:root[data-theme="dark"] .toc a { color: rgb(var(--gray-light)); }
+
+.toc a:hover {
+    color: rgb(var(--juliet-pink));
+}
+
+.toc a.active {
+    color: rgb(var(--juliet-pink));
+    font-weight: 600;
+}
+
+.toc a.active::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 1.1rem;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+    background: rgb(var(--juliet-pink));
+    border-radius: 2px;
+}
+
+/* 平滑滚动（备用） */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 小屏幕隐藏（按需调整） */
+@media (max-width: 900px) {
+    .toc { display: none; }
+}

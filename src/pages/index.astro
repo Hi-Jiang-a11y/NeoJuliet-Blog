@@ -1,0 +1,98 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BaseHead from '../components/BaseHead.astro';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import '../styles/blog-card.css'
+import '../styles/text-effect-typing.css';
+import '../styles/pagination.css';
+import SideAnnouncement from '../components/Side-Announcement.astro';
+import Calendar from '../components/Calendar.astro';
+import BookIcon from '../icons/BookIcon.astro';
+import ModuleA from '../components/sidebar/moduleA.astro';
+import ModuleB from '../components/sidebar/moduleB.astro';
+import ModuleC from '../components/sidebar/moduleC.astro';
+
+// max number of blogcards
+const allPostsRaw = await getCollection('blog');
+console.log('ALL IDS:', allPostsRaw.map(p => p.id));
+
+const englishPosts = allPostsRaw.filter(post => {
+    const id = String(post.id).replace(/^[.\/\\]+/, '').toLowerCase();
+    return !id.startsWith('zh/');
+});
+console.log('ENGLISH IDS:', englishPosts.map(p => p.id));
+
+const allPosts = englishPosts.sort((a, b) => {
+    if (a.data.pinned && !b.data.pinned) return -1;
+    if (!a.data.pinned && b.data.pinned) return 1;
+    return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+});
+
+const POSTS_PER_PAGE = 5;
+const currentPage = 1;
+const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+---
+
+<Layout>
+    <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
+
+    <!--左边栏-->
+    <div slot="leftbar">
+        <ModuleA />
+        <ModuleB />
+        <ModuleC />
+    </div>
+    <!--右边栏-->
+    <div slot="rightbar">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
+    <!--主页内容-->
+    <!--打字机特效-->
+    <h2 id="typing" data-text="Welcome to NeoJuliet's Site!"></h2>
+        <!--简介--!>
+        <p>
+            What you love is your life.
+        </p>
+
+        <!--Blog Cards--!>
+        <h3>Blog Posts</h3>
+            {posts.map(post => (
+                <article class={`blog-card ${post.data.pinned ? 'pinned' : ''}`}>
+                    <h2 class="blog-title">
+                        <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                    </h2>
+                    <!--author and data--!>
+                    <p class="blog-meta">
+                        {post.data.author && <>By {post.data.author} - </>}
+                        <FormattedDate date={post.data.pubDate} />
+                    </p>
+
+                    <!--description--!>
+                    {post.data.description && (
+                        <p class="blog-description">
+                            <BookIcon />
+                            {post.data.description}
+                        </p> )}
+                    <!--tags--!>
+                    {post.data.tags && (
+                        <div class="blog-tags">
+                            {post.data.tags.map(tag => (
+                            <a class="tag" href={`/tag/${tag}`}># {tag}</a> ))}
+                        </div> )}
+                </article> ))}
+
+            <!--分页导航--!>
+            <nav class="pagination">
+                {currentPage > 1 && <a href={`/page/${currentPage - 1}`} class="prev">PREV</a>}
+                {Array.from({ length: totalPages }, (_, i) => (
+                    <a href={`/page/${i + 1}`} class={i + 1 === currentPage ? 'active' : ''}>{i + 1}</a>
+                ))}
+                {currentPage < totalPages && <a href={`/page/${currentPage + 1}`} class="next">NEXT</a>}
+            </nav>
+</Layout>
+

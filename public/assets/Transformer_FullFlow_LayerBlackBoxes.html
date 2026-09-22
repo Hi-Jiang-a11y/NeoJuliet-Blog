@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Transformer 自回归生成流程</title>
+    <style>
+      html,
+      body,
+      #viewport {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      #viewport {
+        position: relative;
+        cursor: grab;
+        touch-action: none;
+      }
+
+      #viewport.dragging {
+        cursor: grabbing;
+      }
+
+      #diagram {
+        position: absolute;
+        top: 0;
+        left: 12px;
+        width: calc(100% - 48px);
+        height: auto;
+        transform-origin: 0 0;
+        user-select: none;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="viewport" aria-label="可缩放的 Transformer 自回归生成流程图">
+      <img
+        id="diagram"
+        src="./Transformer_FullFlow_LayerBlackBoxes.svg"
+        alt="Transformer 自回归生成流程"
+        draggable="false"
+      />
+    </div>
+
+    <script>
+      const viewport = document.querySelector("#viewport");
+      const diagram = document.querySelector("#diagram");
+
+      let scale = 1;
+      let offsetX = 0;
+      let offsetY = 0;
+      let dragging = false;
+      let lastX = 0;
+      let lastY = 0;
+
+      function render() {
+        diagram.style.transform =
+          `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      }
+
+      function resetView() {
+        scale = 1;
+        offsetX = 0;
+        offsetY = (viewport.clientHeight - diagram.clientHeight) / 2;
+        render();
+      }
+
+      viewport.addEventListener("wheel", (event) => {
+        event.preventDefault();
+
+        const rect = viewport.getBoundingClientRect();
+        const pointerX = event.clientX - rect.left;
+        const pointerY = event.clientY - rect.top;
+        const factor = event.deltaY < 0 ? 1.15 : 1 / 1.15;
+        const nextScale = Math.min(8, Math.max(0.35, scale * factor));
+
+        offsetX = pointerX - ((pointerX - offsetX) * nextScale) / scale;
+        offsetY = pointerY - ((pointerY - offsetY) * nextScale) / scale;
+        scale = nextScale;
+
+        render();
+      }, { passive: false });
+
+      viewport.addEventListener("pointerdown", (event) => {
+        dragging = true;
+        lastX = event.clientX;
+        lastY = event.clientY;
+        viewport.classList.add("dragging");
+        viewport.setPointerCapture(event.pointerId);
+      });
+
+      viewport.addEventListener("pointermove", (event) => {
+        if (!dragging) return;
+        offsetX += event.clientX - lastX;
+        offsetY += event.clientY - lastY;
+        lastX = event.clientX;
+        lastY = event.clientY;
+        render();
+      });
+
+      function stopDragging(event) {
+        dragging = false;
+        viewport.classList.remove("dragging");
+        if (viewport.hasPointerCapture(event.pointerId)) {
+          viewport.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      viewport.addEventListener("pointerup", stopDragging);
+      viewport.addEventListener("pointercancel", stopDragging);
+      viewport.addEventListener("dblclick", resetView);
+      diagram.addEventListener("load", resetView);
+      window.addEventListener("resize", resetView);
+
+      if (diagram.complete) resetView();
+    </script>
+  </body>
+</html>
