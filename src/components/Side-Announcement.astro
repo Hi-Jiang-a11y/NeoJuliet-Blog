@@ -1,0 +1,40 @@
+---
+import '../styles/Side-Announcement.css';
+import { getCollection } from 'astro:content';
+
+const announcements = await getCollection('announce');
+
+const sorted = announcements.sort((a, b) => {
+    if (a.data.pinned && !b.data.pinned) return -1;
+    if (!a.data.pinned && b.data.pinned) return 1;
+    return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
+});
+---
+<div class="side-announcement">
+    <h1>Announce</h1>
+    <div class="announcement-list">
+        {sorted.length > 0 ? (
+            sorted.map(a => (
+                <a href={`/announce/${a.id.replace(/\.md$/, '')}`} class="announcement-link">
+                    <div class={`announcement-item ${a.data.pinned ? 'pinned' : ''}`}>
+                        <div class="announcement-header">
+                            <span class="title">{a.data.title}</span>
+                            <span class="date">
+                                {new Date(a.data.date).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric'
+                                })}
+                            </span>
+                        </div>
+
+                        {/* 新增 description 显示 */}
+                        <div class="description">{a.data.description}</div>
+                    </div>
+                </a>
+            ))
+        ) : (
+            <p>No announcements</p>
+        )}
+    </div>
+</div>
+

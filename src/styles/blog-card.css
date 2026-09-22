@@ -1,0 +1,176 @@
+.blog-card {
+    border-bottom: 1.5px solid #eee;
+    padding: 12px 0;
+}
+.blog-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Blog lists intentionally stay lightweight in dark mode: no card surface,
+   only the original divider between entries. */
+:root[data-theme="dark"] .blog-card {
+    background: transparent;
+    border-bottom-color: rgb(235 238 250 / 0.32);
+    box-shadow: none;
+}
+
+:root[data-theme="dark"] .blog-title a,
+:root[data-theme="dark"] .blog-description {
+    color: rgb(var(--gray-light));
+}
+
+:root[data-theme="dark"] .blog-meta {
+    color: rgb(var(--text-muted));
+}
+
+.blog-title {
+    margin: 0 0 0.5em 0;
+    font-size: 1.5rem;
+    position: relative;
+    padding-left: 0.5em;
+}
+
+.blog-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 100%;
+    background-color: rgb(var(--juliet-pink));
+    border-radius: 2px;
+}
+.blog-title a {
+    text-decoration: none;
+    color: var(--black);
+}
+
+.blog-title a:hover {
+    content: " >";
+    opacity: 1;
+    color: rgb(var(--juliet-pink));
+}
+
+.blog-title a::after {
+    content: "";
+    display: inline-block;
+    margin-left: 0.3em;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.blog-title a:hover::after {
+    content: ">";
+    opacity: 1;
+    color: rgb(var(--juliet-pink));
+}
+.blog-description {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgb(var(--gray-dark));
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0.5em 0 1em 0;
+}
+.blog-meta {
+    margin: 0 0 1em 0;
+    color: rgb(var(--gray));
+    font-size: 1rem;
+    line-height: 1.4;
+}
+.blog-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 0.5em;
+}
+/*
+.tag {
+    background: rgba(var(--juliet-pink)/0.15);
+    color: rgb(var(--juliet-hotpink));
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.8em;
+    text-decoration: none;
+}
+
+.tag:hover {
+    background: rgba(var(--juliet-hotpink)/0.15);
+    color: rgb(var(--juliet-deeppink));
+    transform: translateY(-2px);
+}
+*/
+.tag {
+    background: rgba(var(--juliet-pink)/0.1);
+    color: rgb(var(--juliet-hotpink));
+    padding: 3px 10px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    text-decoration: none;
+    transition: transform 0.15s, background 0.15s;
+}
+
+.tag:hover {
+    background: rgba(var(--juliet-hotpink)/0.2);
+    color: rgb(var(--juliet-deeppink));
+    transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+    .blog-card {
+        width: 100%;
+        padding: 8px 0;          /* 只保留上下间距 */
+        margin-bottom: 12px;
+
+        box-shadow: none;        /* ❗ 去掉阴影 */
+        border: none;
+        border-radius: 0;
+
+        border-bottom: 1px solid #eee;  /* 用分割线代替卡片 */
+    }
+
+    /* pinned 标记建议直接取消（否则很怪） */
+    .blog-card.pinned::before {
+        display: none;
+    }
+
+    .blog-title {
+        font-size: 1.1rem;
+        margin: 0 0 6px 0;
+    }
+
+    .blog-title::before {
+        width: 3px;
+    }
+
+    .blog-meta {
+        font-size: 0.8rem;
+    }
+
+    .blog-description {
+        font-size: 0.9rem;
+        line-height: 1.55;
+    }
+
+    .blog-tags {
+        gap: 4px;
+    }
+
+    .tag {
+        font-size: 0.75rem;
+        padding: 3px 7px;
+    }
+
+    /* ❗移动端基本不需要 hover */
+    .blog-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .tag:hover {
+        transform: none;
+    }
+}

@@ -1,0 +1,146 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro'; 
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import '../styles/text-effect-typing.css';
+import SideAnnouncement from '../components/Side-Announcement.astro';
+import Calendar from '../components/Calendar.astro';
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import ModuleA from '../components/sidebar/moduleA.astro';
+import ModuleB from '../components/sidebar/moduleB.astro';
+import ModuleC from '../components/sidebar/moduleC.astro';
+
+type Props = CollectionEntry<'about'>;
+
+// 获取 about.md 条目
+const aboutEntries = await getCollection('about');
+if (aboutEntries.length === 0) throw new Error('No about entry found!');
+const post = aboutEntries[0];
+
+// 直接 render 获取 Content 和 headings
+const { Content, headings } = await render(post);
+const { title, description, author } = post.data;
+
+// 如果 about.md 没有 frontmatter 的 author/title，可以设默认值
+const postTitle = title || 'About Me';
+const postDescription = description || 'About me page';
+const postAuthor = author || 'Juliet';
+---
+<Layout>
+    <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
+
+    <!--左边栏-->
+    <div slot="leftbar">
+        <ModuleA />
+        <ModuleB />
+        <ModuleC />
+    </div>
+    <!--右边栏-->
+    <div slot="rightbar">
+        <SideAnnouncement />
+        <Calendar />
+    </div>
+
+    <h2 id="typing" data-text="About..."></h2>
+
+    <article class="AboutContent">
+        <Content />
+    </article>
+
+</Layout>
+<style is:global>
+.AboutContent {
+  line-height: 1.7;
+  /*color: rgb(var(--gray-dark));*/
+}
+
+/*markdown content*/
+
+/*link*/
+.AboutContent a {
+    color: rgb(var(--juliet-pink));           /* 链接颜色 */
+    text-decoration: none;    /* 连接样式 */
+    font-weight: 500;
+}
+
+.AboutContent a:hover {
+    color: rgb(var(--juliet-pink));
+    text-decoration: underline;
+}
+
+/*blockquote*/
+.AboutContent blockquote {
+    border-left: 4px solid rgb(var(--juliet-hotpink));  /* 更改竖线颜色 */
+    background: rgb(var(--juliet-pink)/0.05);
+    border-radius: 2px;
+    padding-left: 0.75rem 1rem;
+    color: #555;
+    font-style: normal;
+    font-size: 1.2rem;
+}
+
+/*table*/
+.AboutContent table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.AboutContent th,
+.AboutContent td {
+    border: 1px solid #ccc;  /* 竖线 & 横线 */
+    padding: 8px 12px;
+}
+
+.AboutContent th {
+    font-weight: 600;
+}
+
+/*code block*/
+.AboutContent pre {
+    background: rgb(var(--juliet-palepink)/0.20) !important;
+    padding: 1rem !important;
+    border-radius:12px;
+    overflow-x: auto;
+}
+
+.AboutContent pre code,
+code[class*="language-"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    color: inherit !important; /* 保留语法高亮颜色，不覆盖 */
+}
+
+.AboutContent pre code :not(.token) {
+    color: #555 !important; /* 普通文本颜色，自定义灰色或深粉 */
+}
+
+.AboutContent :not(pre) > code {
+    background: rgba(var(--juliet-pink)/0.20);
+    color: rgb(var(--juliet-hotpink)/0.7);
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 0.95em;
+}
+
+.AboutContent h1 {
+    font-size: 2.5rem;
+}
+.AboutContent h2 {
+    font-size: 2.3rem;
+}
+.AboutContent h3 {
+    font-size: 2rem;
+}
+.AboutContent h4 {
+    font-size: 1.8rem;
+}
+.AboutContent h5 {
+    font-size: 1.8rem;
+}
+.AboutContent h6 {
+    font-size: 1.6rem;
+}
+</style>

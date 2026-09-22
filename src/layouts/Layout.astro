@@ -1,0 +1,46 @@
+---
+import Header from '../components/Header.astro';
+
+const { rightbar } = Astro.props ?? {};
+---
+<html lang="en">
+    <head>
+        <script is:inline>
+            (() => {
+                const savedTheme = localStorage.getItem("theme");
+                if (savedTheme === "dark") {
+                    document.documentElement.dataset.theme = savedTheme;
+                } else if (savedTheme) {
+                    localStorage.removeItem("theme");
+                }
+            })();
+        </script>
+
+        <slot name="head" />
+    </head>
+    <body>
+        <!-- 保留，用于交互 -->
+        <script src="/scripts/theme.js" defer></script>
+        <script src="/scripts/header-scroll.js" defer></script>
+        <script type="module" src="/scripts/init-typing.js"></script>
+        <script type="module" src="/scripts/init-toc.js"></script>
+        <script type="module" src="/scripts/init-calendar.js"></script>
+        <Header />
+        <div class="layout">
+            <!--左侧边栏-->
+            <aside class="sidebar-left">
+                <slot name="leftbar" />
+            </aside>
+
+            <!--中间内容-->
+            <main class="content">
+                <slot />
+            </main>
+
+            <!--右侧边栏-->
+            <aside class="sidebar-right">
+                <slot name="rightbar" />
+            </aside>
+        </div>
+    </body>
+</html>

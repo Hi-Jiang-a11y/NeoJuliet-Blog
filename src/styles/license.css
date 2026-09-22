@@ -1,0 +1,99 @@
+.license-container {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(var(--juliet-pink) / 0.2);
+}
+
+.license-container h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding-left: 1rem;
+    position: relative;
+    top: 0;
+    margin: 0 0 0.5rem 0;
+}
+
+.license-container > h1::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 72%;
+    background: rgb(var(--juliet-pink));
+    font-size: 1.5rem;
+    border-radius: 2px;
+}
+
+.license-card {
+    background: rgb(var(--juliet-pink) / 0.045);
+    border: 1px solid rgb(var(--juliet-pink) / 0.18);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    box-shadow: 0 6px 18px rgb(40 30 70 / 0.05);
+}
+
+.license-title {
+    font-size: 0.8rem !important;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+    padding-left: 0 !important;
+}
+
+.blog-link {
+    display: inline;
+}
+
+.blog-link a {
+    display: inline;
+    color: rgb(var(--juliet-hotpink)/0.7);
+    text-decoration: none;
+    word-break: break-all;
+    font-size: 0.7rem;
+    line-height: 1 !important;
+}
+.blog-link a:hover {
+    text-decoration: underline;
+}
+
+.license-meta {
+    display: flex;
+    gap: 0.8rem;
+    font-size: 0.55rem;
+    color: rgb(var(--gray));
+    flex-wrap: wrap;
+}
+
+:root[data-theme="dark"] .license-container {
+    border-top-color: rgb(var(--border));
+}
+:root[data-theme="dark"] .license-card {
+    background: rgb(var(--surface));
+    border-color: rgb(var(--border));
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.2);
+}
+:root[data-theme="dark"] .license-meta { color: rgb(var(--text-muted)); }
+
+.license-meta-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.value {
+  white-space: nowrap; /* 内容不换行 */
+}
+
+.license-link {
+    color: rgb(var(--juliet-hotpink)/0.7);
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.license-link:hover {
+    color: rgb(var(--juliet-hotpink)/0.85);
+}

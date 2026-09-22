@@ -1,0 +1,66 @@
+---
+import '../styles/Toc.css';
+
+const props = Astro.props;
+const headings = props.headings || [];
+
+function buildGrouped(headings) {
+    const acc = [];
+    for (const h of headings) {
+        if (h.depth === 1) {
+            acc.push({ ...h, subheadings: [] });
+        } else if (h.depth === 2) {
+            if (acc.length === 0) acc.push({ ...h, subheadings: [] });
+            else acc[acc.length - 1].subheadings.push({ ...h, subheadings: [] });
+        } else if (h.depth === 3) {
+            const last = acc[acc.length - 1];
+            const lastSub = last && last.subheadings && last.subheadings[last.subheadings.length - 1];
+            if (!last) acc.push({ ...h, subheadings: [] });
+            else if (!lastSub) last.subheadings.push({ ...h, subheadings: [] });
+            else lastSub.subheadings.push({ ...h });
+        } else {
+            const last = acc[acc.length - 1];
+            if (!last) acc.push({ ...h, subheadings: [] });
+            else last.subheadings.push({ ...h, subheadings: [] });
+        }
+    }
+    return acc;
+}
+
+const groupedHeadings = buildGrouped(headings || []);
+
+if (!groupedHeadings || groupedHeadings.length === 0) {
+    // 不渲染 TOC
+    return;
+}
+---
+<nav class="toc" aria-label="Table of contents">
+    <h1 class="toc-title">Table of Contents</h1>
+    <div class="toc-content">
+    <ol>
+        {groupedHeadings.map((root, i) => (
+            <li>
+                <a href={`#${root.slug}`}>{i + 1}. {root.text}</a>
+                {root.subheadings && root.subheadings.length > 0 && (
+                    <ol>
+                        {root.subheadings.map((sub, j) => (
+                            <li>
+                                <a href={`#${sub.slug}`}>{i + 1}.{j + 1}. {sub.text}</a>
+                                    {sub.subheadings && sub.subheadings.length > 0 && (
+                                        <ol>
+                                            {sub.subheadings.map((sub2, k) => (
+                                                <li>
+                                                    <a href={`#${sub2.slug}`}>{i + 1}.{j + 1}.{k + 1}. {sub2.text}</a>
+                                                </li>
+                                            ))}
+                                        </ol>
+                                    )}
+                            </li>
+                        ))}
+                    </ol>
+                )}
+            </li>
+        ))}
+    </ol>
+    </div>
+</nav>
