@@ -2,7 +2,7 @@
 ---
 ## Me
 An ordinary undergraduate EE student.  
-IEEE Membership.
+IEEE Member.
 ## Blog
 Nothing special, just for fun and sharing and some random thoughts.  
 ## Contact Me
