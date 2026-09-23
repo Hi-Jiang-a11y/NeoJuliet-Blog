@@ -4,33 +4,32 @@ import BaseHead from '../../components/BaseHead.astro';
 import { getCollection } from 'astro:content';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import '../../styles/text-effect-typing.css';
-import '../../styles/pagination.css';
 import '../../styles/friendlinks.css';
-import SideAnnouncement from '../../components/Side-Announcement.astro';
-import Calendar from '../../components/Calendar.astro';
 import ModuleA from '../../components/sidebar/moduleA.astro';
 import ModuleB from '../../components/sidebar/moduleB.astro';
 import ModuleC from '../../components/sidebar/moduleC.astro';
+import RecentTimeline from '../../components/RecentTimeline.astro';
 
 const links = await getCollection('friendlinks');
+const timelinePosts = (await getCollection('blog')).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 ---
-<Layout>
+<Layout rightbar={true}>
     <BaseHead slot="head" title={`Friends - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 
     <!--左边栏-->
     <div slot="leftbar">
         <ModuleA />
         <ModuleB />
-        <ModuleC />
     </div>
-
     <div slot="rightbar">
-        <SideAnnouncement />
-        <Calendar />
+        <RecentTimeline posts={timelinePosts} />
+        <div class="rightbar-statistics" style="margin-top: 40px;"><ModuleC /></div>
     </div>
 
-    <h2 id="typing" data-text="Friendlinks..."></h2>
-        <!--简介-->
+    <h2 id="typing" data-text="/f/riendlink"></h2>
+    <!--简介-->
     <p>
         Here are the friendlinks
     </p>
@@ -61,4 +60,3 @@ const links = await getCollection('friendlinks');
     </div>
 
 </Layout>
-

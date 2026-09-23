@@ -1,7 +1,8 @@
 ---
 import Header from '../components/Header.astro';
+import { ClientRouter } from 'astro:transitions';
 
-const { rightbar } = Astro.props ?? {};
+const { rightbar = false } = Astro.props ?? {};
 ---
 <html lang="en">
     <head>
@@ -17,6 +18,7 @@ const { rightbar } = Astro.props ?? {};
         </script>
 
         <slot name="head" />
+        <ClientRouter />
     </head>
     <body>
         <!-- 保留，用于交互 -->
@@ -26,7 +28,7 @@ const { rightbar } = Astro.props ?? {};
         <script type="module" src="/scripts/init-toc.js"></script>
         <script type="module" src="/scripts/init-calendar.js"></script>
         <Header />
-        <div class="layout">
+        <div class:list={["layout", { "layout--with-rightbar": rightbar }]}>
             <!--左侧边栏-->
             <aside class="sidebar-left">
                 <slot name="leftbar" />
@@ -37,10 +39,11 @@ const { rightbar } = Astro.props ?? {};
                 <slot />
             </main>
 
-            <!--右侧边栏-->
-            <aside class="sidebar-right">
-                <slot name="rightbar" />
-            </aside>
+            {rightbar && (
+                <aside class="sidebar-right">
+                    <slot name="rightbar" />
+                </aside>
+            )}
         </div>
     </body>
 </html>

@@ -26,8 +26,10 @@ const tagCount = new Set(
     padding: 18px;
     border-radius: 16px;
 
-    background: rgb(var(--juliet-pink) / 0.08);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    /* Statistics is intentionally frameless wherever it is displayed. */
+    background: transparent !important;
+    border: 0;
+    box-shadow: none !important;
 
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }

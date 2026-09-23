@@ -6,13 +6,11 @@ import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import '../styles/blog-card.css'
 import '../styles/text-effect-typing.css';
-import '../styles/pagination.css';
-import SideAnnouncement from '../components/Side-Announcement.astro';
-import Calendar from '../components/Calendar.astro';
 import BookIcon from '../icons/BookIcon.astro';
 import ModuleA from '../components/sidebar/moduleA.astro';
 import ModuleB from '../components/sidebar/moduleB.astro';
 import ModuleC from '../components/sidebar/moduleC.astro';
+import RecentTimeline from '../components/RecentTimeline.astro';
 
 // max number of blogcards
 const allPostsRaw = await getCollection('blog');
@@ -30,26 +28,21 @@ const allPosts = englishPosts.sort((a, b) => {
     return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
 });
 
-const POSTS_PER_PAGE = 5;
-const currentPage = 1;
-const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
-const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+const timelinePosts = allPosts.slice(0, 8);
+const posts = allPosts;
 ---
 
-<Layout>
+<Layout rightbar={true}>
     <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
 
     <!--左边栏-->
     <div slot="leftbar">
         <ModuleA />
         <ModuleB />
-        <ModuleC />
     </div>
-    <!--右边栏-->
     <div slot="rightbar">
-        <SideAnnouncement />
-        <Calendar />
+        <RecentTimeline posts={timelinePosts} />
+        <div class="rightbar-statistics" style="margin-top: 40px;"><ModuleC /></div>
     </div>
     <!--主页内容-->
     <!--打字机特效-->
@@ -86,13 +79,4 @@ const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
                         </div> )}
                 </article> ))}
 
-            <!--分页导航--!>
-            <nav class="pagination">
-                {currentPage > 1 && <a href={`/page/${currentPage - 1}`} class="prev">PREV</a>}
-                {Array.from({ length: totalPages }, (_, i) => (
-                    <a href={`/page/${i + 1}`} class={i + 1 === currentPage ? 'active' : ''}>{i + 1}</a>
-                ))}
-                {currentPage < totalPages && <a href={`/page/${currentPage + 1}`} class="next">NEXT</a>}
-            </nav>
 </Layout>
-

@@ -7,17 +7,16 @@ import HeaderLink from './HeaderLink.astro';
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-            <HeaderLink href="/">Home</HeaderLink>
+            <HeaderLink href="/">/</HeaderLink>
 
-            <HeaderLink href="/archive/">Archive</HeaderLink>
+            <HeaderLink href="/a/">/a/</HeaderLink>
 
-            <HeaderLink href="/about/">About</HeaderLink>
+            <HeaderLink href="/i/">/i/</HeaderLink>
 
-            <HeaderLink href="/tag/">Tags</HeaderLink>
+            <HeaderLink href="/t/">/t/</HeaderLink>
 
-            <HeaderLink href="/friendlink/">Links</HeaderLink>
+            <HeaderLink href="/f/">/f/</HeaderLink>
         </div>
-        <!-- 主题切换按钮 -->
         <div class="theme-switcher">
             <button id="theme-toggle" type="button" aria-label="Switch to dark mode" title="Toggle theme">🎨</button>
         </div>
@@ -56,6 +55,7 @@ import HeaderLink from './HeaderLink.astro';
 	nav {
 		display: flex;
 		align-items: center;
+		font-family: monospace;
         justify-content: space-between;
         border-bottom-left-radius: 12px;
         border-bottom-right-radius: 12px;
