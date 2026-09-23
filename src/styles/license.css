@@ -1,7 +1,5 @@
 .license-container {
-    margin-top: 2rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid rgb(var(--juliet-pink) / 0.2);
+    margin-top: 0;
 }
 
 .license-container h1 {
@@ -65,9 +63,6 @@
     flex-wrap: wrap;
 }
 
-:root[data-theme="dark"] .license-container {
-    border-top-color: rgb(var(--border));
-}
 :root[data-theme="dark"] .license-card {
     background: rgb(var(--surface));
     border-color: rgb(var(--border));

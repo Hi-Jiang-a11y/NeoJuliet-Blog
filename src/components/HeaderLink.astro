@@ -4,9 +4,18 @@ import type { HTMLAttributes } from 'astro/types';
 type Props = HTMLAttributes<'a'>;
 
 const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
-const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+const normalizePath = (path: string) => {
+	const normalized = path.replace(/\/+$/, '');
+	return normalized || '/';
+};
+
+const pathname = normalizePath(Astro.url.pathname);
+const targetPath = normalizePath(new URL(href || '/', Astro.url).pathname);
+// Keep section links active on their nested pages too (for example, Archive
+// remains active while viewing /archive/ and any future archive subpage).
+const isActive = targetPath === '/'
+	? pathname === '/'
+	: pathname === targetPath || pathname.startsWith(`${targetPath}/`);
 ---
 
 <a href={href} class:list={[className, { active: isActive }]} {...props}>

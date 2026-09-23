@@ -1,0 +1,143 @@
+---
+const { posts = [], limit = 6 } = Astro.props;
+// Keep the timeline order consistent regardless of how the parent page
+// obtained its collection (tag pages do not otherwise guarantee ordering).
+const timelinePosts = [...posts]
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .slice(0, limit);
+
+---
+
+<section class="recent-timeline" aria-labelledby="recent-timeline-title">
+    <h2 id="recent-timeline-title" class="recent-timeline-title">
+        Timeline
+    </h2>
+
+    <div class="recent-timeline-list">
+        <ol class="timeline-items">
+            {timelinePosts.map(post => (
+                <li class="timeline-item">
+                    <span class="timeline-line" aria-hidden="true">
+                        <span class="timeline-point"></span>
+                    </span>
+                    <div class="timeline-entry">
+                        <time datetime={post.data.pubDate.toISOString()}>
+                            {post.data.pubDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' })}
+                        </time>
+                        <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                    </div>
+                </li>
+            ))}
+        </ol>
+    </div>
+
+    <a class="timeline-archive-link" href="/a/">View full archive →</a>
+</section>
+
+<style>
+    .recent-timeline {
+        width: 100%;
+    }
+
+    .recent-timeline-title {
+        margin: 0 0 1rem;
+        padding-left: 10px;
+        position: relative;
+        font-size: 1.45rem;
+        font-weight: 600;
+    }
+
+    .recent-timeline-title::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 4px;
+        height: 70%;
+        border-radius: 2px;
+        background: rgb(var(--juliet-pink));
+        transform: translateY(-50%);
+    }
+
+    .recent-timeline-list {
+        max-height: min(62vh, 620px);
+        overflow-y: auto;
+        padding-right: 0.25rem;
+    }
+
+    .timeline-items {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .timeline-item {
+        display: grid;
+        grid-template-columns: 10px minmax(0, 1fr);
+        min-height: 2.7rem;
+    }
+
+    .timeline-line {
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+
+    .timeline-line::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: rgb(var(--gray) / 0.35);
+    }
+
+    .timeline-point {
+        position: relative;
+        z-index: 1;
+        width: 5px;
+        height: 5px;
+        margin-top: 0.45rem;
+        border-radius: 50%;
+        background: rgb(var(--gray));
+    }
+
+    .timeline-entry {
+        min-width: 0;
+        padding: 0 0 0.4rem 0.45rem;
+    }
+
+    .timeline-entry time {
+        display: block;
+        margin-bottom: 0;
+        color: rgb(var(--gray));
+        font-size: 0.7rem;
+    }
+
+    .timeline-entry a {
+        display: block;
+        overflow: hidden;
+        color: inherit;
+        font-size: 0.82rem;
+        line-height: 1.35;
+        text-decoration: none;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .timeline-entry a:hover {
+        color: rgb(var(--juliet-pink));
+    }
+
+    .timeline-archive-link {
+        display: inline-block;
+        margin-top: 0.65rem;
+        color: rgb(var(--juliet-hotpink) / 0.85);
+        font-size: 0.84rem;
+        text-decoration: none;
+    }
+
+    .timeline-archive-link:hover {
+        text-decoration: underline;
+    }
+</style>

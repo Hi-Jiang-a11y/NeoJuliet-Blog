@@ -1,4 +1,6 @@
 :root {
+    --layout-sidebar-width: 240px;
+    --layout-gap: 50px;
     --accent: #2337ff;
     --accent-dark: #000d8a;
     --black: 15, 18, 25;
@@ -22,6 +24,12 @@
     --surface-muted: #f6f4fb;
     --text-muted: #60739f;
     --border: rgb(177 156 217 / 0.24);
+}
+
+/* Keep the page frame from shifting when one route needs a vertical scrollbar
+   and another route happens not to. */
+html {
+    scrollbar-gutter: stable;
 }
 :root[data-theme="dark"] {
     --accent: #8b9cff;
@@ -270,8 +278,8 @@ hr {
 
 .layout {
     display: grid;
-    grid-template-columns: 240px 1fr 240px;
-    gap: 50px;
+    grid-template-columns: var(--layout-sidebar-width) minmax(0, 1fr);
+    gap: var(--layout-gap);
     max-width: 1400px;
     width: 100%;
     flex: 1 0 auto;
@@ -279,9 +287,14 @@ hr {
     box-sizing: border-box;
 }
 
+.layout--with-rightbar {
+    grid-template-columns: var(--layout-sidebar-width) minmax(0, 1fr) var(--layout-sidebar-width);
+}
+
 .sidebar-left {
     position: sticky;
-    top: 20px;
+    /* Keep both sidebars aligned beneath the sticky header while scrolling. */
+    top: 76px;
     align-self: start;
     display: flex;
     gap:30px;
@@ -289,9 +302,11 @@ hr {
 }
 .sidebar-right {
     position: sticky;
-    /* Leave room for the sticky header while it is visible. */
     top: 76px;
     align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
 .content {
@@ -348,6 +363,41 @@ hr {
 :root:not([data-theme="dark"]) .sidebar-left .sidebar-module:hover {
     transform: none;
     box-shadow: none !important;
+}
+
+/* Article utilities use the same lightweight treatment as the left sidebar. */
+.sidebar-right .toc,
+.sidebar-right .license-card,
+:root[data-theme="dark"] .sidebar-right .toc,
+:root[data-theme="dark"] .sidebar-right .license-card {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Keep the statistics module lightweight and aligned with the timeline when
+   it is displayed in the right sidebar. */
+.sidebar-right .sidebar-module {
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.sidebar-right .rightbar-statistics {
+    margin-top: 40px;
+}
+
+:root[data-theme="dark"] .sidebar-right .sidebar-module,
+:root:not([data-theme="dark"]) .sidebar-right .sidebar-module {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.sidebar-right .sidebar-module h1 {
+    margin-top: 0;
 }
 
 :root[data-theme="dark"] a { color: #aebcff; }

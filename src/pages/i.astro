@@ -4,45 +4,40 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro'; 
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import '../styles/text-effect-typing.css';
-import SideAnnouncement from '../components/Side-Announcement.astro';
-import Calendar from '../components/Calendar.astro';
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import ModuleA from '../components/sidebar/moduleA.astro';
 import ModuleB from '../components/sidebar/moduleB.astro';
 import ModuleC from '../components/sidebar/moduleC.astro';
+import RecentTimeline from '../components/RecentTimeline.astro';
 
 type Props = CollectionEntry<'about'>;
 
-// 获取 about.md 条目
 const aboutEntries = await getCollection('about');
 if (aboutEntries.length === 0) throw new Error('No about entry found!');
 const post = aboutEntries[0];
 
-// 直接 render 获取 Content 和 headings
 const { Content, headings } = await render(post);
 const { title, description, author } = post.data;
 
-// 如果 about.md 没有 frontmatter 的 author/title，可以设默认值
 const postTitle = title || 'About Me';
 const postDescription = description || 'About me page';
 const postAuthor = author || 'Juliet';
+const timelinePosts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 ---
-<Layout>
+<Layout rightbar={true}>
     <BaseHead slot="head" title={SITE_TITLE} description={SITE_DESCRIPTION} />
 
-    <!--左边栏-->
     <div slot="leftbar">
         <ModuleA />
         <ModuleB />
-        <ModuleC />
     </div>
-    <!--右边栏-->
     <div slot="rightbar">
-        <SideAnnouncement />
-        <Calendar />
+        <RecentTimeline posts={timelinePosts} />
+        <div class="rightbar-statistics" style="margin-top: 40px;"><ModuleC /></div>
     </div>
-
-    <h2 id="typing" data-text="About..."></h2>
+    <h2 id="typing" data-text="/i/nformation"></h2>
 
     <article class="AboutContent">
         <Content />
@@ -59,8 +54,8 @@ const postAuthor = author || 'Juliet';
 
 /*link*/
 .AboutContent a {
-    color: rgb(var(--juliet-pink));           /* 链接颜色 */
-    text-decoration: none;    /* 连接样式 */
+    color: rgb(var(--juliet-pink));
+    text-decoration: none;
     font-weight: 500;
 }
 
@@ -71,7 +66,7 @@ const postAuthor = author || 'Juliet';
 
 /*blockquote*/
 .AboutContent blockquote {
-    border-left: 4px solid rgb(var(--juliet-hotpink));  /* 更改竖线颜色 */
+    border-left: 4px solid rgb(var(--juliet-hotpink));
     background: rgb(var(--juliet-pink)/0.05);
     border-radius: 2px;
     padding-left: 0.75rem 1rem;
@@ -88,7 +83,7 @@ const postAuthor = author || 'Juliet';
 
 .AboutContent th,
 .AboutContent td {
-    border: 1px solid #ccc;  /* 竖线 & 横线 */
+    border: 1px solid #ccc;
     padding: 8px 12px;
 }
 
@@ -110,11 +105,11 @@ code[class*="language-"] {
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
-    color: inherit !important; /* 保留语法高亮颜色，不覆盖 */
+    color: inherit !important;
 }
 
 .AboutContent pre code :not(.token) {
-    color: #555 !important; /* 普通文本颜色，自定义灰色或深粉 */
+    color: #555 !important;
 }
 
 .AboutContent :not(pre) > code {

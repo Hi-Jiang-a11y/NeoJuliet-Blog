@@ -5,12 +5,11 @@ import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import '../../styles/blog-card.css';
-import SideAnnouncement from '../../components/Side-Announcement.astro';
-import Calendar from '../../components/Calendar.astro';
 import BookIcon from '../../icons/BookIcon.astro';
 import ModuleA from '../../components/sidebar/moduleA.astro';
 import ModuleB from '../../components/sidebar/moduleB.astro';
 import ModuleC from '../../components/sidebar/moduleC.astro';
+import RecentTimeline from '../../components/RecentTimeline.astro';
 
 export async function getStaticPaths() {
     const allPosts = await getCollection('blog');
@@ -33,19 +32,17 @@ const posts = allPosts
         return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
     });
 ---
-<Layout>
+<Layout rightbar={true}>
     <BaseHead slot="head" title={`${currentTag} - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 
     <!--左边栏-->
     <div slot="leftbar">
         <ModuleA />
         <ModuleB />
-        <ModuleC />
     </div>
-    <!--右边栏-->
     <div slot="rightbar">
-        <SideAnnouncement />
-        <Calendar />
+        <RecentTimeline posts={allPosts} />
+        <ModuleC />
     </div>
     <h1># {currentTag}</h1>
 
@@ -66,4 +63,3 @@ const posts = allPosts
         <p>No posts found for this tag.</p>
     )}
 </Layout>
-
