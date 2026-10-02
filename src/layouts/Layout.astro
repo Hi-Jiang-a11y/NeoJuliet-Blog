@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
 
 const { rightbar = false } = Astro.props ?? {};
@@ -45,5 +46,6 @@ const { rightbar = false } = Astro.props ?? {};
                 </aside>
             )}
         </div>
+        <Footer />
     </body>
 </html>
