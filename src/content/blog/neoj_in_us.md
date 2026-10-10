@@ -2,7 +2,7 @@
 title: 'XXX 在美国'
 author: 'Juliet'
 description: ''
-pubDate: 'Oct 8 2026'
+pubDate: 'Oct 9 2026'
 tags: ["untitled"]
 pinned: false
 license: "CC BY-SA 4.0"
