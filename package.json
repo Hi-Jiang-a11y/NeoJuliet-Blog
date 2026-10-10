@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "font:subset": "node scripts/subset-font.mjs",
+    "build": "npm run font:subset && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
