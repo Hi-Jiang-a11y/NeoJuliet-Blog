@@ -23,7 +23,7 @@ const tags = Object.entries(tagMap).sort((a, b) => b[1] - a[1]); // 按文章数
     <ul class="leftbar-tag-list">
         {tags.map(([tag, count]) => (
             <li>
-                <a href={`/tag/${tag}/`}># {tag}</a>
+                <a href={`/t/${tag}/`}># {tag}</a>
             </li>
         ))}
     </ul>
