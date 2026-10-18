@@ -1,5 +1,5 @@
 ---
-title: 'Linux上优雅地运行Galgame心得(Updating)'
+title: 'Linux上优雅地运行Galgame心得'
 author: 'Juliet'
 description: 'Play galgames on Linux ELEGANTLY'
 pubDate: 'Dec 1 2025'
