@@ -3,7 +3,7 @@ title: 'XXX 在美国'
 author: 'Juliet'
 description: ''
 pubDate: 'Oct 9 2026'
-tags: ["untitled"]
+tags: ["untitled", "travelogue"]
 pinned: false
 license: "CC BY-SA 4.0"
 ---
